@@ -1,0 +1,19 @@
+.selectable-item {
+    background-color: white;
+}
+
+.selectable-item:hover {
+    background-color: lightgrey;
+    cursor: pointer;
+}
+
+.selectable-item:active {
+    background-color: grey;
+}
+
+.selectable-list {
+    background-color: white;
+    width: inherit;
+    overflow: scroll;
+    position: fixed;
+}
