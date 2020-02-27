@@ -1,0 +1,48 @@
+{
+  "name": "beer4yourbuck",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.4.1",
+    "@testing-library/user-event": "^7.2.1",
+    "@types/classnames": "^2.2.9",
+    "@types/jest": "^24.9.1",
+    "@types/node": "^12.12.28",
+    "@types/react": "^16.9.23",
+    "@types/react-dom": "^16.9.5",
+    "@types/reactstrap": "^8.4.2",
+    "@types/request-promise-native": "^1.0.17",
+    "classnames": "^2.2.6",
+    "react": "^16.13.0",
+    "react-dom": "^16.13.0",
+    "react-flip-move": "^3.0.4",
+    "react-scripts": "3.4.0",
+    "reactstrap": "^8.4.1",
+    "request": "^2.88.2",
+    "request-promise-native": "^1.0.8",
+    "typescript": "^3.7.5"
+  },
+  "scripts": {
+    "start": "react-scripts start --no-cache",
+    "build": "react-scripts build",
+    "test": "react-scripts test --no-cache",
+    "eject": "react-scripts eject",
+    "test-ci": "CI=true react-scripts test"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

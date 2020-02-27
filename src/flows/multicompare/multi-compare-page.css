@@ -1,0 +1,10 @@
+.removable-calculation {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.removable-calculation.top {
+    border: 1px solid gold;
+    border-radius: .25rem;
+    background-color: lightgoldenrodyellow;
+}
