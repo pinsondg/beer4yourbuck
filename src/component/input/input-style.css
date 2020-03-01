@@ -1,0 +1,27 @@
+.custom-input {
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 1px;
+    border-bottom-color: black;
+    border-bottom-style: solid;
+    border-radius: 0;
+    background-color: transparent;
+}
+
+.custom-input.error {
+    border: 1px solid red;
+    border-radius: .25rem;
+}
+
+.custom-input:focus,.custom-input:active {
+    border-bottom-color: aquamarine;
+    outline: transparent none 0 !important;
+    box-shadow: none;
+}
+
+.custom-input:disabled {
+    color: grey;
+    background-color: transparent;
+    border-color: grey;
+}

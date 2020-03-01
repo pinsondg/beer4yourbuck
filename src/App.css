@@ -36,3 +36,28 @@
     transform: rotate(360deg);
   }
 }
+
+.custom-button {
+  background-color: transparent;
+  border: 1px solid aquamarine;
+  color: aquamarine;
+  border-radius: .25rem;
+}
+
+.custom-button:hover {
+  border-color: mediumaquamarine;
+  color: mediumaquamarine;
+}
+
+.custom-button:focus {
+  background-color: mediumaquamarine;
+}
+
+@keyframes button-click {
+  from {background-color: transparent}
+  to {background-color: mediumaquamarine}
+}
+
+.custom-button.danger {
+
+}
