@@ -43,5 +43,5 @@ You can learn more in the [Create React App documentation](https://facebook.gith
 
 To learn React, check out the [React documentation](https://reactjs.org/).
 
-##Contributing
+## Contributing
 To contribute to this project fork the branch and submit a PR.
