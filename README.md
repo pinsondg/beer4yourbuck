@@ -1,3 +1,5 @@
+[![buddy pipeline](https://app.buddy.works/pinsondg/beer4yourbuck/pipelines/pipeline/242463/badge.svg?token=2ae746b5dc30b212a01d44e2a26c5c7513aeb1d6b6466376897c94804e50485c "buddy pipeline")](https://app.buddy.works/pinsondg/beer4yourbuck/pipelines/pipeline/242463)
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

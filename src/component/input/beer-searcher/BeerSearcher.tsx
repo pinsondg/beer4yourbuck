@@ -1,15 +1,16 @@
-import React, {Component, useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import BreweryDBAPI from "../../../controller/api/BreweryDBAPI";
 import Beer from "../../../model/Beer";
-import SelectableListItem from "../../list/selectable-list/SelectableListItem";
 import SelectableList from "../../list/selectable-list/SelectableList";
 import {Input} from "reactstrap";
 import classNames from "classnames";
 import './beer-searcher.css'
+import {CustomInput} from "../CustomInput";
+import {CalculationItemInput} from "../../../flows/multicompare/CalculationItem";
 
 const beerApi = new BreweryDBAPI();
 
-export interface BeerSearcherProp {
+export interface BeerSearcherProp extends CustomInput{
     getSelected: (beer: Beer) => void
     onBeerSwitch: () => void;
     error?: boolean
@@ -70,9 +71,21 @@ export default function BeerSearcher(prop: BeerSearcherProp) {
         setHideList(true);
     };
 
+    const handleFocus = () => {
+        if (prop.onFocus) {
+            prop.onFocus(CalculationItemInput.BEER_NAME);
+        }
+    };
+
     return (
         <div className={'beer-searcher'} ref={wrapperRef}>
-            <Input className={'custom-input'} value={text} placeholder={'Beer Name'} onChange={onChange}/>
+            <Input
+                className={'custom-input'}
+                value={text}
+                placeholder={'Beer Name'}
+                onChange={onChange}
+                onFocus={handleFocus}
+            />
             {
                 foundBeers && foundBeers.length > 0 ? (
                     <SelectableList beers={foundBeers} getSelected={onBeerSelected} hide={hideList}/>

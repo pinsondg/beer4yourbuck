@@ -4,6 +4,7 @@ import {Button, Col, Row} from "reactstrap";
 import classNames from "classnames";
 import './multi-compare-page.css';
 import '../../App.css'
+import FlipMove from "react-flip-move";
 
 let itemKey = 0;
 
@@ -128,18 +129,18 @@ export function MultiComparePage() {
     return (
         <div className={'holder'} style={cssProperties}>
             <div style={{margin: '5px'}}>
-                {
-                    calculationItems.map(item => (
-                        <RemovableCalculationItem
-                            onRemove={onRemoveItemClick}
-                            key={item.key}
-                            id={item.id}
-                            onScoreCalculated={onScoreCalculated}
-                            disableDelete={item.disableDelete}
-                            topItem={item.topItem}
-                        />
-                    ))
-                }
+                    {
+                        calculationItems.map(item => (
+                            <RemovableCalculationItem
+                                onRemove={onRemoveItemClick}
+                                key={item.key}
+                                id={item.id}
+                                onScoreCalculated={onScoreCalculated}
+                                disableDelete={item.disableDelete}
+                                topItem={item.topItem}
+                            />
+                        ))
+                    }
             </div>
             <div>
                 <Button style={{margin: '0 auto'}} color={'primary'} onClick={onAddClick}>Add New Item</Button>

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import BeerSearcher from "../../component/input/beer-searcher/BeerSearcher";
-import {Col, Row} from "reactstrap";
+import {Col, CustomInput, Row} from "reactstrap";
 import APVInput from "../../component/input/apv-input/APVInput";
 import Beer from "../../model/Beer";
 import CostInput from "../../component/input/cost-input/CostInput";
@@ -10,6 +10,10 @@ import {OttawayCalculator} from "../../controller/OttawayCalculator";
 interface CalculationItemProps {
     errors?: InputErrors
     onScoreCalculated?: (score: number) => void;
+}
+
+export enum CalculationItemInput {
+    BEER_NAME, APV, COST, VOLUME
 }
 
 interface InputErrors {
@@ -31,6 +35,7 @@ export default function CalculationItem(props: CalculationItemProps) {
         priceError: false
     });
     const [score, setScore] = useState<number | null>(null);
+    const [focusedInput, setFocusedInput] = useState<CalculationItemInput>(CalculationItemInput.BEER_NAME);
 
     useEffect(() => {
         let ottawayScore = -1;
@@ -43,6 +48,22 @@ export default function CalculationItem(props: CalculationItemProps) {
             props.onScoreCalculated(ottawayScore);
         }
     }, [cost, volume, apvInput]);
+
+    const handleEnterPressed = (e: KeyboardEvent) => {
+        if (e.key === 'Enter' && focusedInput !== CalculationItemInput.VOLUME) {
+            e.preventDefault();
+            setFocusedInput(focusedInput + 1);
+        }
+    };
+
+    useEffect(() => {
+        // Bind the event listener
+        document.addEventListener("keydown", handleEnterPressed);
+        return () => {
+            // Unbind the event listener on clean up
+            document.removeEventListener("keydown", handleEnterPressed);
+        };
+    });
 
     const onBeerSelected = (selectedBeer: Beer) => {
         setSelectedBeer(selectedBeer);
@@ -72,16 +93,33 @@ export default function CalculationItem(props: CalculationItemProps) {
         <div>
             <Row>
                 <Col>
-                    <BeerSearcher getSelected={onBeerSelected} onBeerSwitch={onBeerSwitch}/>
+                    <BeerSearcher
+                        getSelected={onBeerSelected}
+                        onBeerSwitch={onBeerSwitch}
+                        focused={focusedInput === CalculationItemInput.BEER_NAME}
+                        onFocus={inputItem => setFocusedInput(CalculationItemInput.BEER_NAME)}
+                    />
                 </Col>
                 <Col>
-                    <APVInput text={apvInput ? apvInput.toString() : ''} locked={selectedBeer !== null} getVal={val => setApvInput(+val)}/>
+                    <APVInput
+                        text={apvInput ? apvInput.toString() : ''}
+                        locked={selectedBeer !== null}
+                        getVal={val => setApvInput(+val)}
+                    />
                 </Col>
                 <Col>
-                    <CostInput getCost={getCost} text={cost ? cost.toString() : ''} error={inputErrors.beerError}/>
+                    <CostInput
+                        getCost={getCost}
+                        text={cost ? cost.toString() : ''}
+                        error={inputErrors.beerError}
+                    />
                 </Col>
                 <Col>
-                    <VolumeInput getVolume={getVolume} text={volume ? volume.toString() : ''} error={inputErrors.volumeError}/>
+                    <VolumeInput
+                        getVolume={getVolume}
+                        text={volume ? volume.toString() : ''}
+                        error={inputErrors.volumeError}
+                    />
                 </Col>
                 {
                     score && score > -1 ? (
