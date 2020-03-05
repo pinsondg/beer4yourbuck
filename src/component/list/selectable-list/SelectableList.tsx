@@ -1,6 +1,6 @@
 import React from "react";
 import Beer from "../../../model/Beer";
-import {ListGroup, Table} from "reactstrap";
+import {Table} from "reactstrap";
 import SelectableListItem from "./SelectableListItem";
 import './selectable-list.css'
 

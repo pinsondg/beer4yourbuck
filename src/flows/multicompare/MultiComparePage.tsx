@@ -4,7 +4,6 @@ import {Button, Col, Row} from "reactstrap";
 import classNames from "classnames";
 import './multi-compare-page.css';
 import '../../App.css'
-import FlipMove from "react-flip-move";
 
 let itemKey = 0;
 

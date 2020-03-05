@@ -1,7 +1,5 @@
 import React from "react";
-import {Col, ListGroupItem, Row} from "reactstrap";
 import Beer from "../../../model/Beer";
-import {on} from "cluster";
 import './selectable-list.css'
 
 export interface SelectableListItemProps {

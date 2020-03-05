@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Input, Label} from "reactstrap";
+import {Input} from "reactstrap";
 import classNames from "classnames";
 import '../input-style.css'
 

@@ -10,7 +10,6 @@ interface VolumeInputProps {
 
 export default function VolumeInput(props: VolumeInputProps) {
     const [volume, setVolume] = useState<string>('');
-    const [inFocus, setInFocus] = useState<boolean>(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         var val = e.target.value;
