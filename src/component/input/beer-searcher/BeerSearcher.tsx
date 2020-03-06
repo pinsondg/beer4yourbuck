@@ -3,7 +3,6 @@ import BreweryDBAPI from "../../../controller/api/BreweryDBAPI";
 import {Beer} from "../../../model/Beer";
 import SelectableList from "../../list/selectable-list/SelectableList";
 import {Col, Input, Row} from "reactstrap";
-import classNames from "classnames";
 import './beer-searcher.css'
 import {CustomInput} from "../CustomInput";
 import {CalculationItemInput} from "../../../flows/multicompare/CalculationItem";
@@ -32,7 +31,7 @@ export default function BeerSearcher(prop: BeerSearcherProp) {
         }
     };
 
-    const inputClasses = classNames('cusom-input', {'error': prop.error});
+    //const inputClasses = classNames('cusom-input', {'error': prop.error});
 
     useEffect(() => {
         // Bind the event listener

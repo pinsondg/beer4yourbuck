@@ -29,7 +29,7 @@ export default function CalculationItem(props: CalculationItemProps) {
     const [apvInput, setApvInput] = useState<number | null>(null);
     const [cost, setCost] = useState<number | null>(null);
     const [volume, setVolume] = useState<number | null>(null);
-    const [inputErrors, setInputErrors] = useState<InputErrors>({
+    const [inputErrors] = useState<InputErrors>({
         beerError: false,
         apvError: false,
         volumeError: false,
@@ -48,7 +48,7 @@ export default function CalculationItem(props: CalculationItemProps) {
         if (ottawayScore > -1 && props.onScoreCalculated) {
             props.onScoreCalculated(ottawayScore);
         }
-    }, [cost, volume, apvInput]);
+    }, [props, cost, volume, apvInput]);
 
     // const handleEnterPressed = (e: KeyboardEvent) => {
     //     if (e.key === 'Enter' && focusedInput !== CalculationItemInput.VOLUME) {

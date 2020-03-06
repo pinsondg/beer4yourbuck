@@ -54,7 +54,7 @@ export function VenueLocationSelectorModal(props: Props) {
                     })
             }))
         }
-    }, [props]);
+    }, [props, venue]);
 
     if (venueLocations && venueLocations.length > 0) {
         return (
