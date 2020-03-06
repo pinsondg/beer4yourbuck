@@ -2,19 +2,26 @@ import * as request from "request-promise-native";
 
 export default class BreweryDBAPI {
     private url: string = process.env.REACT_APP_BACKEND_URL!;
-    private sandbox_key: string = '32c462b931965d238a5b3ee95792182d';
 
     async searchBeer(name: string) {
-        let result = (async () => {
+        return (async () => {
             const baseUrl = this.url;
             const queryString = 'beer/search?&q=' + name;
-            var options = {
+            const options = {
                 uri: baseUrl + queryString,
             };
-
-            const result = await request.get(options);
-            return result;
+            return request.get(options);
         })();
-        return result;
+    }
+
+    async searchBreweryByLocation(lat: number, lon: number) {
+        return (async () => {
+            const baseUrl = this.url;
+            const options = {
+                method: 'GET',
+                uri: baseUrl + 'brewery/search?lat=' + lat + '&lng=' + lon,
+            };
+            return request.get(options);
+        })();
     }
 }

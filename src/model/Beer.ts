@@ -1,5 +1,5 @@
 
-export default interface Beer {
+export interface Beer {
 
     name?: string;
     id?: string;

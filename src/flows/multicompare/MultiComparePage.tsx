@@ -4,7 +4,6 @@ import {Button, Col, Row} from "reactstrap";
 import classNames from "classnames";
 import './multi-compare-page.css';
 import '../../App.css'
-import FlipMove from "react-flip-move";
 
 let itemKey = 0;
 
@@ -14,7 +13,6 @@ interface MultiComparePageProps {
 
 interface RemovableCalculationItemProps {
     onRemove?: (item: RemovableCalculationItemProps) => void;
-    key: number;
     id: number
     onScoreCalculated?: (score: number, id: number) => void;
     disableDelete: boolean
@@ -46,11 +44,10 @@ function RemovableCalculationItem(props: RemovableCalculationItemProps) {
                     <CalculationItem onScoreCalculated={onScoreCalculated}/>
                 </Col>
                 {
-                    !props.disableDelete ? (
-                        <Col sm={'2'}>
-                            <Button color={'danger'} style={{margin: '0 auto'}} onClick={handleRemoveButtonClick}>Remove</Button>
-                        </Col>
-                    ) : null
+                    !props.disableDelete &&
+                    <Col sm={'2'}>
+                        <Button color={'danger'} style={{margin: '0 auto'}} onClick={handleRemoveButtonClick}>Remove</Button>
+                    </Col>
                 }
             </Row>
         </div>
@@ -63,7 +60,7 @@ interface RemovableItemCalculationObject extends RemovableCalculationItemProps {
 
 export function MultiComparePage() {
 
-    const [calculationItems, setCalculationItems] = useState<Array<RemovableItemCalculationObject>>([{key: itemKey, id: itemKey, score: 0, disableDelete: true}]);
+    const [calculationItems, setCalculationItems] = useState<Array<RemovableItemCalculationObject>>([{id: itemKey, score: 0, disableDelete: true}]);
 
     const onRemoveItemClick = (item: RemovableCalculationItemProps) => {
         const items = calculationItems.filter(x => x.id !== item.id);
@@ -82,7 +79,7 @@ export function MultiComparePage() {
             x.topItem = false;
             items.push(x)
         });
-        items.push({key: itemKey, id: itemKey, score: 0, disableDelete: false});
+        items.push({id: itemKey, score: 0, disableDelete: false});
         setCalculationItems(items);
     };
 
@@ -100,8 +97,11 @@ export function MultiComparePage() {
 
     const cssProperties: CSSProperties = {
         width: '100%',
-        overflow: 'hidden',
-        padding: '5px'
+        height: "auto",
+        overflowX: 'hidden',
+        overflowY: "hidden",
+        padding: '5px',
+        flex: '1 1 auto'
     };
 
     const onCompareCLick = () => {
@@ -119,41 +119,45 @@ export function MultiComparePage() {
 
     const clearAll = () => {
         itemKey++;
-        setCalculationItems([{key: itemKey, score: 0, id: itemKey, disableDelete: true}])
+        setCalculationItems([{score: 0, id: itemKey, disableDelete: true}])
     };
 
     const compareButtonToggle = () => {
-        return calculationItems.filter(item => item.score === 0).length === 0 && calculationItems.length > 1;
+        return !(calculationItems.filter(item => item.score === 0).length === 0 && calculationItems.length > 1);
     };
 
     return (
-        <div className={'holder'} style={cssProperties}>
-            <div style={{margin: '5px'}}>
-                    {
-                        calculationItems.map(item => (
-                            <RemovableCalculationItem
-                                onRemove={onRemoveItemClick}
-                                key={item.key}
-                                id={item.id}
-                                onScoreCalculated={onScoreCalculated}
-                                disableDelete={item.disableDelete}
-                                topItem={item.topItem}
-                            />
-                        ))
-                    }
+        <div style={cssProperties}>
+            <div className={'list-holder'}>
+                {
+                    calculationItems.map(item => (
+                        <RemovableCalculationItem
+                            onRemove={onRemoveItemClick}
+                            key={item.id}
+                            id={item.id}
+                            onScoreCalculated={onScoreCalculated}
+                            disableDelete={item.disableDelete}
+                            topItem={item.topItem}
+                        />
+                    ))
+                }
             </div>
-            <div>
-                <Button style={{margin: '0 auto'}} color={'primary'} onClick={onAddClick}>Add New Item</Button>
+            <div className={'bottom-buttons-holder'}>
+                <Row xs={12} >
+                    <Button className={'control-button'} color={'primary'} onClick={onAddClick}>Add New Item</Button>
+                </Row>
+                <Row xs={12}>
+                    <Button className={'control-button'} color={'success'} disabled={compareButtonToggle()} onClick={onCompareCLick}>Compare!</Button>
+                </Row>
+                <Row xs={12}>
                 {
-                    compareButtonToggle() ? (
-                        <Button style={{margin: '0 auto'}} color={'success'} onClick={onCompareCLick}>Compare!</Button>
-                    ) : null
+                    calculationItems.length > 1 &&
+                    <Button className={'control-button'}
+                            color={'danger'}
+                            onClick={clearAll}>Clear
+                    </Button>
                 }
-                {
-                    calculationItems.length > 1 ? (
-                        <Button style={{margin: '0 auto'}} color={'danger'} onClick={clearAll}>Clear</Button>
-                    ) : null
-                }
+                </Row>
             </div>
         </div>
     );

@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
 import BeerSearcher from "../../component/input/beer-searcher/BeerSearcher";
-import {Col, CustomInput, Row} from "reactstrap";
+import {Col, Row} from "reactstrap";
 import APVInput from "../../component/input/apv-input/APVInput";
-import Beer from "../../model/Beer";
+import {Beer} from "../../model/Beer";
 import CostInput from "../../component/input/cost-input/CostInput";
 import VolumeInput from "../../component/input/volume-input/VolumeInput";
 import {OttawayCalculator} from "../../controller/OttawayCalculator";
@@ -10,6 +10,7 @@ import {OttawayCalculator} from "../../controller/OttawayCalculator";
 interface CalculationItemProps {
     errors?: InputErrors
     onScoreCalculated?: (score: number) => void;
+    showScore?: boolean
 }
 
 export enum CalculationItemInput {
@@ -28,7 +29,7 @@ export default function CalculationItem(props: CalculationItemProps) {
     const [apvInput, setApvInput] = useState<number | null>(null);
     const [cost, setCost] = useState<number | null>(null);
     const [volume, setVolume] = useState<number | null>(null);
-    const [inputErrors, setInputErrors] = useState<InputErrors>({
+    const [inputErrors] = useState<InputErrors>({
         beerError: false,
         apvError: false,
         volumeError: false,
@@ -47,23 +48,23 @@ export default function CalculationItem(props: CalculationItemProps) {
         if (ottawayScore > -1 && props.onScoreCalculated) {
             props.onScoreCalculated(ottawayScore);
         }
-    }, [cost, volume, apvInput]);
+    }, [props, cost, volume, apvInput]);
 
-    const handleEnterPressed = (e: KeyboardEvent) => {
-        if (e.key === 'Enter' && focusedInput !== CalculationItemInput.VOLUME) {
-            e.preventDefault();
-            setFocusedInput(focusedInput + 1);
-        }
-    };
-
-    useEffect(() => {
-        // Bind the event listener
-        document.addEventListener("keydown", handleEnterPressed);
-        return () => {
-            // Unbind the event listener on clean up
-            document.removeEventListener("keydown", handleEnterPressed);
-        };
-    });
+    // const handleEnterPressed = (e: KeyboardEvent) => {
+    //     if (e.key === 'Enter' && focusedInput !== CalculationItemInput.VOLUME) {
+    //         e.preventDefault();
+    //         setFocusedInput(focusedInput + 1);
+    //     }
+    // };
+    //
+    // useEffect(() => {
+    //     // Bind the event listener
+    //     document.addEventListener("keydown", handleEnterPressed);
+    //     return () => {
+    //         // Unbind the event listener on clean up
+    //         document.removeEventListener("keydown", handleEnterPressed);
+    //     };
+    // });
 
     const onBeerSelected = (selectedBeer: Beer) => {
         setSelectedBeer(selectedBeer);
@@ -97,7 +98,7 @@ export default function CalculationItem(props: CalculationItemProps) {
                         getSelected={onBeerSelected}
                         onBeerSwitch={onBeerSwitch}
                         focused={focusedInput === CalculationItemInput.BEER_NAME}
-                        onFocus={inputItem => setFocusedInput(CalculationItemInput.BEER_NAME)}
+                        onFocus={() => setFocusedInput(CalculationItemInput.BEER_NAME)}
                     />
                 </Col>
                 <Col>
@@ -122,11 +123,10 @@ export default function CalculationItem(props: CalculationItemProps) {
                     />
                 </Col>
                 {
-                    score && score > -1 ? (
-                        <Col>
-                            <p>{"Ottaway Score: " + score.toFixed(2)}</p>
-                        </Col>
-                    ) : null
+                    props.showScore && score && score > -1 &&
+                    <Col>
+                        <p>{"Ottaway Score: " + score.toFixed(2)}</p>
+                    </Col>
                 }
             </Row>
         </div>
