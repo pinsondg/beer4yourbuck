@@ -1,38 +1,36 @@
 import React from "react";
-import Beer from "../../../model/Beer";
-import {ListGroup, Table} from "reactstrap";
 import SelectableListItem from "./SelectableListItem";
 import './selectable-list.css'
+import classNames from "classnames";
 
 export interface SelectableListProps {
-    beers: Beer[];
-    getSelected: (beer: Beer) => void;
-    hide: boolean
+    components: JSX.Element[];
+    getSelected: (index: number) => void;
+    hide: boolean;
+    showShadow?: boolean;
 }
+
+let id = 0;
 
 export default function SelectableList(props: SelectableListProps) {
 
-    const onBeerSelect = (beer: Beer) => {
-        props.getSelected(beer);
-    };
+    const classes = classNames('selectable-list-holder', {'shadow': props.showShadow});
 
-    const getItems = () => {
-        const list: Array<JSX.Element> = [];
-        var i = 1;
-        for (const beer of props.beers) {
-            list.push(<SelectableListItem beer={beer} onSelect={onBeerSelect} key={i}/>);
-            i++;
-        }
-        return list;
+    const onItemSelect = (index: number) => {
+        props.getSelected(index);
     };
 
     return (
-        <Table hidden={props.hide} className={'selectable-list'}>
-            <tbody>
-                {
-                    getItems()
-                }
-            </tbody>
-        </Table>
+        <div className={classes} hidden={props.hide}>
+            {
+                props.components.map((component, index) => (
+                    <SelectableListItem
+                        key={id++}
+                        component={component}
+                        onSelect={onItemSelect}
+                        index={index}/>
+                ))
+            }
+        </div>
     )
 }

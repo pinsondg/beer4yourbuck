@@ -1,20 +1,28 @@
 import React, {useState} from 'react';
 import './App.css';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import BeerSearcher from "./component/input/beer-searcher/BeerSearcher";
-import CalculationItem from "./flows/multicompare/CalculationItem";
-import {Button, Col, Row} from "reactstrap";
 import {MultiComparePage} from "./flows/multicompare/MultiComparePage";
+import {BeerVenue} from "./model/BeerVenue";
+import {BeerVenueContext, BeerVenueContextData} from "./context/BeerVenueContext";
+import {VenueLocationSelectorModal} from "./component/modal/VenueLocationSelectorModal";
+
 
 function App() {
     console.log("Running app in " + process.env.NODE_ENV + " environment.");
+    const [venue, setVenue] = useState<BeerVenue>();
+    const context: BeerVenueContextData = {venue, setVenue};
 
   return (
     <div className="App">
-        <header>
-            <h1>Beer 4 Your Buck</h1>
-        </header>
-        <MultiComparePage/>
+        <BeerVenueContext.Provider value={context}>
+            <VenueLocationSelectorModal/>
+            <header>
+                <h1>Beer 4 Your Buck</h1>
+            </header>
+            <MultiComparePage/>
+            <footer>
+                <a href={"https://github.com/pinsondg/beer4yourbuck"}>Contribute to this project</a>
+            </footer>
+        </BeerVenueContext.Provider>
     </div>
   );
 }

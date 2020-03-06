@@ -1,8 +1,8 @@
 import React, {useEffect, useRef, useState} from "react";
 import BreweryDBAPI from "../../../controller/api/BreweryDBAPI";
-import Beer from "../../../model/Beer";
+import {Beer} from "../../../model/Beer";
 import SelectableList from "../../list/selectable-list/SelectableList";
-import {Input} from "reactstrap";
+import {Col, Input, Row} from "reactstrap";
 import classNames from "classnames";
 import './beer-searcher.css'
 import {CustomInput} from "../CustomInput";
@@ -62,13 +62,16 @@ export default function BeerSearcher(prop: BeerSearcherProp) {
         }
     };
 
-    const onBeerSelected = (selectedBeer: Beer) => {
-        setSelectedBeer(selectedBeer);
-        prop.getSelected(selectedBeer);
-        if (selectedBeer.nameDisplay) {
-            setText(selectedBeer.nameDisplay);
+    const onBeerSelected = (index: number) => {
+        const beer = foundBeers[index];
+        if (beer != null) {
+            prop.getSelected(beer);
+            if (beer.nameDisplay) {
+                setText(beer.nameDisplay);
+            }
         }
         setHideList(true);
+        setSelectedBeer(foundBeers[index]);
     };
 
     const handleFocus = () => {
@@ -87,9 +90,20 @@ export default function BeerSearcher(prop: BeerSearcherProp) {
                 onFocus={handleFocus}
             />
             {
-                foundBeers && foundBeers.length > 0 ? (
-                    <SelectableList beers={foundBeers} getSelected={onBeerSelected} hide={hideList}/>
-                ) : null
+                foundBeers && foundBeers.length > 0 &&
+                <SelectableList components={foundBeers.map((beer) => (
+                    <Row key={beer.id}>
+                        <Col>
+                            <p>{beer.nameDisplay}</p>
+                        </Col>
+                        <Col>
+                            <p>{beer.abv}</p>
+                        </Col>
+                    </Row>
+                ))}
+                                getSelected={onBeerSelected}
+                                hide={hideList}
+                />
             }
         </div>
     )

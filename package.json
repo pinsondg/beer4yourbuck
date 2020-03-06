@@ -17,6 +17,7 @@
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
     "react-flip-move": "^3.0.4",
+    "react-flip-toolkit": "^7.0.8",
     "react-scripts": "3.4.0",
     "reactstrap": "^8.4.1",
     "request": "^2.88.2",
