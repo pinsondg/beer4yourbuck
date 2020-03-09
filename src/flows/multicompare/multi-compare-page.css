@@ -21,8 +21,9 @@
 
 .list-holder {
     overflow-x: hidden;
-    overflow-y: auto;
+    overflow-y: scroll;
     height: 80%;
+    min-height: 80%;
     margin-top: 5px;
     background:
         /* Shadow covers */
@@ -42,5 +43,4 @@
 
 .bottom-buttons-holder {
     width: 100%;
-    position: fixed;
 }

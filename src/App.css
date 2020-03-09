@@ -4,7 +4,7 @@
   height: 100%;
   overflow-x: hidden;
   overflow-y: hidden;
-  display: flex;
+  display: -webkit-flex;
   flex-flow: column;
 }
 
@@ -78,6 +78,6 @@ header {
 
 footer {
   flex: 0 0 50px;
-  z-index: 1;
+  /*z-index: 1;*/
   border-top: thin solid lightgrey;
 }
