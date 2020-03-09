@@ -47,8 +47,8 @@ export function VenueLocationSelectorModal(props: Props) {
             getLocation((position => {
                 breweryApi.searchBreweryByLocation(position.coords.latitude, position.coords.longitude)
                     .then(response => {
-                        const rawResponse = JSON.parse(response);
-                        const locations: VenueLocationInfo<BeerVenue>[] = JSON.parse(response);
+                        const rawResponse = response.data;
+                        const locations: VenueLocationInfo<BeerVenue>[] = response.data;
                         locations.forEach((location, i) => location.venue = rawResponse[i].brewery);
                         setVenueLocations(locations)
                     })
