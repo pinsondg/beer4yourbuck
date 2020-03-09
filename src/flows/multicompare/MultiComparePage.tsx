@@ -97,7 +97,7 @@ export function MultiComparePage() {
 
     const cssProperties: CSSProperties = {
         width: '100%',
-        height: "auto",
+        height: "100%",
         overflowX: 'hidden',
         overflowY: "hidden",
         padding: '5px',
