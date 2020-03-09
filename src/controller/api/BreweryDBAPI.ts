@@ -1,27 +1,22 @@
-import * as request from "request-promise-native";
+const axios = require('axios').default;
 
 export default class BreweryDBAPI {
     private url: string = process.env.REACT_APP_BACKEND_URL!;
 
     async searchBeer(name: string) {
-        return (async () => {
-            const baseUrl = this.url;
-            const queryString = 'beer/search?&q=' + name;
-            const options = {
-                uri: baseUrl + queryString,
-            };
-            return request.get(options);
-        })();
+        return axios.get(this.url + "beer/search", {
+            params: {
+                q: name
+            }
+        });
     }
 
     async searchBreweryByLocation(lat: number, lon: number) {
-        return (async () => {
-            const baseUrl = this.url;
-            const options = {
-                method: 'GET',
-                uri: baseUrl + 'brewery/search?lat=' + lat + '&lng=' + lon,
-            };
-            return request.get(options);
-        })();
+        return axios.get(this.url + "brewery/search", {
+            params: {
+                lat: lat,
+                lng: lon
+            }
+        });
     }
 }
