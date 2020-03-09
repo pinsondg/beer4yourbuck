@@ -37,6 +37,7 @@ export default function CalculationItem(props: CalculationItemProps) {
     });
     const [score, setScore] = useState<number | null>(null);
     const [focusedInput, setFocusedInput] = useState<CalculationItemInput>(CalculationItemInput.BEER_NAME);
+    const {onScoreCalculated} = props;
 
     useEffect(() => {
         let ottawayScore = -1;
@@ -44,11 +45,12 @@ export default function CalculationItem(props: CalculationItemProps) {
             ottawayScore = OttawayCalculator.calculate(apvInput, cost, volume);
         }
         console.log("Ottaway Score is: " + ottawayScore);
-        setScore(ottawayScore);
-        if (ottawayScore > -1 && props.onScoreCalculated) {
-            props.onScoreCalculated(ottawayScore);
+        if (ottawayScore > -1 && onScoreCalculated && ottawayScore !== score) {
+            onScoreCalculated(ottawayScore);
         }
-    }, [props, cost, volume, apvInput]);
+        setScore(ottawayScore);
+    }, [onScoreCalculated, score, cost, volume, apvInput]);
+
 
     // const handleEnterPressed = (e: KeyboardEvent) => {
     //     if (e.key === 'Enter' && focusedInput !== CalculationItemInput.VOLUME) {
