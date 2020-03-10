@@ -53,7 +53,7 @@ export default function BeerSearcher(prop: BeerSearcherProp) {
         if (val && val !== '') {
             const promise = beerApi.searchBeer(val);
             promise.then((data) => {
-                let beer: Array<Beer> = JSON.parse(data);
+                let beer: Array<Beer> = data.data;
                 setFoundBeers(beer.filter(x => x.abv))
             });
         } else {
