@@ -1,5 +1,5 @@
-import React, {ChangeEvent, useEffect, useState} from "react";
-import {Input} from "reactstrap";
+import React, {useEffect, useState} from "react";
+import {Col, FormGroup, Input, Label} from "reactstrap";
 import classNames from "classnames";
 
 interface CostInputProps {
@@ -28,6 +28,18 @@ export default function CostInput(props: CostInputProps) {
     }, [props.text]);
 
     return (
-        <Input className={inputClasses} value={val} placeholder={'Cost'} step={'0.01'} type={'number'} onChange={handleChange}/>
-    )
+        <FormGroup row>
+            <Label for={'cost'} sm={'2'}>Cost ($)</Label>
+            <Col sm={'10'}>
+                <Input
+                    id={'cost'}
+                    className={inputClasses}
+                    value={val}
+                    step={'0.01'}
+                    type={'number'}
+                    onChange={handleChange}
+                    name={'cost'}
+                />
+            </Col>
+        </FormGroup>)
 }

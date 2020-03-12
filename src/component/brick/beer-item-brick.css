@@ -1,0 +1,58 @@
+.beer-item-brick {
+    display: inline-block;
+    padding: 10px;
+    position: relative;
+    width: 75%;
+}
+
+.section {
+    margin: auto;
+}
+
+.edit-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 5px;
+    background-color: transparent;
+    border: none;
+    width: auto;
+    height: auto;
+}
+
+.beer-item-brick:hover {
+    background-color: lightblue;
+}
+
+.beer-item-brick.first {
+    border-color: gold;
+    background-color: palegoldenrod;
+    border-style: solid;
+    border-width: 2px;
+}
+
+.beer-item-brick.second {
+    border-color: silver;
+    background-color: #E2E2E2;
+    border-style: solid;
+    border-width: 2px;
+}
+
+.beer-item-brick.third {
+    border-color: #cd7f32;
+    background-color: #eda864;
+    border-style: solid;
+    border-width: 2px;
+}
+
+.beer-logo {
+    margin: 10px;
+    border-radius: 50%;
+    border-style: solid;
+    border-width: 3px;
+}
+
+.edit-button:focus,.edit-button:active {
+    outline: transparent none 0 !important;
+    box-shadow: none;
+}

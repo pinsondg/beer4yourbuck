@@ -2,17 +2,19 @@ import React, {useEffect, useRef, useState} from "react";
 import BreweryDBAPI from "../../../controller/api/BreweryDBAPI";
 import {Beer} from "../../../model/Beer";
 import SelectableList from "../../list/selectable-list/SelectableList";
-import {Col, Input, Row} from "reactstrap";
+import {Col, FormGroup, Input, Label, Row} from "reactstrap";
 import './beer-searcher.css'
 import {CustomInput} from "../CustomInput";
-import {CalculationItemInput} from "../../../flows/multicompare/CalculationItem";
+import {CalculationItemInput} from "../../modal/BeerAddModal";
 
 const beerApi = new BreweryDBAPI();
 
 export interface BeerSearcherProp extends CustomInput{
     getSelected: (beer: Beer) => void
     onBeerSwitch: () => void;
+    getName: (name: string) => void;
     error?: boolean
+    text?: string
 }
 
 export default function BeerSearcher(prop: BeerSearcherProp) {
@@ -31,6 +33,12 @@ export default function BeerSearcher(prop: BeerSearcherProp) {
         }
     };
 
+    useEffect(() => {
+        if (prop.text) {
+            setText(prop.text);
+        }
+    }, [prop.text]);
+
     //const inputClasses = classNames('cusom-input', {'error': prop.error});
 
     useEffect(() => {
@@ -45,6 +53,7 @@ export default function BeerSearcher(prop: BeerSearcherProp) {
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const val = e.target.value;
         setText(val);
+        prop.getName(val);
         setHideList(false);
         if (selectedBeer && selectedBeer.nameDisplay !== val) {
             setSelectedBeer(null);
@@ -81,29 +90,35 @@ export default function BeerSearcher(prop: BeerSearcherProp) {
 
     return (
         <div className={'beer-searcher'} ref={wrapperRef}>
-            <Input
-                className={'custom-input'}
-                value={text}
-                placeholder={'Beer Name'}
-                onChange={onChange}
-                onFocus={handleFocus}
-            />
-            {
-                foundBeers && foundBeers.length > 0 &&
-                <SelectableList components={foundBeers.map((beer) => (
-                    <Row key={beer.id}>
-                        <Col>
-                            <p>{beer.nameDisplay}</p>
-                        </Col>
-                        <Col>
-                            <p>{beer.abv}</p>
-                        </Col>
-                    </Row>
-                ))}
-                                getSelected={onBeerSelected}
-                                hide={hideList}
-                />
-            }
+            <FormGroup row>
+                <Label sm={'2'} for={'beer-search'}>Beer Name</Label>
+                <Col sm={'10'}>
+                    <Input
+                        id={'beer-search'}
+                        className={'custom-input'}
+                        value={text}
+                        onChange={onChange}
+                        onFocus={handleFocus}
+                        name={'beer-search'}
+                    />
+                </Col>
+                {
+                    foundBeers && foundBeers.length > 0 &&
+                    <SelectableList components={foundBeers.map((beer) => (
+                        <Row key={beer.id}>
+                            <Col>
+                                <p>{beer.nameDisplay}</p>
+                            </Col>
+                            <Col>
+                                <p>{beer.abv}</p>
+                            </Col>
+                        </Row>
+                    ))}
+                                    getSelected={onBeerSelected}
+                                    hide={hideList}
+                    />
+                }
+            </FormGroup>
         </div>
     )
 }
