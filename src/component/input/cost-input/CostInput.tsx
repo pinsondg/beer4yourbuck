@@ -32,6 +32,7 @@ export default function CostInput(props: CostInputProps) {
             <Label for={'cost'} sm={'2'}>Cost ($)</Label>
             <Col sm={'10'}>
                 <Input
+                    id={'cost'}
                     className={inputClasses}
                     value={val}
                     step={'0.01'}

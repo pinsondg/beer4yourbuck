@@ -94,6 +94,7 @@ export default function BeerSearcher(prop: BeerSearcherProp) {
                 <Label sm={'2'} for={'beer-search'}>Beer Name</Label>
                 <Col sm={'10'}>
                     <Input
+                        id={'beer-search'}
                         className={'custom-input'}
                         value={text}
                         onChange={onChange}

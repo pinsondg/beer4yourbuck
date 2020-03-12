@@ -30,6 +30,7 @@ export default function ABVInput(props: APVInputProps) {
             <Label for={'abv'} sm={'2'}>ABV (%)</Label>
             <Col sm={'10'}>
                 <Input
+                    id={'abv'}
                     className={inputClasses}
                     value={text}
                     type={'number'}
