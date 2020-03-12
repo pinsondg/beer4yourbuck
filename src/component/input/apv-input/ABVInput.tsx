@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Input} from "reactstrap";
+import {Col, FormGroup, Input, Label} from "reactstrap";
 import classNames from "classnames";
 import '../input-style.css'
 
@@ -10,7 +10,7 @@ export interface APVInputProps {
     error?: boolean
 }
 
-export default function APVInput(props: APVInputProps) {
+export default function ABVInput(props: APVInputProps) {
     const [text, setText] = useState<string>('');
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,15 +26,19 @@ export default function APVInput(props: APVInputProps) {
     }, [props.text]);
 
     return (
-        <Input
-            className={inputClasses}
-            value={text}
-            placeholder={'% APV'}
-            type={'number'}
-            step={'0.01'}
-            onChange={onChange}
-            disabled={props.locked}
-            name={'apv'}
-        />
+        <FormGroup row>
+            <Label for={'abv'} sm={'2'}>ABV (%)</Label>
+            <Col sm={'10'}>
+                <Input
+                    className={inputClasses}
+                    value={text}
+                    type={'number'}
+                    step={'0.01'}
+                    onChange={onChange}
+                    disabled={props.locked}
+                    name={'abv'}
+                />
+            </Col>
+        </FormGroup>
     )
 }

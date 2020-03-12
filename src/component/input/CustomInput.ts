@@ -1,4 +1,4 @@
-import {CalculationItemInput} from "../../flows/multicompare/CalculationItem";
+import {CalculationItemInput} from "../modal/BeerAddModal";
 
 export interface CustomInput {
     onFocus?: (inputItem: CalculationItemInput) => void;

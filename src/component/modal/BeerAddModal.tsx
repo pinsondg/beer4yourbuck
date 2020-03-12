@@ -1,17 +1,21 @@
 import React, {useEffect, useState} from "react";
-import BeerSearcher from "../../component/input/beer-searcher/BeerSearcher";
-import {Col, Row} from "reactstrap";
-import APVInput from "../../component/input/apv-input/APVInput";
+import BeerSearcher from "../input/beer-searcher/BeerSearcher";
+import {Button, Form, Modal, ModalBody, ModalHeader} from "reactstrap";
+import ABVInput from "../input/apv-input/ABVInput";
 import {Beer} from "../../model/Beer";
-import CostInput from "../../component/input/cost-input/CostInput";
-import VolumeInput from "../../component/input/volume-input/VolumeInput";
+import CostInput from "../input/cost-input/CostInput";
+import VolumeInput from "../input/volume-input/VolumeInput";
 import {OttawayCalculator} from "../../controller/OttawayCalculator";
 
-interface CalculationItemProps {
+interface BeerAddModalProps {
     errors?: InputErrors
     onScoreCalculated?: (score: number) => void;
     showScore?: boolean
+    onAdd: (beer: Beer) => void;
+    show?: boolean;
+    onClose?: () => void;
 }
+
 
 export enum CalculationItemInput {
     BEER_NAME, APV, COST, VOLUME
@@ -24,7 +28,7 @@ interface InputErrors {
     priceError: boolean;
 }
 
-export default function CalculationItem(props: CalculationItemProps) {
+export default function BeerAddModal(props: BeerAddModalProps) {
     const [selectedBeer, setSelectedBeer] = useState<Beer | null>(null);
     const [apvInput, setApvInput] = useState<number | null>(null);
     const [cost, setCost] = useState<number | null>(null);
@@ -38,6 +42,8 @@ export default function CalculationItem(props: CalculationItemProps) {
     const [score, setScore] = useState<number | null>(null);
     const [focusedInput, setFocusedInput] = useState<CalculationItemInput>(CalculationItemInput.BEER_NAME);
     const {onScoreCalculated} = props;
+    const [isOpen, setIsOpen] = useState<boolean>(true);
+    const [beerName, setBeerName] = useState<string>('');
 
     useEffect(() => {
         let ottawayScore = -1;
@@ -50,6 +56,10 @@ export default function CalculationItem(props: CalculationItemProps) {
         }
         setScore(ottawayScore);
     }, [onScoreCalculated, score, cost, volume, apvInput]);
+
+    useEffect(() => {
+        setIsOpen(props.show ? props.show : false)
+    }, [props]);
 
 
     // const handleEnterPressed = (e: KeyboardEvent) => {
@@ -92,46 +102,71 @@ export default function CalculationItem(props: CalculationItemProps) {
         setVolume(null);
     };
 
+    const toggle = () => {
+        if (props.onClose) {
+            props.onClose();
+        }
+        setIsOpen(!isOpen);
+    };
+
+    const onAdd = () => {
+        if (apvInput && cost && volume && score) {
+            if (selectedBeer) {
+                selectedBeer.price = cost;
+                selectedBeer.volume = volume;
+                selectedBeer.ottawayScore = score;
+                props.onAdd(selectedBeer);
+            } else {
+                const beer: Beer = {
+                    ottawayScore: score,
+                    volume: volume,
+                    price: cost,
+                    name: beerName,
+                    nameDisplay: beerName
+                };
+                props.onAdd(beer);
+            }
+        } else {
+            console.log('ERROR not all fields filled out.')
+            //TODO: Display errors
+        }
+    };
+
     return (
-        <div>
-            <Row>
-                <Col>
+        <Modal isOpen={isOpen} toggle={toggle}>
+            <ModalHeader toggle={toggle}>Add Beer</ModalHeader>
+            <ModalBody>
+                <Form>
                     <BeerSearcher
                         getSelected={onBeerSelected}
                         onBeerSwitch={onBeerSwitch}
                         focused={focusedInput === CalculationItemInput.BEER_NAME}
                         onFocus={() => setFocusedInput(CalculationItemInput.BEER_NAME)}
+                        getName={name => setBeerName(name)}
+                        text={beerName}
                     />
-                </Col>
-                <Col>
-                    <APVInput
+                    <ABVInput
                         text={apvInput ? apvInput.toString() : ''}
                         locked={selectedBeer !== null}
                         getVal={val => setApvInput(+val)}
                     />
-                </Col>
-                <Col>
                     <CostInput
                         getCost={getCost}
                         text={cost ? cost.toString() : ''}
                         error={inputErrors.beerError}
                     />
-                </Col>
-                <Col>
                     <VolumeInput
                         getVolume={getVolume}
                         text={volume ? volume.toString() : ''}
                         error={inputErrors.volumeError}
                     />
-                </Col>
-                {
-                    props.showScore && score && score > -1 &&
-                    <Col>
-                        <p>{"Ottaway Score: " + score.toFixed(2)}</p>
-                    </Col>
-                }
-            </Row>
-        </div>
-
+                    {
+                        props.showScore && score && score > -1 &&
+                            <p>{"Ottaway Score: " + score.toFixed(2)}</p>
+                    }
+                    <Button onClick={onAdd}>Add</Button>
+                </Form>
+            </ModalBody>
+        </Modal>
     )
 }

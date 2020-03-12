@@ -1,9 +1,9 @@
 import {fireEvent, render} from '@testing-library/react'
-import CalculationItem from "./CalculationItem";
+import BeerAddModal from "./BeerAddModal";
 import React from "react";
 
 it('calculation item should calculate score on input change', () => {
-    const { getByPlaceholderText, getByText } = render(<CalculationItem showScore={true}/>);
+    const { getByPlaceholderText, getByText } = render(<BeerAddModal showScore={true}/>);
     const volumeInput = getByPlaceholderText('Volume');
     const abvInput = getByPlaceholderText('% APV');
     const beerInput = getByPlaceholderText('Beer Name');

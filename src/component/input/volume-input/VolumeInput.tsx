@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Input} from "reactstrap";
+import {Col, FormGroup, Input, Label} from "reactstrap";
 import classNames from "classnames";
 
 interface VolumeInputProps {
@@ -30,6 +30,17 @@ export default function VolumeInput(props: VolumeInputProps) {
     }, [props.text]);
 
     return (
-        <Input className={classes} value={volume} placeholder={'Volume'} step={'0.01'} type={'number'} onChange={handleChange}/>
+        <FormGroup row>
+            <Label for={'volume'} sm={'2'}>Volume (fl oz)</Label>
+            <Col sm={'10'}>
+                <Input
+                    className={classes}
+                    value={volume}
+                    step={'0.01'}
+                    type={'number'}
+                    name={'volume'}
+                    onChange={handleChange}/>
+            </Col>
+        </FormGroup>
     )
 }

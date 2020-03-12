@@ -13,6 +13,7 @@ import {
 } from "reactstrap";
 import {BeerVenue, VenueLocationInfo} from "../../model/BeerVenue";
 import BreweryDBAPI from "../../controller/api/BreweryDBAPI";
+import {getLocation} from "../../controller/LocationController";
 
 const breweryApi = new BreweryDBAPI();
 
@@ -126,10 +127,4 @@ function IndexedDropdownItem(props: IndexedDropdownItemProps) {
     return (
         <DropdownItem onClick={onClick}>{props.element}</DropdownItem>
     )
-}
-
-function getLocation(successCallback: PositionCallback, errorCallBack?: PositionErrorCallback) {
-    if (navigator && navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(successCallback, errorCallBack);
-    }
 }

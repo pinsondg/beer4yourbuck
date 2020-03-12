@@ -1,10 +1,8 @@
 import React, {useState} from 'react';
 import './App.css';
-import {MultiComparePage} from "./flows/multicompare/MultiComparePage";
 import {BeerVenue} from "./model/BeerVenue";
 import {BeerVenueContext, BeerVenueContextData} from "./context/BeerVenueContext";
-import {VenueLocationSelectorModal} from "./component/modal/VenueLocationSelectorModal";
-
+import {MultiCompareFlow} from "./flows/multicompare/MultiCompareFlow";
 
 function App() {
     console.log("Running app in " + process.env.NODE_ENV + " environment.");
@@ -14,11 +12,11 @@ function App() {
   return (
     <div className="App">
         <BeerVenueContext.Provider value={context}>
-            <VenueLocationSelectorModal/>
+            {/*<VenueLocationSelectorModal/>*/}
             <header>
                 <h1>Beer 4 Your Buck</h1>
             </header>
-            <MultiComparePage/>
+            <MultiCompareFlow/>
             <footer>
                 <a href={"https://github.com/pinsondg/beer4yourbuck"}>Contribute to this project</a>
             </footer>
