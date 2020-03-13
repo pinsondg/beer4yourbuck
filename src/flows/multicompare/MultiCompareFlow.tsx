@@ -45,7 +45,7 @@ export function MultiCompareFlow(props: Props) {
     };
 
     return (
-        <div className={'page-container'}>
+        <div>
             <div>
                 <Button onClick={() => setShowAddModal(true)}>Add</Button>
                 <Button disabled={!(beerBricks.length > 1)} onClick={onCompare}>Compare!</Button>
