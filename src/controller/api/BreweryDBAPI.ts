@@ -19,4 +19,14 @@ export default class BreweryDBAPI {
             }
         });
     }
+
+    async uploadImage(file: File) {
+        const formData = new FormData();
+        formData.append('image', file);
+        return axios.post(this.url + 'menu/process', formData, {
+            headers: {
+                'content-type': 'multipart/form-data'
+            }
+        });
+    }
 }
