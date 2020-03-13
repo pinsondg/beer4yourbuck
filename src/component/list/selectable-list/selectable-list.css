@@ -14,10 +14,10 @@
 .selectable-list-holder {
     background-color: white;
     z-index: 1;
-    width: inherit;
-    height: 200px;
-    overflow: scroll;
-    position: fixed;
+    max-height: 200px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    position: absolute;
 }
 
 .selectable-list-holder.shadow {

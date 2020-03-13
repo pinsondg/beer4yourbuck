@@ -136,7 +136,7 @@ export default function BeerAddModal(props: BeerAddModalProps) {
         <Modal isOpen={isOpen} toggle={toggle}>
             <ModalHeader toggle={toggle}>Add Beer</ModalHeader>
             <ModalBody>
-                <Form>
+                <Form autoComplete={'off'}>
                     <BeerSearcher
                         getSelected={onBeerSelected}
                         onBeerSwitch={onBeerSwitch}
