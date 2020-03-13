@@ -1,0 +1,19 @@
+.upload-area {
+    width: 75%;
+    height: 50%;
+    border-width: 2px;
+    border-style: dashed;
+    border-radius: .25rem;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fafafa;
+    border-color: #eeeeee;
+    color: #bdbdbd;
+}
+
+.page {
+    height: 100%;
+    width: 100%;
+}

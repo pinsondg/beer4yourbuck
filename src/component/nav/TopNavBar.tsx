@@ -25,7 +25,7 @@ export function TopNavBar(props: Props) {
                             <NavLink href={'/compare'}>Compare</NavLink>
                         </NavItem>
                         <NavItem>
-                            <NavLink href={'/photo'}>Photo Upload</NavLink>
+                            <NavLink href={'/upload'}>Photo Upload</NavLink>
                         </NavItem>
                     </Nav>
                 </Collapse>

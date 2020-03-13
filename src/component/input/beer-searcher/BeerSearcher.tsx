@@ -101,23 +101,24 @@ export default function BeerSearcher(prop: BeerSearcherProp) {
                         onFocus={handleFocus}
                         name={'beer-search'}
                     />
+                    {
+                        foundBeers && foundBeers.length > 0 &&
+                        <SelectableList components={foundBeers.map((beer) => (
+                            <Row key={beer.id}>
+                                <Col>
+                                    <p>{beer.nameDisplay}</p>
+                                </Col>
+                                <Col>
+                                    <p>{beer.abv}</p>
+                                </Col>
+                            </Row>
+                        ))}
+                                        getSelected={onBeerSelected}
+                                        hide={hideList}
+                                        showShadow={true}
+                        />
+                    }
                 </Col>
-                {
-                    foundBeers && foundBeers.length > 0 &&
-                    <SelectableList components={foundBeers.map((beer) => (
-                        <Row key={beer.id}>
-                            <Col>
-                                <p>{beer.nameDisplay}</p>
-                            </Col>
-                            <Col>
-                                <p>{beer.abv}</p>
-                            </Col>
-                        </Row>
-                    ))}
-                                    getSelected={onBeerSelected}
-                                    hide={hideList}
-                    />
-                }
             </FormGroup>
         </div>
     )
