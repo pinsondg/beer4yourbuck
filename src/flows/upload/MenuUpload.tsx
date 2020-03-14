@@ -3,6 +3,8 @@ import {useDropzone} from "react-dropzone";
 import './menu-upload.css'
 import {Button} from "reactstrap";
 import BreweryDBAPI from "../../controller/api/BreweryDBAPI";
+import classNames from "classnames";
+import {isMobile} from "../../controller/Utils";
 
 interface Props {
 
@@ -24,10 +26,8 @@ export function MenuUpload(props: Props) {
                 setImageData(e.target.result);
             }
         };
-        if (selectedImageFile) {
-            reader.readAsDataURL(selectedImageFile);
-        }
-    }, [selectedImageFile]);
+        reader.readAsDataURL(file);
+    }, []);
     const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop});
 
     const upload = () => {
@@ -36,18 +36,34 @@ export function MenuUpload(props: Props) {
         }
     };
 
+    const uploadAreaClasses = classNames('upload-area', {
+        'mobile' : isMobile(),
+        'hidden' : selectedImageFile !== null
+    });
+
+    const imageHolderClasses = classNames('selected-image-holder', {
+        'hidden' : selectedImageFile === null
+    });
+
+    const clearFile = () => {
+        setSelectedImageFile(null);
+        setImageData(null);
+    };
+
     return (
         <div className={'page'}>
             <h1>Upload</h1>
-            <div {...getRootProps()} className={'upload-area'}>
+            <div {...getRootProps()} className={uploadAreaClasses}>
                 <input {...getInputProps()} type={'file'} accept="image/*;capture=camera"/>
                 {
-                    isDragActive ?
-                        <p>Drop the files here ...</p> :
-                        <p>Drag image files here or click to upload/capture</p>
+                    !isMobile() ?
+                        isDragActive ?
+                            <p>Drop the files here ...</p> :
+                            <p>Drag image files here or click to upload/capture</p>
+                        : <p>Tap to take picture.</p>
                 }
             </div>
-            <div className={'selected-image-holder'}>
+            <div className={imageHolderClasses}>
                 <h3>Selected Image</h3>
                 {
                     imageData ? (
@@ -59,6 +75,7 @@ export function MenuUpload(props: Props) {
                     )
                 }
                 <Button disabled={imageData === null} onClick={upload}>Upload</Button>
+                <Button onClick={clearFile}>Back</Button>
             </div>
         </div>
     );

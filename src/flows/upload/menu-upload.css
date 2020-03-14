@@ -13,6 +13,14 @@
     color: #bdbdbd;
 }
 
+.upload-area.mobile {
+
+}
+
+.upload-area.hidden {
+    display: none;
+}
+
 .page {
     height: 100%;
     width: 100%;
@@ -21,6 +29,10 @@
 
 .selected-image-holder {
     width: 100%;
+}
+
+.selected-image-holder.hidden {
+    display: none;
 }
 
 .image {
