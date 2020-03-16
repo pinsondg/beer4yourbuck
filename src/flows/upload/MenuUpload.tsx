@@ -5,6 +5,7 @@ import {Button} from "reactstrap";
 import BreweryDBAPI from "../../controller/api/BreweryDBAPI";
 import classNames from "classnames";
 import {isMobile} from "../../controller/Utils";
+import {FaCamera} from "react-icons/all";
 
 interface Props {
 
@@ -60,7 +61,7 @@ export function MenuUpload(props: Props) {
                         isDragActive ?
                             <p>Drop the files here ...</p> :
                             <p>Drag image files here or click to upload/capture</p>
-                        : <p>Tap to take picture.</p>
+                        : <p>Tap to take picture<br/><FaCamera/></p>
                 }
             </div>
             <div className={imageHolderClasses}>

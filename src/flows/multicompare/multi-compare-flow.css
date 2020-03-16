@@ -24,5 +24,19 @@
 }
 
 .add-button {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    padding: 0 auto;
+    float: right;
+}
 
+.compare-button {
+    /*margin-left: auto;*/
+    /*margin-right: auto;*/
+}
+
+.button-container {
+    width: 100%;
+    /*display: inline-block;*/
 }
