@@ -4,7 +4,7 @@ import {Button} from "reactstrap";
 import BeerAddModal from "../../component/modal/BeerAddModal";
 import {Beer} from "../../model/Beer";
 import './multi-compare-flow.css'
-import {MdAdd} from "react-icons/all";
+import {MdAdd} from "react-icons/md";
 
 interface Props {
 
@@ -45,7 +45,7 @@ export function MultiCompareFlow(props: Props) {
     return (
         <div style={{width: '100%', height: '100%'}}>
             <div className={'button-container'}>
-                <Button className={'add-button'} onClick={() => setShowAddModal(true)}><MdAdd/></Button>
+                <Button className={'add-button'} color={'primary'} onClick={() => setShowAddModal(true)}><MdAdd size={25}/></Button>
             </div>
             <div className={'list-holder'}>
                 {

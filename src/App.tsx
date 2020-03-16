@@ -6,7 +6,6 @@ import {MultiCompareFlow} from "./flows/multicompare/MultiCompareFlow";
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import {TopNavBar} from "./component/nav/TopNavBar";
 import {HomePage} from "./flows/home/HomePage";
-import {MenuUpload} from "./flows/upload/MenuUpload";
 import {NearYouPage} from "./flows/near-you/NearYouPage";
 
 
@@ -30,9 +29,6 @@ function App() {
                           </Route>
                           <Route path={'/compare'}>
                               <MultiCompareFlow/>
-                          </Route>
-                          <Route path={'/upload'}>
-                                <MenuUpload/>
                           </Route>
                           <Route path={'/near'}>
                             <NearYouPage/>
