@@ -4,6 +4,7 @@ import {Button} from "reactstrap";
 import BeerAddModal from "../../component/modal/BeerAddModal";
 import {Beer} from "../../model/Beer";
 import './multi-compare-flow.css'
+import {MdAdd} from "react-icons/md";
 
 interface Props {
 
@@ -17,40 +18,39 @@ export function MultiCompareFlow(props: Props) {
     // const [editingBeer, setEditingBeer] = useState<BeerItem | undefined>(undefined);
 
     const onBeerAdded = (beer: Beer) => {
-        setBeerBricks(beerBricks.concat([{beer: beer, isEditable: true, onEditSelect: () => {}, id: beerId.toString(), place: Place.NONE}]))
-        beerId++;
-        setShowAddModal(false);
-    };
-
-    const onCompare = () => {
-        const newList: BeerItem[] = [];
-        beerBricks.sort((x,y) => {
+        const newList = beerBricks.concat([{beer: beer, isEditable: true, onEditSelect: () => {}, id: beerId.toString(), place: Place.NONE}]);
+        newList.sort((x,y) => {
             if (x.beer.ottawayScore && y.beer.ottawayScore) {
                 return y.beer.ottawayScore - x.beer.ottawayScore;
             } else {
                 return 0;
             }
-        }).forEach(x => newList.push(x));
-        newList.forEach(x => x.isEditable = false);
-        if (newList.length > 0) {
-            newList[0].place = Place.FIRST;
-        }
-        if (newList.length > 1) {
-            newList[1].place = Place.SECOND;
-        }
-        if(newList.length  > 2) {
-            newList[2].place = Place.THIRD;
-        }
+        });
+        newList.forEach((item, i) => {
+            if (i === 0) {
+                newList[i].place = Place.FIRST;
+            } else if (i === 1) {
+                newList[i].place = Place.SECOND;
+            } else if (i === 2) {
+                newList[i].place = Place.THIRD;
+            } else {
+                newList[i].place = Place.NONE;
+            }
+        });
         setBeerBricks(newList);
+        beerId++;
+        setShowAddModal(false);
     };
 
     return (
         <div style={{width: '100%', height: '100%'}}>
-            <div>
-                <Button onClick={() => setShowAddModal(true)}>Add</Button>
-                <Button disabled={!(beerBricks.length > 1)} onClick={onCompare}>Compare!</Button>
+            <div className={'button-container'}>
+                <Button className={'add-button'} color={'primary'} onClick={() => setShowAddModal(true)}><MdAdd size={25}/></Button>
             </div>
             <div className={'list-holder'}>
+                {
+                    beerBricks.length === 0 && <p>List is empty. Add beer to compare.</p>
+                }
                 {
                     beerBricks.map(beerBrick =>
                         <BeerItemBrick

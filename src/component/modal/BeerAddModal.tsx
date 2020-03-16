@@ -164,7 +164,7 @@ export default function BeerAddModal(props: BeerAddModalProps) {
                         props.showScore && score && score > -1 &&
                             <p>{"Ottaway Score: " + score.toFixed(2)}</p>
                     }
-                    <Button onClick={onAdd}>Add</Button>
+                    <Button onClick={onAdd} color={'primary'}>Add</Button>
                 </Form>
             </ModalBody>
         </Modal>
