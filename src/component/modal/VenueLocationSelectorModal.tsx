@@ -24,7 +24,7 @@ interface Props {
 export function VenueLocationSelectorModal(props: Props) {
     const [venueLocations, setVenueLocations] = useState<VenueLocationInfo<BeerVenue>[] | null>(null);
     const [selectedVenue, setSelectedVenue] = useState<VenueLocationInfo<BeerVenue> | null>(null);
-    const {venue ,setVenue} = useContext(BeerVenueContext);
+    const {venue, setVenue} = useContext(BeerVenueContext);
 
 
     const onSelected = (location: VenueLocationInfo<BeerVenue>) => {
