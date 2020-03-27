@@ -24,6 +24,7 @@ interface Props {
 export function VenueLocationSelectorModal(props: Props) {
     const [venueLocations, setVenueLocations] = useState<VenueLocationInfo<BeerVenue>[] | null>(null);
     const [selectedVenue, setSelectedVenue] = useState<VenueLocationInfo<BeerVenue> | null>(null);
+    const [appearAutomatically, setAppearAutomatically] = useState<boolean>(true);
     const {venue, setVenue} = useContext(BeerVenueContext);
 
 
@@ -41,10 +42,11 @@ export function VenueLocationSelectorModal(props: Props) {
     const close = () => {
         setSelectedVenue(null);
         setVenueLocations(null);
+        setAppearAutomatically(false);
     };
 
     useEffect(() => {
-        if (!venue) {
+        if (appearAutomatically && !venue) {
             getLocation((position => {
                 breweryApi.searchBreweryByLocation(position.coords.latitude, position.coords.longitude)
                     .then(response => {
@@ -55,7 +57,7 @@ export function VenueLocationSelectorModal(props: Props) {
                     })
             }))
         }
-    }, [props, venue]);
+    }, [props, appearAutomatically, venue]);
 
     if (venueLocations && venueLocations.length > 0) {
         return (

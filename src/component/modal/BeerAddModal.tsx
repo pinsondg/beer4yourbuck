@@ -114,16 +114,14 @@ export default function BeerAddModal(props: BeerAddModalProps) {
             if (selectedBeer) {
                 selectedBeer.price = cost;
                 selectedBeer.volume = volume;
-                selectedBeer.ottawayScore = score;
                 props.onAdd(selectedBeer);
             } else {
-                const beer: Beer = {
-                    ottawayScore: score,
-                    volume: volume,
-                    price: cost,
-                    name: beerName,
-                    nameDisplay: beerName
-                };
+                const beer: Beer = new Beer.Builder()
+                    .withName(beerName)
+                    .withAbv(apvInput.toString())
+                    .withPrice(cost)
+                    .withNameDisplay(beerName)
+                    .build();
                 props.onAdd(beer);
             }
         } else {

@@ -29,6 +29,9 @@ export function TopNavBar(props: Props) {
                         <NavItem>
                             <NavLink className={'clickable'} onClick={() => history.push('/compare')}>Compare</NavLink>
                         </NavItem>
+                        <NavItem>
+                            <NavLink className={'clickable'} onClick={() => history.push('/upload')}>Menu Upload</NavLink>
+                        </NavItem>
                     </Nav>
                     <NavbarText>Current Venue: {venue && venue.name && venue.name !== '' ? venue.name : 'None'}</NavbarText>
                 </Collapse>

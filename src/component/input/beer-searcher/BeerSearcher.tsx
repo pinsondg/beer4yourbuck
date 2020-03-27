@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import BreweryDBAPI from "../../../controller/api/BreweryDBAPI";
-import {Beer} from "../../../model/Beer";
+import {Beer, BeerInterface} from "../../../model/Beer";
 import SelectableList from "../../list/selectable-list/SelectableList";
 import {Col, FormGroup, Input, Label, Row} from "reactstrap";
 import './beer-searcher.css'
@@ -62,8 +62,8 @@ export default function BeerSearcher(prop: BeerSearcherProp) {
         if (val && val !== '') {
             const promise = beerApi.searchBeer(val);
             promise.then((data) => {
-                let beer: Array<Beer> = data.data;
-                setFoundBeers(beer.filter(x => x.abv))
+                let beer: Array<Beer> = data.data.map((x: BeerInterface) => new Beer.Builder().withBeer(x).build());
+                setFoundBeers(beer.filter(x => x.abv));
             });
         } else {
             setFoundBeers([]);
