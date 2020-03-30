@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from "react";
 import BeerItem, {BeerItemBrick, Place} from "../../component/brick/BeerItemBrick";
 import {Button} from "reactstrap";
-import BeerAddModal from "../../component/modal/BeerAddModal";
+import BeerAddModal, {ModalType} from "../../component/modal/BeerAddModal";
 import {Beer} from "../../model/Beer";
 import './multi-compare-flow.css'
 import {MdAdd} from "react-icons/md";
@@ -41,12 +41,18 @@ function sortList(list: BeerItem[]): BeerItem[] {
 
 let beerId = 0;
 
+interface EditBeer {
+    shouldShow: boolean;
+    brick: BeerItem;
+}
+
 export function MultiCompareFlow(props: Props) {
     const {setCompareBeers, compareBeers} = useContext(CompareBeerContext);
     const [showVolumeModal, setShowVolumeModal] = useState<boolean>(false);
     const [beerBricks, setBeerBricks] = useState<BeerItem[]>([]);
     const [showAddModal, setShowAddModal] = useState<boolean>(false);
     const [showClearConfirm, setShowClearConfirm] = useState<boolean>(false);
+    const [edit, setEdit] = useState<EditBeer | null>(null);
 
     const onBeerAdded = (beer: Beer) => {
         const newList = [...beerBricks, {beer: beer, isEditable: true, onEditSelect: () => {}, id: beerId.toString(), place: Place.NONE, onDeleteSelect: onDeleteSelect}];
@@ -58,7 +64,6 @@ export function MultiCompareFlow(props: Props) {
     };
 
     const onDeleteSelect = (id: string) => {
-        console.log("Delete: " + id);
         const newBeers = sortList(beerBricks.filter(x => x.id !== id));
         setBeerBricks(newBeers);
         setCompareBeers(newBeers.map(x => x.beer))
@@ -104,6 +109,22 @@ export function MultiCompareFlow(props: Props) {
         setShowVolumeModal(false);
     };
 
+    const onEditSelect = (id: string) => {
+        setEdit({shouldShow: true, brick: beerBricks.filter(x => x.id === id)[0]});
+    };
+
+    const onEditConfirm = (beer: Beer) => {
+        if (edit) {
+            const found = beerBricks.filter(x => x.id === edit.brick.id)[0];
+            if (found) {
+                found.beer = beer;
+            }
+            setBeerBricks([...beerBricks]);
+            setCompareBeers(beerBricks.map(beerBrick => beerBrick.beer));
+            setEdit({...edit, shouldShow: false});
+        }
+    };
+
     return (
         <div style={{width: '100%', height: '100%', position: 'relative'}}>
             <Button className={'add-button'} color={'primary'} onClick={() => setShowAddModal(true)}><MdAdd size={25}/></Button>
@@ -120,7 +141,7 @@ export function MultiCompareFlow(props: Props) {
                                         beer={beerBrick.beer}
                                         id={beerBrick.id}
                                         isEditable={beerBrick.isEditable}
-                                        onEditSelect={beerBrick.onEditSelect}
+                                        onEditSelect={onEditSelect}
                                         key={beerBrick.id}
                                         place={beerBrick.place}
                                         onDeleteSelect={onDeleteSelect}
@@ -136,7 +157,7 @@ export function MultiCompareFlow(props: Props) {
                 }
             </div>
             {
-                showAddModal && <BeerAddModal show={showAddModal} onAdd={onBeerAdded} onClose={() => setShowAddModal(false)}/>
+                showAddModal && <BeerAddModal modalType={ModalType.ADD} show={showAddModal} onConfirm={onBeerAdded} onClose={() => setShowAddModal(false)}/>
             }
             {
                 showClearConfirm && <ConformationModal show={showClearConfirm} onYes={clear} onNo={() => setShowClearConfirm(false)} onClose={() => setShowClearConfirm(false)} text={"Are you sure you want to clear all beers?"}/>
@@ -146,6 +167,9 @@ export function MultiCompareFlow(props: Props) {
                                                       text={"We could not find any volumes for this comparison. Would you like to set the volume for every beer to the same baseline of 12 fl oz?"}
                                                       header={"No volume found!"}
                 />
+            }
+            {
+                edit && edit.shouldShow && <BeerAddModal initialBeer={edit.brick.beer} show={edit.shouldShow} modalType={ModalType.EDIT} onConfirm={onEditConfirm} onClose={() => {setEdit({...edit, shouldShow: false})}}/>
             }
         </div>
     )

@@ -15,6 +15,7 @@ export interface BeerSearcherProp extends CustomInput{
     getName: (name: string) => void;
     error?: boolean
     text?: string
+    selectedBeer?: Beer;
 }
 
 export default function BeerSearcher(prop: BeerSearcherProp) {
@@ -49,6 +50,12 @@ export default function BeerSearcher(prop: BeerSearcherProp) {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     });
+
+    useEffect(() => {
+        if (prop.selectedBeer) {
+            setSelectedBeer(prop.selectedBeer);
+        }
+    }, [prop]);
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const val = e.target.value;

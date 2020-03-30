@@ -8,14 +8,19 @@ import VolumeInput from "../input/volume-input/VolumeInput";
 import {OttawayCalculator} from "../../controller/OttawayCalculator";
 
 interface BeerAddModalProps {
+    initialBeer?: Beer
     errors?: InputErrors
     onScoreCalculated?: (score: number) => void;
     showScore?: boolean
-    onAdd: (beer: Beer) => void;
+    modalType: ModalType;
+    onConfirm: (beer: Beer) => void;
     show?: boolean;
     onClose?: () => void;
 }
 
+export enum ModalType {
+    ADD, EDIT
+}
 
 export enum CalculationItemInput {
     BEER_NAME, APV, COST, VOLUME
@@ -58,25 +63,21 @@ export default function BeerAddModal(props: BeerAddModalProps) {
     }, [onScoreCalculated, score, cost, volume, apvInput]);
 
     useEffect(() => {
-        setIsOpen(props.show ? props.show : false)
+        const beer = props.initialBeer;
+        if (beer) {
+            if (beer.labels) {
+                setSelectedBeer(beer);
+            }
+            setBeerName(beer.name ? beer.name : '');
+            setApvInput(beer.abv ? +beer.abv : null);
+            setVolume(beer.volume ? beer.volume : null);
+            setCost(beer.price ? beer.price : null);
+        }
     }, [props]);
 
-
-    // const handleEnterPressed = (e: KeyboardEvent) => {
-    //     if (e.key === 'Enter' && focusedInput !== CalculationItemInput.VOLUME) {
-    //         e.preventDefault();
-    //         setFocusedInput(focusedInput + 1);
-    //     }
-    // };
-    //
-    // useEffect(() => {
-    //     // Bind the event listener
-    //     document.addEventListener("keydown", handleEnterPressed);
-    //     return () => {
-    //         // Unbind the event listener on clean up
-    //         document.removeEventListener("keydown", handleEnterPressed);
-    //     };
-    // });
+    useEffect(() => {
+        setIsOpen(props.show ? props.show : false)
+    }, [props]);
 
     const onBeerSelected = (selectedBeer: Beer) => {
         setSelectedBeer(selectedBeer);
@@ -98,8 +99,10 @@ export default function BeerAddModal(props: BeerAddModalProps) {
     const onBeerSwitch = () => {
         setApvInput(null);
         setSelectedBeer(null);
-        setCost(null);
-        setVolume(null);
+        if (props.modalType === ModalType.ADD) {
+            setCost(null);
+            setVolume(null);
+        }
     };
 
     const toggle = () => {
@@ -114,15 +117,16 @@ export default function BeerAddModal(props: BeerAddModalProps) {
             if (selectedBeer) {
                 selectedBeer.price = cost;
                 selectedBeer.volume = volume;
-                props.onAdd(selectedBeer);
+                props.onConfirm(selectedBeer);
             } else {
                 const beer: Beer = new Beer.Builder()
                     .withName(beerName)
                     .withAbv(apvInput.toString())
                     .withPrice(cost)
+                    .withVolume(volume)
                     .withNameDisplay(beerName)
                     .build();
-                props.onAdd(beer);
+                props.onConfirm(beer);
             }
         } else {
             console.log('ERROR not all fields filled out.')
@@ -132,7 +136,7 @@ export default function BeerAddModal(props: BeerAddModalProps) {
 
     return (
         <Modal isOpen={isOpen} toggle={toggle}>
-            <ModalHeader toggle={toggle}>Add Beer</ModalHeader>
+            <ModalHeader toggle={toggle}>{props.modalType === ModalType.ADD ? 'Add' : 'Edit'} Beer</ModalHeader>
             <ModalBody>
                 <Form autoComplete={'off'}>
                     <BeerSearcher
@@ -142,6 +146,7 @@ export default function BeerAddModal(props: BeerAddModalProps) {
                         onFocus={() => setFocusedInput(CalculationItemInput.BEER_NAME)}
                         getName={name => setBeerName(name)}
                         text={beerName}
+                        selectedBeer={selectedBeer ? selectedBeer : undefined}
                     />
                     <ABVInput
                         text={apvInput ? apvInput.toString() : ''}
@@ -162,7 +167,7 @@ export default function BeerAddModal(props: BeerAddModalProps) {
                         props.showScore && score && score > -1 &&
                             <p>{"Ottaway Score: " + score.toFixed(2)}</p>
                     }
-                    <Button onClick={onAdd} color={'primary'}>Add</Button>
+                    <Button onClick={onAdd} color={'primary'} disabled={score === -1}>{props.modalType === ModalType.ADD ? 'Add' : 'Update'}</Button>
                 </Form>
             </ModalBody>
         </Modal>

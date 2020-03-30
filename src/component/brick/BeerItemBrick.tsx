@@ -41,6 +41,13 @@ export function BeerItemBrick(props: Props) {
 
     return (
         <Jumbotron className={classes} onMouseEnter={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)}>
+            <div className={'edit-button-div'}>
+                {(props.isEditable && (isHovering || isMobile()))
+                && <button className={'edit-button'} onClick={handleEditClick}>Edit</button>}
+                {(props.isEditable && props.isDeletable) && (isHovering || isMobile()) && <span>|</span>}
+                {(props.isDeletable && (isHovering || isMobile()))
+                && <button className={'edit-button'} onClick={handleDeleteClick}>Delete</button>}
+            </div>
             {
                 props.place === Place.INVALID && <Row>
                     <Col xs={'auto'} className={'section'}>
@@ -66,13 +73,6 @@ export function BeerItemBrick(props: Props) {
                 <Col xs={'auto'} className={'section'}>
                     <h1>${props.beer.price ? props.beer.price.toPrecision(3) : 'N/A'}</h1>
                 </Col>
-                <div className={'edit-button-div'}>
-                    {(props.isEditable && (isHovering || isMobile()))
-                    && <button className={'edit-button'} onClick={handleEditClick}>Edit</button>}
-                    {(props.isEditable && props.isDeletable) && (isHovering || isMobile()) && <span>|</span>}
-                    {(props.isDeletable && (isHovering || isMobile()))
-                    && <button className={'edit-button'} onClick={handleDeleteClick}>Delete</button>}
-                </div>
             </Row>
         </Jumbotron>
     )

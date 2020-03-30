@@ -91,7 +91,7 @@ export function MenuUpload(props: Props) {
                     !isMobile() ?
                         isDragActive ?
                             <p>Drop the files here ...</p> :
-                            <p>Drag image files here or click to upload/capture</p>
+                            <p>Drag image files here or click to upload</p>
                         : <p>Tap to take picture<br/><FaCamera/></p>
                 }
             </div>
