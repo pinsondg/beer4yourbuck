@@ -5,7 +5,8 @@ import {Button} from "reactstrap";
 import BreweryDBAPI from "../../controller/api/BreweryDBAPI";
 import classNames from "classnames";
 import {isMobile} from "../../controller/Utils";
-import {AiOutlineLoading3Quarters, FaCamera} from "react-icons/all";
+import {AiOutlineLoading3Quarters} from "react-icons/ai";
+import {FaCamera} from "react-icons/fa"
 import {Beer, BeerInterface} from "../../model/Beer";
 import {CompareBeerContext} from "../../context/CompareBeerContext";
 import {useHistory} from "react-router-dom";
