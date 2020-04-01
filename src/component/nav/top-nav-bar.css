@@ -5,3 +5,7 @@
 .clickable {
 
 }
+
+.selected-nav {
+    border-bottom: solid 3px lightgrey;
+}

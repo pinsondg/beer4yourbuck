@@ -8,14 +8,19 @@ import {TopNavBar} from "./component/nav/TopNavBar";
 import {HomePage} from "./flows/home/HomePage";
 import {NearYouPage} from "./flows/near-you/NearYouPage";
 import {VenueLocationSelectorModal} from "./component/modal/VenueLocationSelectorModal";
+import {MenuUpload} from "./flows/upload/MenuUpload";
+import {Beer} from "./model/Beer";
+import {CompareBeerContext, CompareBeerContextData} from "./context/CompareBeerContext";
 
 function App() {
     console.log("Running app in " + process.env.NODE_ENV + " environment.");
     const [venue, setVenue] = useState<BeerVenue>();
-    const context: BeerVenueContextData = {venue, setVenue};
+    const [compareBeers, setCompareBeers] = useState<Beer[]>([]);
+    const venueContext: BeerVenueContextData = {venue, setVenue};
+    const compareBeerContext: CompareBeerContextData = {compareBeers, setCompareBeers};
 
   return (
-      <BeerVenueContext.Provider value={context}>
+      <BeerVenueContext.Provider value={venueContext}>
           <Router>
               <div className="App">
                       <VenueLocationSelectorModal/>
@@ -27,12 +32,17 @@ function App() {
                               <Route exact path={'/'}>
                                 <HomePage/>
                               </Route>
-                              <Route path={'/compare'}>
-                                  <MultiCompareFlow/>
-                              </Route>
-                              <Route path={'/near'}>
-                                <NearYouPage/>
-                              </Route>
+                              <CompareBeerContext.Provider value={compareBeerContext}>
+                                  <Route path={'/upload'}>
+                                      <MenuUpload/>
+                                  </Route>
+                                  <Route path={'/compare'}>
+                                      <MultiCompareFlow/>
+                                  </Route>
+                                  <Route path={'/near'}>
+                                      <NearYouPage/>
+                                  </Route>
+                              </CompareBeerContext.Provider>
                           </Switch>
                       </div>
                       <footer>

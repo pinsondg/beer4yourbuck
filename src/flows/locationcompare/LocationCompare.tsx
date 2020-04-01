@@ -35,6 +35,7 @@ export function LocationCompare(props: Props) {
                     venue={venue}
                     isEditable={true}
                     place={Place.NONE}
+                    onDeleteSelect={() => {}}
                 />
             }
         </div>

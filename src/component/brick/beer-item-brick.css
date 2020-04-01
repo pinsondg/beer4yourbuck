@@ -8,6 +8,8 @@
     border-color: black;
     transition: color .15s
         ease-in-out,background-color .15s;
+    overflow: hidden;
+    margin: 0 auto;
 }
 
 .section {
@@ -15,10 +17,7 @@
 }
 
 .edit-button {
-    position: absolute;
-    top: 0;
-    right: 0;
-    margin: 5px;
+    /*margin: 5px;*/
     background-color: transparent;
     border: none;
     width: auto;
@@ -58,6 +57,11 @@
     border-width: 2px;
 }
 
+.beer-item-brick.invalid {
+    border-color: darkred;
+    background-color: lightcoral;
+}
+
 .beer-item-brick.third:hover {
     background-color: #cd7f32;
 }
@@ -72,4 +76,10 @@
 .edit-button:focus,.edit-button:active {
     outline: transparent none 0 !important;
     box-shadow: none;
+}
+
+.edit-button-div {
+    position: absolute;
+    top: 0;
+    right: 0;
 }

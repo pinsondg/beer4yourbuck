@@ -3,7 +3,7 @@ import BeerAddModal from "./BeerAddModal";
 import React from "react";
 
 it('calculation item should calculate score on input change', () => {
-    const {getByText, getByLabelText } = render(<BeerAddModal showScore={true} onAdd={() => {}}/>);
+    const {getByText, getByLabelText } = render(<BeerAddModal showScore={true} onConfirm={() => {}}/>);
     const volumeInput = getByLabelText('Volume (fl oz)');
     const abvInput = getByLabelText('ABV (%)');
     const beerInput = getByLabelText('Beer Name');

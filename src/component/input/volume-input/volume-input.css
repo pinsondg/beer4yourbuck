@@ -1,0 +1,17 @@
+.input-holder {
+    display: flex;
+}
+
+.volume-input {
+    flex: 1 1 auto;
+    border-right-width: 0;
+}
+
+.volume-dropdown {
+    flex: 0 0 auto;
+    border-left-width: 0;
+}
+
+.volume-dropdown>button {
+    border: lightgrey solid 1px;
+}
