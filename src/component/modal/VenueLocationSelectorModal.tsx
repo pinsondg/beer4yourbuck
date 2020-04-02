@@ -52,7 +52,9 @@ export function VenueLocationSelectorModal(props: Props) {
                     .then(response => {
                         const rawResponse = response.data;
                         const locations: VenueLocationInfo<BeerVenue>[] = response.data;
-                        locations.forEach((location, i) => location.venue = rawResponse[i].brewery);
+                        if (locations) {
+                            locations.forEach((location, i) => location.venue = rawResponse[i].brewery);
+                        }
                         setVenueLocations(locations)
                     })
             }))

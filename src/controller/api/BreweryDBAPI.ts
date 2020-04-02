@@ -29,4 +29,8 @@ export default class BreweryDBAPI {
             }
         });
     }
+    
+    async checkJobStatus(jobId: number) {
+        return axios.get(this.url + 'menu/process/' + jobId)
+    }
 }

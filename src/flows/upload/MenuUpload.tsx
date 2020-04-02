@@ -1,4 +1,4 @@
-import React, {useCallback, useContext, useState} from "react";
+import React, {useCallback, useContext, useEffect, useState} from "react";
 import {useDropzone} from "react-dropzone";
 import './menu-upload.css'
 import {Button} from "reactstrap";
@@ -22,12 +22,15 @@ interface UploadError {
 
 const api = new BreweryDBAPI();
 
+let uploadChecker: NodeJS.Timeout | undefined;
+
 export function MenuUpload(props: Props) {
     const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
     const [imageData, setImageData] = useState<string | null>(null);
     const [isUploading, setIsUploading] = useState<boolean>(false);
     const [uploadError, setUploadError] = useState<UploadError | null>(null);
     const {setCompareBeers} = useContext(CompareBeerContext);
+    const [jobId, setJobId] = useState<number | null>(null);
     const history = useHistory();
 
     const onDrop = useCallback((acceptedFiles: File[]) => {
@@ -50,19 +53,48 @@ export function MenuUpload(props: Props) {
         setIsUploading(false);
     };
 
+    useEffect(() => {
+        const checkJob = () => {
+            if (jobId) {
+                api.checkJobStatus(jobId)
+                    .then(data => {
+                        const status: string = data.data.status;
+                        console.log(data);
+                        if (status === 'COMPLETE') {
+                            const beers: Beer[] = data.data.beers.map((x: BeerInterface) => new Beer.Builder().withBeer(x).build());
+                            setCompareBeers(beers);
+                            setIsUploading(false);
+                            setUploadError(null);
+                            setJobId(null);
+                            history.push('/compare');
+                        } else if (status === 'FAILED') {
+                            setUploadError({message: data.data.message, status: data.status});
+                            setIsUploading(false);
+                        }
+                    }).catch(error => {
+                    const response = error.response;
+                    setUploadError({message: response.data.message, status: response.status});
+                    setIsUploading(false);
+                    clearImage();
+                });
+            }
+        };
+        if (isUploading) {
+            uploadChecker = setInterval(checkJob, 2000);
+        } else if (uploadChecker && !isUploading) {
+            clearInterval(uploadChecker);
+        }
+    }, [isUploading, history, jobId, setCompareBeers]);
+
     const upload = () => {
         if (selectedImageFile) {
             setIsUploading(true);
             api.uploadImage(selectedImageFile).then(data => {
-                const beers: Beer[] = data.data.map((x: BeerInterface) => new Beer.Builder().withBeer(x).build());
-                setCompareBeers(beers);
-                setIsUploading(false);
-                setUploadError(null);
-                history.push('/compare');
+                setJobId(data.data.jobId);
             }).catch(error => {
                 const response = error.response;
                 setUploadError({message: response.data.message, status: response.status});
-                clearImage()
+                clearImage();
             });
         }
     };
