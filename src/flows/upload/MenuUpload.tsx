@@ -17,7 +17,7 @@ interface Props {
 
 interface UploadError {
     message: string;
-    status: number;
+    status?: number;
 }
 
 const api = new BreweryDBAPI();
@@ -72,10 +72,14 @@ export function MenuUpload(props: Props) {
                             setIsUploading(false);
                         }
                     }).catch(error => {
-                    const response = error.response;
-                    setUploadError({message: response.data.message, status: response.status});
-                    setIsUploading(false);
-                    clearImage();
+                    try {
+                        const response = error.response;
+                        setUploadError({message: response.data.message, status: response.status});
+                    } catch (e) {
+                        setUploadError({message: 'We encountered an unknown error! Please try again later.'});
+                    } finally {
+                        clearImage();
+                    }
                 });
             }
         };
@@ -92,9 +96,14 @@ export function MenuUpload(props: Props) {
             api.uploadImage(selectedImageFile).then(data => {
                 setJobId(data.data.jobId);
             }).catch(error => {
-                const response = error.response;
-                setUploadError({message: response.data.message, status: response.status});
-                clearImage();
+                try {
+                    const response = error.response;
+                    setUploadError({message: response.data.message, status: response.status});
+                } catch (e) {
+                    setUploadError({message: 'We encountered an unknown error! Please try again later.'})
+                } finally {
+                    clearImage();
+                }
             });
         }
     };
