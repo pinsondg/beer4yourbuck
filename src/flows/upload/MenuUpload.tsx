@@ -11,6 +11,8 @@ import {Beer, BeerInterface} from "../../model/Beer";
 import {CompareBeerContext} from "../../context/CompareBeerContext";
 import {useHistory} from "react-router-dom";
 
+let fixRotation = require('fix-image-rotation');
+
 interface Props {
 
 }
@@ -19,6 +21,11 @@ interface UploadError {
     message: string;
     status?: number;
 }
+
+let myRotationFunction = async (file: File) => {
+    let blobOfArray: File = await fixRotation.fixRotation(file);
+    return blobOfArray;
+};
 
 const api = new BreweryDBAPI();
 
@@ -36,12 +43,12 @@ export function MenuUpload(props: Props) {
     const onDrop = useCallback((acceptedFiles: File[]) => {
         const file = acceptedFiles[0];
         const reader = new FileReader();
-        setSelectedImageFile(file);
         reader.onload = (e) => {
             if (e && e.target && !(e.target.result instanceof ArrayBuffer)) {
                 setImageData(e.target.result);
             }
         };
+        myRotationFunction(file).then((data) => setSelectedImageFile(data)).catch(err => console.log(err));
         reader.readAsDataURL(file);
         setUploadError(null);
     }, []);
