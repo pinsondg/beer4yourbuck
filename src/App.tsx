@@ -7,7 +7,6 @@ import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import {TopNavBar} from "./component/nav/TopNavBar";
 import {HomePage} from "./flows/home/HomePage";
 import {NearYouPage} from "./flows/near-you/NearYouPage";
-import {VenueLocationSelectorModal} from "./component/modal/VenueLocationSelectorModal";
 import {MenuUpload} from "./flows/upload/MenuUpload";
 import {Beer} from "./model/Beer";
 import {CompareBeerContext, CompareBeerContextData} from "./context/CompareBeerContext";
@@ -23,7 +22,7 @@ function App() {
       <BeerVenueContext.Provider value={venueContext}>
           <Router>
               <div className="App">
-                      <VenueLocationSelectorModal/>
+                      {/*<VenueLocationSelectorModal/>*/}
                       <header>
                           <TopNavBar/>
                       </header>

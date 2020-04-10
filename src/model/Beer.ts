@@ -13,6 +13,7 @@ export interface BeerInterface {
     labels?: BeerIconLabels;
     price?: number
     volume?: number
+    verified?: boolean
 }
 
 export class Beer implements BeerInterface {
@@ -26,6 +27,7 @@ export class Beer implements BeerInterface {
     labels?: BeerIconLabels;
     price?: number;
     volume?: number;
+    verified?: boolean;
 
     getOttawayScore(): number {
         if (this.volume && this.abv && this.price) {
@@ -44,6 +46,7 @@ export class Beer implements BeerInterface {
         private labels?: BeerIconLabels;
         private price?: number;
         private volume?: number;
+        private verified?: boolean;
 
         withName(name: string): Builder {
             this.name = name;
@@ -90,6 +93,11 @@ export class Beer implements BeerInterface {
             return this;
         }
 
+        withVerified(verified: boolean): Builder {
+            this.verified = verified;
+            return this;
+        }
+
         withBeer(beer: BeerInterface): Builder {
             this.volume = beer.volume;
             this.nameDisplay = beer.nameDisplay;
@@ -100,6 +108,7 @@ export class Beer implements BeerInterface {
             this.isRetired = beer.isRetired;
             this.id = beer.id;
             this.description = beer.description;
+            this.verified = beer.verified;
             return this;
         }
 
@@ -115,6 +124,7 @@ export class Beer implements BeerInterface {
             beer.volume = this.volume;
             beer.isRetired = this.isRetired;
             beer.labels = this.labels;
+            beer.verified = this.verified;
             return beer;
         }
     }

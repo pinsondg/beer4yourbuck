@@ -5,6 +5,8 @@ import classNames from "classnames";
 import './beer-item-brick.css'
 import {BeerVenue} from "../../model/BeerVenue";
 import {isMobile} from "../../controller/Utils";
+import './brick.css'
+import CircularBeerLogo from "../image/CircularBeerLogo";
 
 export default interface Props {
     beer: Beer;
@@ -24,11 +26,15 @@ export enum Place {
 export function BeerItemBrick(props: Props) {
     const [isHovering, setIsHovering] = useState<boolean>(false);
 
-    const classes = classNames('beer-item-brick', {
+    const classes = classNames('brick', {
         'first': props.place === Place.FIRST,
         'second' : props.place === Place.SECOND,
         'third' : props.place === Place.THIRD,
         'invalid' : props.place === Place.INVALID
+    });
+
+    const placeClasses = classNames('place-div', {
+        'show': props.place !== Place.INVALID && props.place !== Place.NONE
     });
 
     const handleEditClick = () => {
@@ -37,6 +43,22 @@ export function BeerItemBrick(props: Props) {
 
     const handleDeleteClick = () => {
         props.onDeleteSelect(props.id)
+    };
+
+    const determinePlace = () => {
+        let retString = '';
+        switch (props.place) {
+            case Place.FIRST:
+                retString = '1st';
+                break;
+            case Place.SECOND:
+                retString = '2nd';
+                break;
+            case Place.THIRD:
+                retString = '3rd';
+                break;
+        }
+        return retString;
     };
 
     return (
@@ -48,6 +70,11 @@ export function BeerItemBrick(props: Props) {
                 {(props.isDeletable && (isHovering || isMobile()))
                 && <button className={'edit-button'} onClick={handleDeleteClick}>Delete</button>}
             </div>
+            <div className={placeClasses}>
+                <h3>
+                    {determinePlace()}
+                </h3>
+            </div>
             {
                 props.place === Place.INVALID && <Row>
                     <Col xs={'auto'} className={'section'}>
@@ -57,12 +84,11 @@ export function BeerItemBrick(props: Props) {
             }
             <Row>
                 <Col xs={'auto'} className={'section'}>
-                    <img
-                        className={'beer-logo'}
-                        src={props.beer.labels ? props.beer.labels.contentAwareMedium : ''}
-                        alt={'Beer Logo'}
+                    <CircularBeerLogo
                         height={100}
                         width={100}
+                        src={props.beer.labels ? props.beer.labels.contentAwareMedium : ''}
+                        alt={'Beer Logo'}
                     />
                 </Col>
                 <Col xs={'auto'} className={'section'}>

@@ -1,0 +1,78 @@
+.venue-info-holder {
+    margin: auto;
+    border-right: darkgray 1px solid;
+}
+
+.beer-info-heading {
+    justify-content: center;
+    height: 15%;
+    width: 100%;
+    margin: auto;
+}
+
+.beer-list-holder {
+    justify-content: center;
+    height: 85%;
+    width: 100%;
+    margin: auto;
+}
+
+.beer-info-holder {
+    margin: 0 auto;
+    height: 100%;
+    overflow: hidden;
+}
+
+.beer-holder {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: row;
+    padding: 5px;
+    margin: auto;
+    max-height: 100%;
+    min-height: 0;
+    width: 100%;
+    align-content: stretch;
+    align-items: center;
+}
+
+.beer-text {
+    flex: 1 1 auto;
+    width: 100%;
+    margin: auto;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    padding: 5px;
+    align-items: center;
+}
+
+.beer-text h3 {
+    margin-bottom: 0;
+}
+
+.beer-text h4 {
+    margin-bottom: 0;
+}
+
+.logo-holder {
+    overflow-x: hidden;
+    overflow-y: hidden;
+    flex: 1 0 20%;
+    justify-content: center;
+}
+
+.logo-holder img {
+    max-height: 100%;
+    margin: auto;
+    max-width: 100%;
+}
+
+.badge-holder {
+    flex: 0 1 25%;
+    align-self: flex-end;
+    margin: auto;
+    justify-content: center;
+    display: inherit;
+}

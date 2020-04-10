@@ -29,6 +29,7 @@
     "reactstrap": "^8.4.1",
     "request": "^2.88.2",
     "request-promise-native": "^1.0.8",
+    "styled-components": "^5.1.0",
     "typescript": "^3.7.5"
   },
   "scripts": {
@@ -55,5 +56,8 @@
   },
   "transformIgnorePatterns": [
     "node_modules/?!(react-icons)"
-  ]
+  ],
+  "devDependencies": {
+    "@types/styled-components": "^5.0.1"
+  }
 }

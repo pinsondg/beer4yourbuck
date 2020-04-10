@@ -66,29 +66,6 @@
     flex: 1 1 auto;
 }
 
-p.processing-holder {
-    margin: 0 auto;
-    padding: 0;
-}
-
-
-
-@keyframes spin {
-    from {
-        transform:rotate(0deg);
-    }
-    to {
-        transform:rotate(360deg);
-    }
-}
-
-.loading-icon {
-    animation-name: spin;
-    animation-duration: 1000ms;
-    animation-iteration-count: infinite;
-    animation-timing-function: linear;
-}
-
 .control-btn {
     margin: 10px;
 }

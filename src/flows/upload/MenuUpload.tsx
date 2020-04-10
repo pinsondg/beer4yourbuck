@@ -5,11 +5,11 @@ import {Button} from "reactstrap";
 import BreweryDBAPI from "../../controller/api/BreweryDBAPI";
 import classNames from "classnames";
 import {isMobile} from "../../controller/Utils";
-import {AiOutlineLoading3Quarters} from "react-icons/ai";
 import {FaCamera} from "react-icons/fa"
 import {Beer, BeerInterface} from "../../model/Beer";
 import {CompareBeerContext} from "../../context/CompareBeerContext";
 import {useHistory} from "react-router-dom";
+import {LoadingSpinner} from "../../component/load/LoadSpinner";
 
 let fixRotation = require('fix-image-rotation');
 
@@ -29,7 +29,7 @@ let myRotationFunction = async (file: File) => {
 
 const api = new BreweryDBAPI();
 
-let uploadChecker: NodeJS.Timeout | undefined;
+let uploadChecker: number;
 
 export function MenuUpload(props: Props) {
     const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
@@ -165,10 +165,7 @@ export function MenuUpload(props: Props) {
                 }
                 {
                     isUploading ? (
-                        <div className={'processing-holder'}>
-                            <p>Processing upload...</p>
-                            <AiOutlineLoading3Quarters size={42} className={'loading-icon'}/>
-                        </div>
+                        <LoadingSpinner message={"Processing upload..."}/>
                     ) : (
                         <div className={'button-holder'}>
                             <Button className={'control-btn'} disabled={imageData === null || isUploading} onClick={upload}>Upload</Button>

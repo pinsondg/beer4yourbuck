@@ -33,4 +33,8 @@ export default class BreweryDBAPI {
     async checkJobStatus(jobId: number) {
         return axios.get(this.url + 'menu/process/' + jobId)
     }
+
+    async getVenuesNearYou(lat: number, lon: number, radius: number) {
+        return axios.get(this.url + 'venue/search?latlon=' + lat.toFixed(5) + ',' + lon.toFixed(5) + '&radius=' + radius);
+    }
 }

@@ -1,17 +1,3 @@
-.beer-item-brick {
-    display: inline-block;
-    padding: 10px;
-    position: relative;
-    width: 75%;
-    border-style: solid;
-    border-width: 1px;
-    border-color: black;
-    transition: color .15s
-        ease-in-out,background-color .15s;
-    overflow: hidden;
-    margin: 0 auto;
-}
-
 .section {
     margin: auto;
 }
@@ -24,45 +10,41 @@
     height: auto;
 }
 
-.beer-item-brick:hover {
-    background-color: lightblue;
-}
-
-.beer-item-brick.first {
+.brick.first {
     border-color: gold;
     background-color: palegoldenrod;
     border-style: solid;
     border-width: 2px;
 }
 
-.beer-item-brick.first:hover {
+.brick.first:hover {
     background-color: #e8dc6b;
 }
 
-.beer-item-brick.second {
+.brick.second {
     border-color: silver;
     background-color: #E2E2E2;
     border-style: solid;
     border-width: 2px;
 }
 
-.beer-item-brick.second:hover {
+.brick.second:hover {
     background-color: #cfcfcf;
 }
 
-.beer-item-brick.third {
+.brick.third {
     border-color: #cc6633;
     background-color: #cf8b48;
     border-style: solid;
     border-width: 2px;
 }
 
-.beer-item-brick.invalid {
+.brick.invalid {
     border-color: darkred;
     background-color: lightcoral;
 }
 
-.beer-item-brick.third:hover {
+.brick.third:hover {
     background-color: #cd7f32;
 }
 
@@ -76,6 +58,12 @@
 .edit-button:focus,.edit-button:active {
     outline: transparent none 0 !important;
     box-shadow: none;
+}
+
+.place-div {
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 .edit-button-div {
