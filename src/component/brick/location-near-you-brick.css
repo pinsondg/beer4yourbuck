@@ -1,6 +1,8 @@
 .venue-info-holder {
     margin: auto;
     border-right: darkgray 1px solid;
+    padding: 10px;
+    /*font-size: 2.5vw;*/
 }
 
 .beer-info-heading {
@@ -8,6 +10,10 @@
     height: 15%;
     width: 100%;
     margin: auto;
+}
+
+.maps-button {
+    font-size: 14px;
 }
 
 .beer-list-holder {
@@ -34,18 +40,19 @@
     width: 100%;
     align-content: stretch;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .beer-text {
     flex: 1 1 auto;
-    width: 100%;
-    margin: auto;
+    margin: 0 auto;
     overflow: hidden;
     display: flex;
+    padding: 2px;
     flex-direction: row;
     justify-content: space-evenly;
-    padding: 5px;
     align-items: center;
+    font-size: 16px;
 }
 
 .beer-text h3 {
@@ -56,23 +63,37 @@
     margin-bottom: 0;
 }
 
-.logo-holder {
-    overflow-x: hidden;
-    overflow-y: hidden;
-    flex: 1 0 20%;
-    justify-content: center;
+.beer-text h5 {
+    margin-bottom: 0;
 }
 
-.logo-holder img {
-    max-height: 100%;
-    margin: auto;
-    max-width: 100%;
+.beer-text h6 {
+    margin-bottom: 0;
 }
+
+.beer-text p {
+    margin-bottom: 0;
+}
+
+
 
 .badge-holder {
-    flex: 0 1 25%;
+    flex: 0 1 15%;
     align-self: flex-end;
     margin: auto;
     justify-content: center;
     display: inherit;
+    font-size: 14px;
+}
+
+.venue-info-holder h4 {
+    margin-bottom: 3px;
+}
+
+.venue-info-holder p {
+    margin-bottom: 3px;
+}
+
+.logo-holder.location {
+    flex: 0 0 42px;
 }

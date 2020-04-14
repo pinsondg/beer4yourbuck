@@ -1,12 +1,14 @@
-import React, {ReactNode, useEffect, useState} from "react";
+import React, {ReactNode, useContext, useEffect, useState} from "react";
 import {LocationNearYouBrick} from "../../component/brick/LocationNearYouBrick";
 import {BeerVenue} from "../../model/BeerVenue";
 import {Nav, NavItem, NavLink} from "reactstrap";
 import './near-you-page.css'
 import {Beer} from "../../model/Beer";
-import BreweryDBAPI from "../../controller/api/BreweryDBAPI";
+import Beer4YourBuckAPI from "../../controller/api/Beer4YourBuckAPI";
 import {getDistance, getLocation, metersToMiles} from "../../controller/LocationController";
 import {LoadingSpinner} from "../../component/load/LoadSpinner";
+import {BeerNearYouBrick} from "../../component/brick/BeerNearYouBrick";
+import {NotificationContext, NotificationType} from "../../context/NotificationContext";
 
 enum Mode {
     LOCATION, BEER
@@ -29,6 +31,7 @@ export function NearYouPage() {
     const [mode, setMode] = useState<Mode>(Mode.LOCATION);
     const [currPos, setCurrPos] = useState<Position>();
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const {notifications, setNotifications} = useContext(NotificationContext);
 
     const getNearYouLocationBricks = (): ReactNode => {
         return [...venues].sort((venue1, venue2)=> {
@@ -50,9 +53,20 @@ export function NearYouPage() {
         });
     };
 
+    const getNearYouBeerBricks = (): ReactNode => {
+        let beers: {beer: Beer, venue: BeerVenue}[] = [];
+        venues.forEach(venue => venue.beers.forEach(beer => beers.push({venue: venue, beer: beer})));
+        return (
+            beers.sort((item1 , item2) => {
+                return new Beer.Builder().withBeer(item2.beer).build().getOttawayScore()
+                    - new Beer.Builder().withBeer(item1.beer).build().getOttawayScore()
+            }).map(item => <BeerNearYouBrick beer={new Beer.Builder().withBeer(item.beer).build()} venue={item.venue}/>)
+        );
+    };
+
     useEffect(() => {
         setIsLoading(true);
-        const api = new BreweryDBAPI();
+        const api = new Beer4YourBuckAPI();
         getLocation((position) => {
             console.log("Accuracy: " + position.coords.accuracy.toFixed(2) + " m");
             setCurrPos(position);
@@ -63,14 +77,31 @@ export function NearYouPage() {
                     console.log(JSON.stringify(newVenues));
                     if (newVenues.length > 0 && JSON.stringify(newVenues) !== JSON.stringify(venues)) {
                         setVenues(newVenues);
+                    } else if (newVenues.filter((venue) => venue.beers.length > 0).length === 0) {
+                        setNotifications([...notifications, {
+                            title: "No Venues Near You",
+                            message: "Looks like there's no venues near you that we know about." +
+                                " Try expanding the search range or moving to another location." +
+                                " Also, you can add a venue we don't know about by visiting the location" +
+                                " and telling us what's there!",
+                            timeout: 11000,
+                            type: NotificationType.WARNING,
+                        }])
                     }
+                    setIsLoading(false);
                 }).catch(err => {
                     setIsLoading(false);
+                    setNotifications([...notifications, {
+                        title: "Error Getting Locations Near You",
+                        message: "There was an error getting locations near you. Please try again later.",
+                        timeout: 5000,
+                        type: NotificationType.ERROR
+                    }]);
             });
         }, () => {
             console.log("Error getting position");
         });
-    }, [venues]);
+    }, [setNotifications, venues]);
 
     return (
         <div className={'near-you-page-content'}>
@@ -89,6 +120,9 @@ export function NearYouPage() {
                     <div className={'items-holder'}>
                         {
                             mode === Mode.LOCATION && getNearYouLocationBricks()
+                        }
+                        {
+                            mode === Mode.BEER && getNearYouBeerBricks()
                         }
                     </div>
                 )

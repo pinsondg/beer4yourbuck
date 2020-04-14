@@ -2,7 +2,7 @@ import React, {useCallback, useContext, useEffect, useState} from "react";
 import {useDropzone} from "react-dropzone";
 import './menu-upload.css'
 import {Button} from "reactstrap";
-import BreweryDBAPI from "../../controller/api/BreweryDBAPI";
+import Beer4YourBuckAPI from "../../controller/api/Beer4YourBuckAPI";
 import classNames from "classnames";
 import {isMobile} from "../../controller/Utils";
 import {FaCamera} from "react-icons/fa"
@@ -10,6 +10,7 @@ import {Beer, BeerInterface} from "../../model/Beer";
 import {CompareBeerContext} from "../../context/CompareBeerContext";
 import {useHistory} from "react-router-dom";
 import {LoadingSpinner} from "../../component/load/LoadSpinner";
+import {Notification, NotificationContext, NotificationType} from "../../context/NotificationContext";
 
 let fixRotation = require('fix-image-rotation');
 
@@ -27,7 +28,7 @@ let myRotationFunction = async (file: File) => {
     return blobOfArray;
 };
 
-const api = new BreweryDBAPI();
+const api = new Beer4YourBuckAPI();
 
 let uploadChecker: number;
 
@@ -39,6 +40,7 @@ export function MenuUpload(props: Props) {
     const {setCompareBeers} = useContext(CompareBeerContext);
     const [jobId, setJobId] = useState<number | null>(null);
     const history = useHistory();
+    const {notifications, setNotifications} = useContext(NotificationContext);
 
     const onDrop = useCallback((acceptedFiles: File[]) => {
         const file = acceptedFiles[0];
@@ -73,6 +75,12 @@ export function MenuUpload(props: Props) {
                             setIsUploading(false);
                             setUploadError(null);
                             setJobId(null);
+                            setNotifications([...notifications, {
+                                title: 'Upload Successful',
+                                message: `Your menu upload was successful. We found ${beers.length} beers on the menu.`,
+                                type: NotificationType.INFO,
+                                timeout: 10000
+                            }]);
                             history.push('/compare');
                         } else if (status === 'FAILED') {
                             setUploadError({message: data.data.message, status: data.status});
@@ -103,13 +111,20 @@ export function MenuUpload(props: Props) {
             api.uploadImage(selectedImageFile).then(data => {
                 setJobId(data.data.jobId);
             }).catch(error => {
+                const notification: Notification = {
+                    title: "Error Uploading Image",
+                    message: 'We encountered an unknown error! Please try again later.',
+                    type: NotificationType.ERROR,
+                    timeout: 10000
+                };
                 try {
                     const response = error.response;
-                    setUploadError({message: response.data.message, status: response.status});
+                    notification.message = response.data.message;
                 } catch (e) {
-                    setUploadError({message: 'We encountered an unknown error! Please try again later.'})
+                    //ignore
                 } finally {
                     clearImage();
+                    setNotifications([...notifications, notification])
                 }
             });
         }

@@ -36,3 +36,10 @@ export interface VenueLocationInfo<T extends BeerVenue> {
     latitude: number;
     longitude: number;
 }
+
+export interface GooglePlace {
+    formattedAddress: string;
+    name: string;
+    placeId: string;
+    vicinity: string;
+}

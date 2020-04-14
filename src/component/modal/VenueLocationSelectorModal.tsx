@@ -11,32 +11,39 @@ import {
     ModalFooter,
     ModalHeader
 } from "reactstrap";
-import {BeerVenue, VenueLocationInfo} from "../../model/BeerVenue";
-import BreweryDBAPI from "../../controller/api/BreweryDBAPI";
+import {BeerVenue, GooglePlace} from "../../model/BeerVenue";
+import Beer4YourBuckAPI from "../../controller/api/Beer4YourBuckAPI";
 import {getLocation} from "../../controller/LocationController";
 
-const breweryApi = new BreweryDBAPI();
+const breweryApi = new Beer4YourBuckAPI();
 
 interface Props {
 
 }
 
 export function VenueLocationSelectorModal(props: Props) {
-    const [venueLocations, setVenueLocations] = useState<VenueLocationInfo<BeerVenue>[] | null>(null);
-    const [selectedVenue, setSelectedVenue] = useState<VenueLocationInfo<BeerVenue> | null>(null);
+    const [venueLocations, setVenueLocations] = useState<GooglePlace[] | null>(null);
+    const [selectedVenue, setSelectedVenue] = useState<GooglePlace | null>(null);
     const [appearAutomatically, setAppearAutomatically] = useState<boolean>(true);
     const {venue, setVenue} = useContext(BeerVenueContext);
 
 
-    const onSelected = (location: VenueLocationInfo<BeerVenue>) => {
+    const onSelected = (location: GooglePlace) => {
         setSelectedVenue(location)
     };
 
     const activateVenue = () => {
         if (selectedVenue && setVenue) {
-            setVenue(selectedVenue.venue);
+            breweryApi.getVenueByGooglePlacesId(selectedVenue.placeId).then(data => {
+                const foundVenue: BeerVenue | null = data.data;
+                if (foundVenue) {
+                    setVenue(foundVenue);
+                } else {
+                    breweryApi.createNewVenue(selectedVenue, []).then(data => setVenue(data.data))
+                }
+            });
         }
-        close()
+        close();
     };
 
     const close = () => {
@@ -48,13 +55,10 @@ export function VenueLocationSelectorModal(props: Props) {
     useEffect(() => {
         if (appearAutomatically && !venue) {
             getLocation((position => {
-                breweryApi.searchBreweryByLocation(position.coords.latitude, position.coords.longitude)
+                breweryApi.searchPossibleVenueNearYou(position.coords.latitude, position.coords.longitude, 70)
                     .then(response => {
                         const rawResponse = response.data;
-                        const locations: VenueLocationInfo<BeerVenue>[] = response.data;
-                        if (locations) {
-                            locations.forEach((location, i) => location.venue = rawResponse[i].brewery);
-                        }
+                        const locations: GooglePlace[] = response.data;
                         setVenueLocations(locations)
                     })
             }))
@@ -83,8 +87,8 @@ export function VenueLocationSelectorModal(props: Props) {
 }
 
 interface DropdownItems {
-    venues: VenueLocationInfo<BeerVenue>[] | null;
-    onSelect: (venueLocation: VenueLocationInfo<BeerVenue>) => void;
+    venues: GooglePlace[] | null;
+    onSelect: (venueLocation: GooglePlace) => void;
 }
 
 let dropdownItemKey = 0;
@@ -97,7 +101,7 @@ const VenueDropdown = (props: DropdownItems) => {
 
     const onItemClick = (index: number) => {
         if (props.venues) {
-            setText(props.venues[index].venue.name);
+            setText(props.venues[index].name);
             props.onSelect(props.venues[index])
         }
     };
@@ -109,7 +113,7 @@ const VenueDropdown = (props: DropdownItems) => {
             </DropdownToggle>
             <DropdownMenu>
                 {props.venues && props.venues.map((venue, index) => (
-                    <IndexedDropdownItem index={index} key={dropdownItemKey++} onClick={onItemClick} element={<div>{venue.venue.name}</div>}/>
+                    <IndexedDropdownItem index={index} key={dropdownItemKey++} onClick={onItemClick} element={<div>{venue.name}</div>}/>
                 ))}
             </DropdownMenu>
         </Dropdown>

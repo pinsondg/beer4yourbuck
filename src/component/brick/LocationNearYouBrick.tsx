@@ -14,6 +14,10 @@ export default interface Props {
     distance: number;
 }
 
+// fitty('p');
+// fitty('h3');
+// fitty('h4');
+
 export function LocationNearYouBrick(props: Props) {
     const showInMaps = () => {
         window.open("https://www.google.com/maps?q=" + props.venue.name, '_blank');
@@ -31,15 +35,15 @@ export function LocationNearYouBrick(props: Props) {
         <Jumbotron className={'brick location-near-you'}>
             <Row>
                 <Col md={'6'} className={'venue-info-holder'}>
-                    <h1>{props.venue.name}</h1>
-                    <h4>{props.venue.address}</h4>
+                    <h5>{props.venue.name}</h5>
+                    <p>{props.venue.address}</p>
                     <p>{props.distance.toFixed(2)} miles away</p>
-                    <Button color={'primary'} onClick={showInMaps}><FaMapMarkerAlt/> Show In Maps</Button>
+                    <Button color={'primary'} className={'maps-button'} onClick={showInMaps}><FaMapMarkerAlt/> Show In Maps</Button>
                 </Col>
                 <Col md={'6'} className={'beer-info-holder'}>
                     <Row className={'beer-info-heading'}>
                         <Col xs={'auto'} style={{borderBottom: 'darkgray 1px solid'}}>
-                            <h2>Beers 4 Your Buck</h2>
+                            <h5>Beers 4 Your Buck</h5>
                         </Col>
                     </Row>
                     <Row className={'beer-list-holder'}>
@@ -47,15 +51,14 @@ export function LocationNearYouBrick(props: Props) {
                         {
                             props.venue.beers.map(beer => new Beer.Builder().withBeer(beer).build()).sort(beerSort).slice(0, 3).map(beer =>
                                 <div className={'beer-holder'}>
-                                    <div className={'logo-holder'}>
+                                    <div className={'logo-holder location'}>
                                         <CircularBeerLogo
-                                            src={beer.labels ? beer.labels.contentAwareMedium : ''}
+                                            src={beer.label ? beer.label : ''}
                                             alt={'Beer Logo'}
                                         />
                                     </div>
                                     <div className={'beer-text'}>
-                                        <h3>{beer.name}</h3>
-                                        <h4>${beer.price}</h4>
+                                        {beer.name} - ${beer.price}
                                     </div>
                                     <div className={'badge-holder'}>
                                     {

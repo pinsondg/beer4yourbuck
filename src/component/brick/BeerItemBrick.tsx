@@ -87,7 +87,7 @@ export function BeerItemBrick(props: Props) {
                     <CircularBeerLogo
                         height={100}
                         width={100}
-                        src={props.beer.labels ? props.beer.labels.contentAwareMedium : ''}
+                        src={props.beer.label ? props.beer.label : ''}
                         alt={'Beer Logo'}
                     />
                 </Col>

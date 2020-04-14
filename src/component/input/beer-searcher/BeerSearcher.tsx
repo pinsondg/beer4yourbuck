@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
-import BreweryDBAPI from "../../../controller/api/BreweryDBAPI";
+import Beer4YourBuckAPI from "../../../controller/api/Beer4YourBuckAPI";
 import {Beer, BeerInterface} from "../../../model/Beer";
 import SelectableList from "../../list/selectable-list/SelectableList";
 import {Col, FormGroup, Input, Label, Row} from "reactstrap";
@@ -7,7 +7,7 @@ import './beer-searcher.css'
 import {CustomInput} from "../CustomInput";
 import {CalculationItemInput} from "../../modal/BeerAddModal";
 
-const beerApi = new BreweryDBAPI();
+const beerApi = new Beer4YourBuckAPI();
 
 export interface BeerSearcherProp extends CustomInput{
     getSelected: (beer: Beer) => void
@@ -62,11 +62,11 @@ export default function BeerSearcher(prop: BeerSearcherProp) {
         setText(val);
         prop.getName(val);
         setHideList(false);
-        if (selectedBeer && selectedBeer.nameDisplay !== val) {
+        if (selectedBeer && selectedBeer.name !== val) {
             setSelectedBeer(null);
             prop.onBeerSwitch();
         }
-        if (val && val !== '') {
+        if (val && val !== '' && val.length > 1) {
             const promise = beerApi.searchBeer(val);
             promise.then((data) => {
                 let beer: Array<Beer> = data.data.map((x: BeerInterface) => new Beer.Builder().withBeer(x).build());
@@ -81,8 +81,8 @@ export default function BeerSearcher(prop: BeerSearcherProp) {
         const beer = foundBeers[index];
         if (beer != null) {
             prop.getSelected(beer);
-            if (beer.nameDisplay) {
-                setText(beer.nameDisplay);
+            if (beer.name) {
+                setText(beer.name);
             }
         }
         setHideList(true);
@@ -113,7 +113,10 @@ export default function BeerSearcher(prop: BeerSearcherProp) {
                         <SelectableList components={foundBeers.map((beer) => (
                             <Row key={beer.id}>
                                 <Col>
-                                    <p>{beer.nameDisplay}</p>
+                                    <p>{beer.breweryName}</p>
+                                </Col>
+                                <Col>
+                                    <p>{beer.name}</p>
                                 </Col>
                                 <Col>
                                     <p>{beer.abv}</p>

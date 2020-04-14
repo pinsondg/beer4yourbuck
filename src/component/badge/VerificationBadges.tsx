@@ -1,16 +1,21 @@
-import React from "react";
+import React, {CSSProperties} from "react";
 import {MdCheck, MdErrorOutline} from "react-icons/all";
 import {Badge} from "reactstrap";
 import './verification-badge.css'
 
-export function VerifiedBadge() {
+interface Props {
+    className?: string;
+    style?: CSSProperties;
+}
+
+export function VerifiedBadge(props: Props) {
     return (
-        <Badge color={'success'}><MdCheck/> Verified</Badge>
+        <Badge style={props.style} className={props.className} pill color={'success'}><MdCheck/> Verified</Badge>
     )
 }
 
-export function UnverifiedBadge() {
+export function UnverifiedBadge(props: Props) {
     return (
-        <Badge color={'danger'}><MdErrorOutline/> Unverified</Badge>
+        <Badge style={props.style} className={props.className} pill color={'danger'}><MdErrorOutline/> Unverified</Badge>
     )
 }

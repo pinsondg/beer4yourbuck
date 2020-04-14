@@ -16,3 +16,15 @@
 .brick:hover {
     background-color: lightblue;
 }
+
+.logo-holder img {
+    max-height: 100%;
+    margin: auto;
+    max-width: 100%;
+}
+
+.logo-holder.location {
+    overflow-x: hidden;
+    overflow-y: hidden;
+    justify-content: center;
+}
