@@ -9,7 +9,7 @@ export interface Notification {
 }
 
 export enum NotificationType {
-    INFO, ACTION, ERROR, WARNING
+    INFO, ACTION, ERROR, WARNING, SUCCESS
 }
 
 export const NotificationContext = createContext<NotificationContext>({notifications: [], setNotifications: () => {}});

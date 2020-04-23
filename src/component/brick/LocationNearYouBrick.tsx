@@ -1,27 +1,20 @@
 import React from "react";
-import {Button, Col, Jumbotron, Row} from "reactstrap";
+import {Col, Jumbotron, Row} from "reactstrap";
 import {Beer} from "../../model/Beer";
 import {BeerVenue} from "../../model/BeerVenue";
 import './brick.css'
 import './location-near-you-brick.css'
 import './beer-item-brick.css'
 import CircularBeerLogo from "../image/CircularBeerLogo";
-import {FaMapMarkerAlt} from "react-icons/all";
 import {UnverifiedBadge, VerifiedBadge} from "../badge/VerificationBadges";
+import ShowInMapsButton from "../button/show-map-button/ShowInMapsButton";
 
 export default interface Props {
     venue: BeerVenue;
     distance: number;
 }
 
-// fitty('p');
-// fitty('h3');
-// fitty('h4');
-
 export function LocationNearYouBrick(props: Props) {
-    const showInMaps = () => {
-        window.open("https://www.google.com/maps?q=" + props.venue.name, '_blank');
-    };
 
     const beerSort = (x: Beer, y: Beer) => {
         if (x.getOttawayScore() && y.getOttawayScore()) {
@@ -38,7 +31,7 @@ export function LocationNearYouBrick(props: Props) {
                     <h5>{props.venue.name}</h5>
                     <p>{props.venue.address}</p>
                     <p>{props.distance.toFixed(2)} miles away</p>
-                    <Button color={'primary'} className={'maps-button'} onClick={showInMaps}><FaMapMarkerAlt/> Show In Maps</Button>
+                    <ShowInMapsButton address={props.venue.address}/>
                 </Col>
                 <Col md={'6'} className={'beer-info-holder'}>
                     <Row className={'beer-info-heading'}>

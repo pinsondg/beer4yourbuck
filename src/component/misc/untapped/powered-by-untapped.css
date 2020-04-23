@@ -1,0 +1,13 @@
+.powered-by-untapped {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.powered-by-untapped-image {
+    flex: 0 0 auto;
+    /*max-width: 100%;*/
+    max-height: 100%;
+    margin: 10px;
+}

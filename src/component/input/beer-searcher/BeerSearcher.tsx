@@ -5,7 +5,7 @@ import SelectableList from "../../list/selectable-list/SelectableList";
 import {Col, FormGroup, Input, Label, Row} from "reactstrap";
 import './beer-searcher.css'
 import {CustomInput} from "../CustomInput";
-import {CalculationItemInput} from "../../modal/BeerAddModal";
+import {CalculationItemInput} from "../../modal/beerAdd/BeerAddModal";
 
 const beerApi = new Beer4YourBuckAPI();
 
@@ -66,13 +66,13 @@ export default function BeerSearcher(prop: BeerSearcherProp) {
             setSelectedBeer(null);
             prop.onBeerSwitch();
         }
-        if (val && val !== '' && val.length > 1) {
+        if (val && val !== '' && val.length % 2 === 0) {
             const promise = beerApi.searchBeer(val);
             promise.then((data) => {
                 let beer: Array<Beer> = data.data.map((x: BeerInterface) => new Beer.Builder().withBeer(x).build());
                 setFoundBeers(beer.filter(x => x.abv));
             });
-        } else {
+        } else if (val.length === 0) {
             setFoundBeers([]);
         }
     };

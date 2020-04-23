@@ -1,12 +1,13 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Beer} from "../../model/Beer";
-import {Col, Jumbotron, Row} from "reactstrap";
+import {Button, Col, Jumbotron, Row} from "reactstrap";
 import classNames from "classnames";
 import './beer-item-brick.css'
 import {BeerVenue} from "../../model/BeerVenue";
 import {isMobile} from "../../controller/Utils";
 import './brick.css'
 import CircularBeerLogo from "../image/CircularBeerLogo";
+import {LoadingSpinner} from "../load/LoadSpinner";
 
 export default interface Props {
     beer: Beer;
@@ -17,6 +18,7 @@ export default interface Props {
     isDeletable?: boolean;
     isEditable?: boolean
     place: Place;
+    onPublish?: (id: string) => void;
 }
 
 export enum Place {
@@ -25,6 +27,8 @@ export enum Place {
 
 export function BeerItemBrick(props: Props) {
     const [isHovering, setIsHovering] = useState<boolean>(false);
+    const [published, setPublished] = useState<boolean>(false);
+    const [isPublishing, setIsPublishing] = useState<boolean>(false);
 
     const classes = classNames('brick', {
         'first': props.place === Place.FIRST,
@@ -61,6 +65,18 @@ export function BeerItemBrick(props: Props) {
         return retString;
     };
 
+    useEffect(() => {
+        setPublished(props.beer.isPublished ? props.beer.isPublished : false);
+        setIsPublishing(false);
+    }, [props]);
+
+    const onPublishClick = () => {
+        if (props.onPublish) {
+            setIsPublishing(true);
+            props.onPublish(props.id);
+        }
+    };
+
     return (
         <Jumbotron className={classes} onMouseEnter={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)}>
             <div className={'edit-button-div'}>
@@ -95,6 +111,10 @@ export function BeerItemBrick(props: Props) {
                     <h1>{props.beer.name}</h1>
                     <h5>{props.beer.abv ? props.beer.abv : 'N/A'}% ABV - {props.beer.volume ? props.beer.volume : 'N/A'} fl oz</h5>
                     <h5>{props.venue && props.venue.name ? 'Location: ' + props.venue.name : ''}</h5>
+                    <Button hidden={!(!!props.onPublish) || published || isPublishing} onClick={onPublishClick}>Publish</Button>
+                    {
+                        isPublishing && <LoadingSpinner message={`Publishing...`}/>
+                    }
                 </Col>
                 <Col xs={'auto'} className={'section'}>
                     <h1>${props.beer.price ? props.beer.price.toPrecision(3) : 'N/A'}</h1>

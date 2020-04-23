@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from "react";
 import BeerItem, {BeerItemBrick, Place} from "../../component/brick/BeerItemBrick";
 import {Button} from "reactstrap";
-import BeerAddModal, {ModalType} from "../../component/modal/BeerAddModal";
+import BeerAddModal, {ModalType} from "../../component/modal/beerAdd/BeerAddModal";
 import {Beer} from "../../model/Beer";
 import './multi-compare-flow.css'
 import {MdAdd} from "react-icons/md";
@@ -9,7 +9,6 @@ import {Flipped, Flipper} from "react-flip-toolkit";
 import {CompareBeerContext} from "../../context/CompareBeerContext";
 import {ConformationModal} from "../../component/modal/ConformationModal";
 import {NotificationContext, NotificationType} from "../../context/NotificationContext";
-import {VenueLocationSelectorModal} from "../../component/modal/VenueLocationSelectorModal";
 import {BeerVenueContext} from "../../context/BeerVenueContext";
 import Beer4YourBuckAPI from "../../controller/api/Beer4YourBuckAPI";
 
@@ -62,14 +61,21 @@ export function MultiCompareFlow(props: Props) {
     const [showClearConfirm, setShowClearConfirm] = useState<boolean>(false);
     const [edit, setEdit] = useState<EditBeer | null>(null);
     const [uploadNotificationsShown, setUploadNotificationsShown] = props.uploadNotificationShown;
-    const [showVenueModal, setShowVenueModal] = useState<boolean>(false);
-    const [shouldPublish, setShouldPublish] = useState<boolean>(false);
 
-    const updateBeersInBackend = () => {
-        if (venue && shouldPublish) {
-            api.addBeersToVenue(venue, beerBricks.map(beerBrick => beerBrick.beer)).catch(err => {
+    const updateBeerInBackend = (beer: Beer) => {
+        if (venue) {
+            api.addBeersToVenue(venue, beerBricks.map(beerBrick => beerBrick.beer)).then(() => {
                 setNotifications([...notifications, {
-                    title: "Beer Not Added!",
+                    title: "Beer Published!",
+                    message: `${beer.name} has been successfully published to ${venue.name}`,
+                    type: NotificationType.SUCCESS,
+                    timeout: 3000
+                }]);
+                beer.isPublished = true;
+                setBeerBricks([...beerBricks]);
+            }).catch(() => {
+                setNotifications([...notifications, {
+                    title: "Beer Not Published!",
                     message: beerBricks[beerBricks.length - 1].beer.name + " was not added to " + venue.name + ".",
                     type: NotificationType.ERROR,
                     timeout: 5000
@@ -85,19 +91,17 @@ export function MultiCompareFlow(props: Props) {
         setCompareBeers(sorted.map(x => x.beer));
         beerId++;
         setShowAddModal(false);
-        if (!uploadNotificationsShown) {
+        if (!uploadNotificationsShown && venue) {
             setNotifications([...notifications,
                 {
-                    title: "Publish Compared Beers?",
+                    title: "Publishing Beers",
                     type: NotificationType.ACTION,
-                    message: "Would you like to automatically publish the beers you have compared?" +
-                        " This helps other users find the best deals!" +
-                        " Click this notification to automatically publish.",
-                    action: () => {setShowVenueModal(true);setShouldPublish(true)}
+                    message: "You can publish any beer you compare to the current venue. This helps other user's find" +
+                        " the best deals near them!",
+                    timeout: 10000
                 }]);
             setUploadNotificationsShown(true);
         }
-        updateBeersInBackend();
     };
 
     const onDeleteSelect = (id: string) => {
@@ -162,13 +166,18 @@ export function MultiCompareFlow(props: Props) {
         }
     };
 
+    const onPublish = (id: string) => {
+        const found = beerBricks.filter(x => x.id === id)[0].beer;
+        updateBeerInBackend(found);
+    };
+
     return (
-        <div style={{width: '100%', height: '100%', position: 'relative'}}>
+        <div style={{width: '100%', position: 'relative', flex: '1 1 auto', maxHeight: '100%', overflow: 'hidden'}}>
             <Button className={'add-button'} color={'primary'} onClick={() => setShowAddModal(true)}><MdAdd size={25}/></Button>
             <div className={'list-holder'}>
                 <Flipper flipKey={JSON.stringify(beerBricks.map(x => x.id))}>
                     {
-                        beerBricks.length === 0 && <p>List is empty. Add beer to compare.</p>
+                        beerBricks.length === 0 && <p>List is empty. Add beer to compare and publish.</p>
                     }
                     {
                         beerBricks.map(beerBrick =>
@@ -183,6 +192,7 @@ export function MultiCompareFlow(props: Props) {
                                         place={beerBrick.place}
                                         onDeleteSelect={onDeleteSelect}
                                         isDeletable={true}
+                                        onPublish={venue ? onPublish : undefined}
                                     />
                                 </div>
                             </Flipped>
@@ -207,9 +217,6 @@ export function MultiCompareFlow(props: Props) {
             }
             {
                 edit && edit.shouldShow && <BeerAddModal initialBeer={edit.brick.beer} show={edit.shouldShow} modalType={ModalType.EDIT} onConfirm={onEditConfirm} onClose={() => {setEdit({...edit, shouldShow: false})}}/>
-            }
-            {
-                showVenueModal && <VenueLocationSelectorModal/>
             }
         </div>
     )

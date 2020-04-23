@@ -1,9 +1,10 @@
 import React, {ReactNode, useEffect, useState} from "react";
-import {Alert, Button} from "reactstrap";
+import {Alert, Button, Col, Container, Row} from "reactstrap";
 import {Notification, NotificationType} from "../../context/NotificationContext";
 import classNames from "classnames";
 import './notification.css'
-import {MdError, MdInfo, MdWarning} from "react-icons/all";
+import {MdCheckCircle, MdError, MdInfo, MdWarning} from "react-icons/all";
+import {isMobile} from "../../controller/Utils";
 
 interface NotificationProps {
     notification: Notification;
@@ -32,6 +33,7 @@ export default function NotificationComponent(props: NotificationProps) {
 
     const notificationClass = classNames('notification', {
         'clickable' : props.notification.action,
+        'mobile' : isMobile()
     });
 
     useEffect(() => {
@@ -56,19 +58,30 @@ export default function NotificationComponent(props: NotificationProps) {
                     color: 'warning'
                 });
                 break;
+            case NotificationType.SUCCESS:
+                setTypeProperties({
+                    icon: <MdCheckCircle size={iconSize}/>,
+                    color: 'success'
+                })
         }
     }, [props.notification.type]);
 
     return (
         <Alert className={notificationClass} color={typeProperties.color} onClick={onClick}>
-            <div className={'icon-holder'}>
-                {typeProperties.icon}
-            </div>
-            <div className={'text-holder'}>
-                <h6>{props.notification.title}</h6>
-                <p>{props.notification.message}</p>
-            </div>
-            <Button className={'dismiss-button'} onClick={onCloseClick}>Dismiss</Button>
+            <Container fluid={true}>
+                <Row style={{alignItems: 'center'}}>
+                    <Col sm={'2'} lg={2}>
+                        {typeProperties.icon}
+                    </Col>
+                    <Col sm={6} lg={8} style={{textAlign: 'left', fontSize: '14px'}}>
+                        <h6>{props.notification.title}</h6>
+                        {props.notification.message}
+                    </Col>
+                    <Col sm={4} lg={2}>
+                        <Button style={{fontSize: '14px'}} className={'dismiss-button'} onClick={onCloseClick}>Dismiss</Button>
+                    </Col>
+                </Row>
+            </Container>
         </Alert>
     )
 }

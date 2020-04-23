@@ -55,14 +55,64 @@ export default class Beer4YourBuckAPI {
         return axios.post(this.url + 'venue/', {
             googlePlaceId: googlePlace.placeId,
             beers: initialBeers
+        }, {
+            headers: {
+                'content-type': 'application/json',
+                'accept': 'application/json'
+            }
         });
     }
 
     async addBeersToVenue(venue: BeerVenue, beers: Beer[]) {
-        return axios.post(`venue/${venue.id}/beers`, beers, {
+        return axios.post(this.url + `venue/${venue.id}/beers`, beers, {
+            headers: {
+                'content-type': 'application/json',
+                'accept': 'application/json'
+            }
+        });
+    }
+
+    async voteOnBeer(beer: Beer, upvote: boolean) {
+        return axios.post(this.url + `beer/vote/${beer.id}`, {}, {
+            params: {
+                vote: upvote ? 'upvote' : 'downvote'
+            }
+        });
+    }
+
+    async getVotedBeers() {
+        return axios.get(this.url + 'beer/vote');
+    }
+
+    async login(usernameOrEmail: string, password: string) {
+        const formData = new FormData();
+        formData.append('user', usernameOrEmail);
+        formData.append('password', password);
+        return axios.post(this.url + '/auth/login', formData, {
+            headers: {
+                'content-type': 'application/x-www-form-urlencoded',
+                'accept': 'application/json'
+            }
+        })
+    }
+
+    async register(userName: string, email: string, password: string) {
+        return axios.post(this.url + '/auth/register', {
+            userName: userName,
+            email: email,
+            password: password
+        }, {
             headers: {
                 'content-type': 'application/json'
             }
         });
+    }
+
+    async getUserDetails() {
+        return axios.get(this.url + '/auth/user');
+    }
+
+    async logout() {
+        return axios.post(this.url + '/auth/logout');
     }
 }

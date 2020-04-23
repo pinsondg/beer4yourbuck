@@ -78,7 +78,8 @@ header {
   height: 100%;
   overflow-x: hidden;
   overflow-y: hidden;
-  padding: 5px;
+  display: flex;
+  flex-direction: column;
 }
 
 footer {

@@ -5,5 +5,5 @@ export const BeerVenueContext = createContext<BeerVenueContextData>({setVenue: (
 
 export interface BeerVenueContextData {
     venue?: BeerVenue;
-    setVenue?: (venue: BeerVenue) => void;
+    setVenue: (venue: BeerVenue) => void;
 }

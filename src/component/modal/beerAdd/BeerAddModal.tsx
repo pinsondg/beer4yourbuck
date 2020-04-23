@@ -1,11 +1,13 @@
 import React, {useEffect, useState} from "react";
-import BeerSearcher from "../input/beer-searcher/BeerSearcher";
+import BeerSearcher from "../../input/beer-searcher/BeerSearcher";
 import {Button, Form, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
-import ABVInput from "../input/apv-input/ABVInput";
-import {Beer} from "../../model/Beer";
-import CostInput from "../input/cost-input/CostInput";
-import VolumeInput from "../input/volume-input/VolumeInput";
-import {OttawayCalculator} from "../../controller/OttawayCalculator";
+import ABVInput from "../../input/apv-input/ABVInput";
+import {Beer} from "../../../model/Beer";
+import CostInput from "../../input/cost-input/CostInput";
+import VolumeInput from "../../input/volume-input/VolumeInput";
+import {OttawayCalculator} from "../../../controller/OttawayCalculator";
+import PoweredByUntapped from "../../misc/untapped/PoweredByUntapped";
+import './beer-add-modal.css'
 
 interface BeerAddModalProps {
     initialBeer?: Beer
@@ -167,6 +169,7 @@ export default function BeerAddModal(props: BeerAddModalProps) {
                             <p>{"Ottaway Score: " + score.toFixed(2)}</p>
                     }
                 </Form>
+                <PoweredByUntapped className={'untapped'} text={'Beer Search is '}/>
             </ModalBody>
             <ModalFooter>
                 <Button onClick={onAdd} color={'primary'} disabled={score === -1}>{props.modalType === ModalType.ADD ? 'Add' : 'Update'}</Button>

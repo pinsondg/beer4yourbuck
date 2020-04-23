@@ -1,9 +1,11 @@
 .notification {
-    display: flex;
-    flex-direction: row;
     justify-content: center;
-    width: 75%;
     margin: 5px auto;
+    width: 50%;
+}
+
+.notification.mobile {
+    width: 95%;
 }
 
 .notification.clickable {
@@ -19,7 +21,6 @@
 }
 
 .dismiss-button {
-    height: 50%;
     align-self: center;
 }
 

@@ -14,6 +14,7 @@ import {
 import {BeerVenue, GooglePlace} from "../../model/BeerVenue";
 import Beer4YourBuckAPI from "../../controller/api/Beer4YourBuckAPI";
 import {getLocation} from "../../controller/LocationController";
+import {NotificationContext, NotificationType} from "../../context/NotificationContext";
 
 const breweryApi = new Beer4YourBuckAPI();
 
@@ -26,6 +27,7 @@ export function VenueLocationSelectorModal(props: Props) {
     const [selectedVenue, setSelectedVenue] = useState<GooglePlace | null>(null);
     const [appearAutomatically, setAppearAutomatically] = useState<boolean>(true);
     const {venue, setVenue} = useContext(BeerVenueContext);
+    const {notifications, setNotifications} = useContext(NotificationContext);
 
 
     const onSelected = (location: GooglePlace) => {
@@ -38,6 +40,13 @@ export function VenueLocationSelectorModal(props: Props) {
                 const foundVenue: BeerVenue | null = data.data;
                 if (foundVenue) {
                     setVenue(foundVenue);
+                    setNotifications([...notifications, {
+                        title: 'Help Us Out!',
+                        message: `Thanks for setting your venue to ${foundVenue}. Click this notification to help
+                        us verify beers that other users have reported at this venue.`,
+                        action: () => {alert('clicked')},
+                        type: NotificationType.INFO
+                    }]);
                 } else {
                     breweryApi.createNewVenue(selectedVenue, []).then(data => setVenue(data.data))
                 }
@@ -55,13 +64,12 @@ export function VenueLocationSelectorModal(props: Props) {
     useEffect(() => {
         if (appearAutomatically && !venue) {
             getLocation((position => {
-                breweryApi.searchPossibleVenueNearYou(position.coords.latitude, position.coords.longitude, 70)
+                breweryApi.searchPossibleVenueNearYou(position.coords.latitude, position.coords.longitude, 50)
                     .then(response => {
-                        const rawResponse = response.data;
                         const locations: GooglePlace[] = response.data;
                         setVenueLocations(locations)
-                    })
-            }))
+                    });
+            }));
         }
     }, [props, appearAutomatically, venue]);
 
@@ -69,10 +77,10 @@ export function VenueLocationSelectorModal(props: Props) {
         return (
             <Modal isOpen={true}>
                 <ModalHeader>
-                    We noticed that you are near {venueLocations.length} location{venueLocations.length > 1 ? "s" : ''} that we know serves cold brews!
+                    We noticed that you are near {venueLocations.length} venue{venueLocations.length > 1 ? "s" : ''} that we know serves cold brews!
                 </ModalHeader>
                 <ModalBody>
-                    <p>Would you like to set your location? Setting your location helps us fill in more info automatically!</p>
+                    <p>Would you like to set your venue? Setting your venue allows you to publish beers to it, which helps other users find the best beers near them!</p>
                     <VenueDropdown venues={venueLocations} onSelect={onSelected}/>
                 </ModalBody>
                 <ModalFooter>
@@ -109,7 +117,7 @@ const VenueDropdown = (props: DropdownItems) => {
     return (
         <Dropdown isOpen={dropdownOpen} toggle={toggle}>
             <DropdownToggle caret>
-                {text ? text : "Select Brewery"}
+                {text ? text : "Select Venue"}
             </DropdownToggle>
             <DropdownMenu>
                 {props.venues && props.venues.map((venue, index) => (
