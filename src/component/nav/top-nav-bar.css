@@ -6,6 +6,10 @@
 
 }
 
+.brand {
+    color: #fafad2!important;
+}
+
 .selected-nav {
     border-bottom: solid 3px lightgrey;
 }

@@ -1,5 +1,6 @@
 import {BeerVenue, GooglePlace} from "../../model/BeerVenue";
 import {Beer} from "../../model/Beer";
+import {UserType} from "../../model/User";
 
 const axios = require('axios').default;
 
@@ -100,7 +101,8 @@ export default class Beer4YourBuckAPI {
         return axios.post(this.url + '/auth/register', {
             userName: userName,
             email: email,
-            password: password
+            password: password,
+            role: UserType.PATRON
         }, {
             headers: {
                 'content-type': 'application/json'

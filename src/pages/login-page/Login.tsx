@@ -1,9 +1,9 @@
 import React, {useContext, useState} from "react";
 import {Button, Col, Container, Form, FormGroup, Input, Label} from "reactstrap";
-import Beer4YourBuckAPI from "../controller/api/Beer4YourBuckAPI";
+import Beer4YourBuckAPI from "../../controller/api/Beer4YourBuckAPI";
 import {useHistory} from "react-router-dom";
-import {NotificationContext, NotificationType} from "../context/NotificationContext";
-import {UserContext} from "../context/UserContext";
+import {NotificationContext, NotificationType} from "../../context/NotificationContext";
+import {UserContext} from "../../context/UserContext";
 
 interface Props {
 
@@ -69,7 +69,7 @@ export default function Login(props: Props) {
                 </FormGroup>
                 <FormGroup row>
                     <Col>
-                        <Button onClick={onSubmit}>Login</Button>
+                        <Button color={'primary'} onClick={onSubmit}>Login</Button>
                     </Col>
                 </FormGroup>
             </Form>

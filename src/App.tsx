@@ -16,8 +16,9 @@ import CurrentVenue from "./pages/current-venue/CurrentVenue";
 import {VenueLocationSelectorModal} from "./component/modal/VenueLocationSelectorModal";
 import {UserContext} from "./context/UserContext";
 import User from "./model/User";
-import Login from "./pages/Login";
+import Login from "./pages/login-page/Login";
 import Beer4YourBuckAPI from "./controller/api/Beer4YourBuckAPI";
+import Register from "./pages/registration-page/Register";
 
 const api = new Beer4YourBuckAPI();
 function App() {
@@ -42,11 +43,11 @@ function App() {
               <Router>
                   <div className="App">
                           <VenueLocationSelectorModal/>
-                          <header>
-                              <TopNavBar/>
-                          </header>
-                          <div className={'content'}>
-                              <NotificationContext.Provider value={notificationContext}>
+                          <NotificationContext.Provider value={notificationContext}>
+                              <header>
+                                  <TopNavBar/>
+                              </header>
+                              <div className={'content'}>
                                   <NotificationCenter/>
                                   <Switch>
                                       <Route exact path={'/'}>
@@ -68,13 +69,16 @@ function App() {
                                           <Route exact path={'/login'}>
                                               <Login/>
                                           </Route>
+                                          <Route path={'/register'}>
+                                              <Register/>
+                                          </Route>
                                       </CompareBeerContext.Provider>
                                   </Switch>
-                              </NotificationContext.Provider>
-                          </div>
-                          <footer>
-                              <a href={"https://github.com/pinsondg/beer4yourbuck"}>Contribute to this project</a>
-                          </footer>
+                              </div>
+                              <footer style={{backgroundColor: '#343a40'}}>
+                                  <a href={"https://github.com/pinsondg/beer4yourbuck"}>Contribute to this project</a>
+                              </footer>
+                          </NotificationContext.Provider>
                   </div>
               </Router>
           </UserContext.Provider>

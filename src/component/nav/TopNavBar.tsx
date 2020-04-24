@@ -1,21 +1,26 @@
 import React, {useContext, useEffect, useState} from "react";
-import {Button, Collapse, Nav, Navbar, NavbarBrand, NavbarText, NavbarToggler, NavItem, NavLink} from "reactstrap";
+import {Collapse, Nav, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink} from "reactstrap";
 import {BeerVenueContext} from "../../context/BeerVenueContext";
 import {useHistory, useLocation} from "react-router-dom";
 import './top-nav-bar.css'
 import {isMobile} from "../../controller/Utils";
 import {UserContext} from "../../context/UserContext";
+import Beer4YourBuckAPI from "../../controller/api/Beer4YourBuckAPI";
+import {NotificationContext, NotificationType} from "../../context/NotificationContext";
 
 interface Props {
 
 }
+
+const api = new Beer4YourBuckAPI();
 
 export function TopNavBar(props: Props) {
     const location = useLocation();
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [selected, setSelected] = useState<string | null>(null);
     const {venue} = useContext(BeerVenueContext);
-    const {user} = useContext(UserContext);
+    const {user, setUser} = useContext(UserContext);
+    const {notifications, setNotifications} = useContext(NotificationContext);
     const history = useHistory();
 
     const toggle = () => setIsOpen(!isOpen);
@@ -40,9 +45,22 @@ export function TopNavBar(props: Props) {
         }
     }, [location.pathname]);
 
+    const logout = () => {
+        api.logout().then(() => {
+            setUser(null);
+            setNotifications([...notifications, {
+                title: 'Log Out Successful',
+                message: 'You have logged out successfully.',
+                timeout: 4000,
+                type: NotificationType.SUCCESS
+            }]);
+            history.push('/');
+        })
+    };
+
     return (
-        <Navbar color="light" light expand="sm">
-            <NavbarBrand className={'clickable'} onClick={() => history.push('/')}>Beer 4 Your Buck</NavbarBrand>
+        <Navbar color={'dark'} expand="sm" dark style={{marginBottom: '0 !important'}}>
+            <NavbarBrand className={'brand clickable'} onClick={() => history.push('/')}>Beer 4 Your Buck</NavbarBrand>
             <NavbarToggler onClick={toggle} />
             <Collapse isOpen={isOpen} navbar>
                 <Nav className="mr-auto" navbar>
@@ -59,15 +77,24 @@ export function TopNavBar(props: Props) {
                         <NavLink className={'clickable'} onClick={() => history.push('/current-venue')}>Current Venue</NavLink>
                     </NavItem>}
                 </Nav>
-                <NavbarText>Current Venue: {venue && venue.name && venue.name !== '' ? venue.name : 'None'}</NavbarText>
-                {
-                    user === null ? (
-                        <div style={{margin: '5px'}}>
-                            <Button style={{margin: '1px'}} className={'clickable'} onClick={() => history.push('/login')}>Login</Button>
-                            <Button style={{margin: '1px'}} className={'clickable'}>Sign Up</Button>
-                        </div>
-                    ) : null
-                }
+                <Nav className="ml-auto" navbar>
+                    {
+                        user === null ? (
+                                <div style={{display: "flex", flexDirection:"row"}}>
+                                    <NavItem>
+                                        <NavLink className={'clickable'} onClick={() => history.push('/login')}>Login</NavLink>
+                                    </NavItem>
+                                    <NavItem>
+                                        <NavLink className={'clickable'} onClick={() => history.push('/register')}>Sign Up</NavLink>
+                                    </NavItem>
+                                </div>
+                        ) : (
+                            <NavItem style={{margin: '5px'}}>
+                                <NavLink className={'clickable'} onClick={logout}>Logout</NavLink>
+                            </NavItem>
+                        )
+                    }
+                </Nav>
             </Collapse>
         </Navbar>
     );
