@@ -10,6 +10,12 @@
     height: auto;
 }
 
+.brick.venue-brick {
+    border-radius: .3rem;
+    background-color: #e9ecef;
+    width: auto;
+}
+
 .brick.first {
     border-color: gold;
     background-color: palegoldenrod;

@@ -13,7 +13,6 @@ import {CompareBeerContext, CompareBeerContextData} from "./context/CompareBeerC
 import {Notification, NotificationContext} from "./context/NotificationContext";
 import NotificationCenter from "./component/notification/NotificationCenter";
 import CurrentVenue from "./pages/current-venue/CurrentVenue";
-import {VenueLocationSelectorModal} from "./component/modal/VenueLocationSelectorModal";
 import {UserContext} from "./context/UserContext";
 import User from "./model/User";
 import Login from "./pages/login-page/Login";
@@ -23,7 +22,7 @@ import Register from "./pages/registration-page/Register";
 const api = new Beer4YourBuckAPI();
 function App() {
     console.log("Running app in " + process.env.NODE_ENV + " environment.");
-    const [venue, setVenue] = useState<BeerVenue>();
+    const [venue, setVenue] = useState<BeerVenue | null>();
     const [compareBeers, setCompareBeers] = useState<Beer[]>([]);
     const [notifications, setNotifications] = useState<Notification[]>([]);
     const [uploadNotificationShown, setUploadNotificationShown] = useState<boolean>(false);
@@ -42,7 +41,6 @@ function App() {
           <UserContext.Provider value={userContext}>
               <Router>
                   <div className="App">
-                          <VenueLocationSelectorModal/>
                           <NotificationContext.Provider value={notificationContext}>
                               <header>
                                   <TopNavBar/>

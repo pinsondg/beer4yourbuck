@@ -101,7 +101,7 @@ export default function Register() {
     };
 
     const handleRegister = () => {
-        if (state.confirmPassword === state.password && passwordRegex.test(state.password)) {
+        if (state.confirmPassword === state.password && passwordRegex.test(state.password) && state.email !== '' && state.username !== '') {
             api.register(state.username, state.email, state.password).then(data => {
                 setNotifications([...notifications, {
                     title: 'Registration Successful',
@@ -133,6 +133,20 @@ export default function Register() {
                 type: NotificationType.ERROR,
                 timeout: 4000
             }])
+        } else if (state.username === '') {
+            setNotifications([...notifications, {
+                title: "Username is Empty",
+                message: 'Username cannot be empty.',
+                type: NotificationType.ERROR,
+                timeout: 4000
+            }]);
+        } else if (state.email === '') {
+            setNotifications([...notifications, {
+                title: "Email is Empty",
+                message: 'Email cannot be empty.',
+                type: NotificationType.ERROR,
+                timeout: 4000
+            }]);
         }
     };
 
@@ -140,36 +154,36 @@ export default function Register() {
         <div style={{padding: '10px'}}>
             <Container style={{margin: '0 auto'}}>
                 <h3>Sign Up</h3>
-                <Form>
-                    <FormGroup row>
-                        <Label sm={2} for={'username'}>
+                <Form style={{marginTop: '10px'}}>
+                    <FormGroup row className={'justify-content-center align-items-center'}>
+                        <Label xs={4} sm={2} for={'username'}>
                             Username
                         </Label>
-                        <Col sm={10}>
+                        <Col xs={8} sm={10}>
                             <Input name={'username'} id={'username'} placeholder={'Username'} onChange={onInputChange}/>
                         </Col>
                     </FormGroup>
-                    <FormGroup row>
-                        <Label sm={2} for={'email'}>
+                    <FormGroup row className={'justify-content-center align-items-center'}>
+                        <Label xs={4} sm={2} for={'email'}>
                             Email
                         </Label>
-                        <Col sm={10}>
+                        <Col xs={8} sm={10} className={'justify-content-center align-items-center'}>
                             <Input type={'email'} name={'email'} id={'email'} placeholder={'Email'} onChange={onInputChange}/>
                         </Col>
                     </FormGroup>
-                    <FormGroup row>
-                        <Label sm={2} for={'password'}>
+                    <FormGroup row className={'justify-content-center align-items-center'}>
+                        <Label xs={4} sm={2} for={'password'}>
                             Password
                         </Label>
-                        <Col sm={10}>
+                        <Col xs={8} sm={10}>
                             <Input type={'password'} name={'password'} id={'password'} placeholder={'Password'} onChange={onInputChange}/>
                         </Col>
                     </FormGroup>
-                    <FormGroup row>
-                        <Label sm={2} for={'confirm-password'}>
+                    <FormGroup row className={'justify-content-center align-items-center'}>
+                        <Label xs={4} sm={2} for={'confirm-password'}>
                             Confirm Password
                         </Label>
-                        <Col sm={10}>
+                        <Col xs={8} sm={10}>
                             <Input type={'password'} name={'confirm-password'} id={'confirm-password'} placeholder={'Confirm Password'} onChange={onInputChange}/>
                         </Col>
                     </FormGroup>

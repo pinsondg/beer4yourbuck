@@ -68,32 +68,25 @@ export function TopNavBar(props: Props) {
                         <NavLink className={'clickable'} onClick={() => history.push('/near')}>Near You</NavLink>
                     </NavItem>
                     <NavItem className={!isMobile() && selected && selected === 'compare' ? 'selected-nav' : ''}>
-                        <NavLink className={'clickable'} onClick={() => history.push('/compare')}>Compare</NavLink>
+                        <NavLink className={'clickable'} onClick={() => history.push('/compare')}>Quick Compare</NavLink>
                     </NavItem>
                     <NavItem className={!isMobile() && selected && selected === 'upload' ? 'selected-nav' : ''}>
                         <NavLink className={'clickable'} onClick={() => history.push('/upload')}>Menu Upload</NavLink>
                     </NavItem>
-                    {venue && <NavItem className={!isMobile() && selected && selected === 'venue' ? 'selected-nav' : ''}>
+                    <NavItem className={!isMobile() && selected && selected === 'venue' ? 'selected-nav' : ''}>
                         <NavLink className={'clickable'} onClick={() => history.push('/current-venue')}>Current Venue</NavLink>
-                    </NavItem>}
+                    </NavItem>
                 </Nav>
                 <Nav className="ml-auto" navbar>
-                    {
-                        user === null ? (
-                                <div style={{display: "flex", flexDirection:"row"}}>
-                                    <NavItem>
-                                        <NavLink className={'clickable'} onClick={() => history.push('/login')}>Login</NavLink>
-                                    </NavItem>
-                                    <NavItem>
-                                        <NavLink className={'clickable'} onClick={() => history.push('/register')}>Sign Up</NavLink>
-                                    </NavItem>
-                                </div>
-                        ) : (
-                            <NavItem style={{margin: '5px'}}>
-                                <NavLink className={'clickable'} onClick={logout}>Logout</NavLink>
-                            </NavItem>
-                        )
-                    }
+                    {user === null && <NavItem>
+                        <NavLink className={'clickable'} onClick={() => history.push('/login')}>Login</NavLink>
+                    </NavItem>}
+                    {user === null && <NavItem>
+                            <NavLink className={'clickable'} onClick={() => history.push('/register')}>Sign Up</NavLink>
+                        </NavItem>}
+                    {user !== null && <NavItem style={{margin: '5px'}}>
+                        <NavLink className={'clickable'} onClick={logout}>Logout</NavLink>
+                    </NavItem>}
                 </Nav>
             </Collapse>
         </Navbar>

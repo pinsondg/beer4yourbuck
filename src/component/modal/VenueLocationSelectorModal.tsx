@@ -19,7 +19,7 @@ import {NotificationContext, NotificationType} from "../../context/NotificationC
 const breweryApi = new Beer4YourBuckAPI();
 
 interface Props {
-
+    onNoVenuesFound?: () => void;
 }
 
 export function VenueLocationSelectorModal(props: Props) {
@@ -42,9 +42,8 @@ export function VenueLocationSelectorModal(props: Props) {
                     setVenue(foundVenue);
                     setNotifications([...notifications, {
                         title: 'Help Us Out!',
-                        message: `Thanks for setting your venue to ${foundVenue}. Click this notification to help
-                        us verify beers that other users have reported at this venue.`,
-                        action: () => {alert('clicked')},
+                        message: `Thanks for setting your venue to ${foundVenue.name}. Take a second to upvote/downvote beers
+                        to help us provide accurate data.`,
                         type: NotificationType.INFO
                     }]);
                 } else {
@@ -67,7 +66,15 @@ export function VenueLocationSelectorModal(props: Props) {
                 breweryApi.searchPossibleVenueNearYou(position.coords.latitude, position.coords.longitude, 50)
                     .then(response => {
                         const locations: GooglePlace[] = response.data;
-                        setVenueLocations(locations)
+                        setVenueLocations(locations);
+                        if (locations.length === 0 && props.onNoVenuesFound) {
+                            props.onNoVenuesFound();
+                        }
+                    })
+                    .catch(err => {
+                        if (props.onNoVenuesFound) {
+                            props.onNoVenuesFound();
+                        }
                     });
             }));
         }
@@ -85,7 +92,11 @@ export function VenueLocationSelectorModal(props: Props) {
                 </ModalBody>
                 <ModalFooter>
                     <Button disabled={selectedVenue == null} color={'primary'} onClick={activateVenue}>Set Location!</Button>
-                    <Button color={'secondary'} onClick={close}>Don't Set Location</Button>
+                    <Button color={'secondary'} onClick={() => {
+                        close();
+                        if (props.onNoVenuesFound) {
+                            props.onNoVenuesFound()
+                        }}}>Don't Set Location</Button>
                 </ModalFooter>
             </Modal>
         )

@@ -95,5 +95,9 @@
 }
 
 .logo-holder.location {
-    flex: 0 0 42px;
+    width: 42px;
+}
+
+.venue-info-holder.mobile {
+    border-right: 0;
 }

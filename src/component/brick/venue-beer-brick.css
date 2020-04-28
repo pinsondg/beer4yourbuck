@@ -1,0 +1,53 @@
+.vote-button {
+    margin: 5px;
+    color: gray;
+}
+
+.venue-beer-brick-content {
+    position: relative;
+}
+
+.vote-buttons-group {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.vote-buttons-group p, h1, h2, h3, h4, h5, h6 {
+    margin-bottom: 0;
+}
+
+.added-badge {
+    position: absolute;
+    left: 0;
+    top: 0;
+    margin: 5px;
+}
+
+.vote-button.upvoted {
+    color: green;
+}
+
+.vote-button.downvoted {
+    color: red;
+}
+
+.vote-button.upvoted:hover {
+    color: green;
+    cursor: default;
+}
+
+.vote-button.downvoted:hover {
+    color: red;
+    cursor: default;
+}
+
+.vote-button:hover {
+    cursor: pointer;
+    color: dimgrey;
+}
+
+.logo-holder.venue {
+    width: 65px;
+}

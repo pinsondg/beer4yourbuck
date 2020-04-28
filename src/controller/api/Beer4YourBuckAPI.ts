@@ -53,7 +53,7 @@ export default class Beer4YourBuckAPI {
     }
 
     async createNewVenue(googlePlace: GooglePlace, initialBeers: Beer[]) {
-        return axios.post(this.url + 'venue/', {
+        return axios.post(this.url + 'venue', {
             googlePlaceId: googlePlace.placeId,
             beers: initialBeers
         }, {
@@ -81,8 +81,8 @@ export default class Beer4YourBuckAPI {
         });
     }
 
-    async getVotedBeers() {
-        return axios.get(this.url + 'beer/vote');
+    async getUserBeerActivityInfo() {
+        return axios.get(this.url + 'beer/user');
     }
 
     async login(usernameOrEmail: string, password: string) {
@@ -116,5 +116,17 @@ export default class Beer4YourBuckAPI {
 
     async logout() {
         return axios.post(this.url + '/auth/logout');
+    }
+
+    async getTotalNumberReportedBeers() {
+        return axios.get(this.url + 'beer/count');
+    }
+
+    async getTotalNumberReportedVenues() {
+        return axios.get(this.url + 'venue/count');
+    }
+
+    async getBeerVotedScore(beer: Beer) {
+        return axios.get(this.url + `/beer/vote/${beer.id}`);
     }
 }

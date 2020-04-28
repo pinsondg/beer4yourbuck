@@ -41,10 +41,10 @@ export default function RegistrationModal(props: Props) {
                     </Row>
                     <hr/>
                     <Row className={'align-items-center'}>
-                        <Col style={{display: 'flex'}} sm={{offset: 2, size: 4}}>
+                        <Col xs={6} style={{display: 'flex'}} sm={{offset: 2, size: 4}}>
                             <Button style={{margin: '0 auto'}} onClick={onLogin}>Login</Button>
                         </Col>
-                        <Col style={{display: "flex"}} className={'align-items-center'} sm={4}>
+                        <Col xs={6} style={{display: "flex"}} className={'align-items-center'} sm={4}>
                             <Button style={{margin: '0 auto'}} color={'primary'} onClick={onRegister}>Register</Button>
                         </Col>
                     </Row>
