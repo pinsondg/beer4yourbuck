@@ -85,10 +85,13 @@ export default class Beer4YourBuckAPI {
         return axios.get(this.url + 'beer/user');
     }
 
-    async login(usernameOrEmail: string, password: string) {
+    async login(usernameOrEmail: string, password: string, rememberMe: boolean) {
         const formData = new FormData();
         formData.append('user', usernameOrEmail);
         formData.append('password', password);
+        if (rememberMe) {
+            formData.append('remember-me','on');
+        }
         return axios.post(this.url + '/auth/login', formData, {
             headers: {
                 'content-type': 'application/x-www-form-urlencoded',

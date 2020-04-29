@@ -14,6 +14,7 @@ const api = new Beer4YourBuckAPI();
 export default function Login(props: Props) {
     const [name, setName] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+    const [rememberMe, setRememberMe] = useState<boolean>(false);
     const history = useHistory();
     const {notifications, setNotifications} = useContext(NotificationContext);
     const {user, setUser} = useContext(UserContext);
@@ -30,7 +31,7 @@ export default function Login(props: Props) {
 
     const onSubmit = () => {
         console.log(`Username/Email: ${name} Password: ${password}`);
-        api.login(name, password).then(data => {
+        api.login(name, password, rememberMe).then(data => {
             api.getUserDetails().then(data => {
                 console.log(data.data);
                 setUser(data.data);
@@ -51,23 +52,26 @@ export default function Login(props: Props) {
         <Container>
             <h3>Login</h3>
             <Form>
-                <FormGroup row>
-                    <Label for={'email-username-login'} sm={2}>
+                <FormGroup row className={'align-items-center justify-content-center'}>
+                    <Label for={'email-username-login'} xs={4}>
                         Username or Email
                     </Label>
-                    <Col sm={10}>
+                    <Col xs={8}>
                         <Input name={'email'} id={'email-username-login'} onChange={onEmailChange} placeholder={'Username or Email'}/>
                     </Col>
                 </FormGroup>
-                <FormGroup row>
-                    <Label for={'password-login'} sm={2}>
+                <FormGroup row className={'align-items-center justify-content-center'}>
+                    <Label for={'password-login'} xs={4}>
                         Password
                     </Label>
-                    <Col sm={10}>
+                    <Col xs={8}>
                         <Input type={'password'} name={'password'} id={'password-login'} onChange={onPasswordChange} placeholder={'Password'}/>
                     </Col>
                 </FormGroup>
-                <FormGroup row>
+                <FormGroup check className={'align-items-center justify-content-center'}>
+                    <Label check><Input onChange={() => setRememberMe(!rememberMe)} type={'checkbox'}/> Remember Me</Label>
+                </FormGroup>
+                <FormGroup row className={'align-items-center justify-content-center'}>
                     <Col>
                         <Button color={'primary'} onClick={onSubmit}>Login</Button>
                     </Col>

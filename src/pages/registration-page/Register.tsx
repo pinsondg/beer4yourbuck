@@ -10,6 +10,7 @@ interface FieldData {
     username: string;
     password: string;
     confirmPassword: string;
+    rememberMe: boolean;
 }
 
 var passwordRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
@@ -20,12 +21,14 @@ type Action =
     | {type: 'setPassword', val: string}
     | {type: 'setUsername', val: string}
     | {type: 'setConfirmPassword', val: string}
+    | {type: 'setRememberMe', val: boolean}
 
 const initialState: FieldData = {
     email: '',
     username: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    rememberMe: false
 };
 
 function reducer(state: FieldData, action: Action): FieldData {
@@ -38,6 +41,8 @@ function reducer(state: FieldData, action: Action): FieldData {
             return {...state, password: action.val};
         case "setUsername":
             return {...state, username: action.val};
+        case "setRememberMe":
+            return {...state, rememberMe: action.val}
     }
 }
 
@@ -63,6 +68,8 @@ export default function Register() {
             case 'confirm-password':
                 dispatch({type: 'setConfirmPassword', val: e.target.value});
                 break;
+            case 'remember-me':
+                dispatch({type: "setRememberMe", val: !state.rememberMe})
         }
     };
 
@@ -109,7 +116,7 @@ export default function Register() {
                     timeout: 4000,
                     type: NotificationType.SUCCESS
                 }]);
-                api.login(state.username, state.password).then(data => {
+                api.login(state.username, state.password, state.rememberMe).then(data => {
                     api.getUserDetails().then(data => {
                         setUser(data.data);
                         history.push('/')
@@ -186,6 +193,9 @@ export default function Register() {
                         <Col xs={8} sm={10}>
                             <Input type={'password'} name={'confirm-password'} id={'confirm-password'} placeholder={'Confirm Password'} onChange={onInputChange}/>
                         </Col>
+                    </FormGroup>
+                    <FormGroup check className={'align-items-center justify-content-center'}>
+                        <Label check><Input id={'remember-me'} onChange={onInputChange} type={'checkbox'}/> Remember Me</Label>
                     </FormGroup>
                     <Row>
                         <Col>
