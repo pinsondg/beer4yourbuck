@@ -1,6 +1,6 @@
 import React from "react";
 import {Button} from "reactstrap";
-import {FaMapMarkerAlt} from "react-icons/all";
+import {FaMapMarkerAlt} from "react-icons/fa";
 import classNames from "classnames";
 
 interface Props {

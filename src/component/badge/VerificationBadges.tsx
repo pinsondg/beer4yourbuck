@@ -1,5 +1,5 @@
 import React, {CSSProperties} from "react";
-import {MdCheck, MdErrorOutline} from "react-icons/all";
+import {MdCheck, MdErrorOutline} from "react-icons/md";
 import {Badge} from "reactstrap";
 import './verification-badge.css'
 import classNames from "classnames";

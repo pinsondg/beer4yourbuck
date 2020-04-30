@@ -37,7 +37,7 @@
   },
   "scripts": {
     "start": "react-scripts start --no-cache",
-    "build": "react-scripts build",
+    "build": "react-scripts --max_old_space_size=896 build",
     "test": "react-scripts test --no-cache",
     "eject": "react-scripts eject",
     "test-ci": "CI=true react-scripts test"

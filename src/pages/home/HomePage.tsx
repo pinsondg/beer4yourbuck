@@ -1,7 +1,9 @@
 import React, {useEffect, useState} from "react";
 import './home-page.css'
 import Background from '../../image/domain/stock/selective-focus-photography-of-people-having-a-toast-1269043.jpg'
-import {GiGears, IoIosArrowDown, MdCompareArrows, MdMyLocation} from "react-icons/all";
+import {GiGears} from "react-icons/gi";
+import {IoIosArrowDown} from 'react-icons/io'
+import {MdCompareArrows, MdMyLocation} from 'react-icons/md'
 import Beer4YourBuckAPI from "../../controller/api/Beer4YourBuckAPI";
 
 const api = new Beer4YourBuckAPI();

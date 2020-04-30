@@ -3,7 +3,7 @@ import {Alert, Button, Col, Container, Row} from "reactstrap";
 import {Notification, NotificationType} from "../../context/NotificationContext";
 import classNames from "classnames";
 import './notification.css'
-import {MdCheckCircle, MdError, MdInfo, MdWarning} from "react-icons/all";
+import {MdCheckCircle, MdError, MdInfo, MdWarning} from "react-icons/md";
 import {isMobile} from "../../controller/Utils";
 
 interface NotificationProps {

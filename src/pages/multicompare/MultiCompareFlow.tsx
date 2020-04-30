@@ -13,7 +13,6 @@ import {BeerVenueContext} from "../../context/BeerVenueContext";
 import Beer4YourBuckAPI from "../../controller/api/Beer4YourBuckAPI";
 
 interface Props {
-    uploadNotificationShown: [boolean, (x: boolean) => void];
 }
 
 const api = new Beer4YourBuckAPI();
@@ -60,7 +59,6 @@ export function MultiCompareFlow(props: Props) {
     const [showAddModal, setShowAddModal] = useState<boolean>(false);
     const [showClearConfirm, setShowClearConfirm] = useState<boolean>(false);
     const [edit, setEdit] = useState<EditBeer | null>(null);
-    const [uploadNotificationsShown, setUploadNotificationsShown] = props.uploadNotificationShown;
 
     const updateBeerInBackend = (beer: Beer) => {
         if (venue) {
@@ -91,17 +89,6 @@ export function MultiCompareFlow(props: Props) {
         setCompareBeers(sorted.map(x => x.beer));
         beerId++;
         setShowAddModal(false);
-        if (!uploadNotificationsShown && venue) {
-            setNotifications([...notifications,
-                {
-                    title: "Publishing Beers",
-                    type: NotificationType.ACTION,
-                    message: "You can publish any beer you compare to the current venue. This helps other user's find" +
-                        " the best deals near them!",
-                    timeout: 10000
-                }]);
-            setUploadNotificationsShown(true);
-        }
     };
 
     const onDeleteSelect = (id: string) => {

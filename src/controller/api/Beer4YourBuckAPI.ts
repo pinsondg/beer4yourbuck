@@ -100,17 +100,30 @@ export default class Beer4YourBuckAPI {
         })
     }
 
-    async register(userName: string, email: string, password: string) {
+    async register(userName: string, email: string, password: string, firstName: string, lastName: string) {
+        if (lastName === '') {
+            lastName = 'secret';
+        }
         return axios.post(this.url + '/auth/register', {
             userName: userName,
             email: email,
             password: password,
-            role: UserType.PATRON
+            role: UserType.PATRON,
+            firstName: firstName,
+            lastName: lastName
         }, {
             headers: {
                 'content-type': 'application/json'
             }
         });
+    }
+
+    async requestNewEmail(userName: string) {
+        return axios.get(this.url + "/auth/register/resend", {
+            params: {
+                'username': userName
+            }
+        })
     }
 
     async getUserDetails() {

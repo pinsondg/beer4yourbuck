@@ -1,5 +1,5 @@
 import React from "react";
-import {AiOutlineLoading3Quarters} from "react-icons/all";
+import {AiOutlineLoading3Quarters} from "react-icons/ai";
 import './load-spinner.css'
 import classNames from "classnames";
 

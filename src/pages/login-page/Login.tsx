@@ -30,21 +30,43 @@ export default function Login(props: Props) {
     };
 
     const onSubmit = () => {
-        console.log(`Username/Email: ${name} Password: ${password}`);
         api.login(name, password, rememberMe).then(data => {
             api.getUserDetails().then(data => {
-                console.log(data.data);
                 setUser(data.data);
                 history.push('/')
             });
         }).catch(err => {
             console.log(err);
-            setNotifications([...notifications, {
-                title: 'Login Error',
-                message: 'Could not log you in. Please check your username/email and password and try again.',
-                type: NotificationType.ERROR,
-                timeout: 4000
-            }])
+            if (err.response.data && err.response.data.exception === 'User is disabled') {
+                setNotifications([...notifications, {
+                    title: 'Your Account is Disabled!',
+                    message: 'Your account had not yet been enabled.' +
+                        ' Check your inbox for a verification email or click this notification to request another one.',
+                    type: NotificationType.ERROR,
+                    action: () => {
+                        api.requestNewEmail(name).then(data => {
+                            setNotifications([...notifications, {
+                                title: 'Email Resent',
+                                message: 'Verification email had been resent.',
+                                type: NotificationType.SUCCESS,
+                            }])
+                        }).catch(() => {
+                            setNotifications([...notifications, {
+                                title: 'Email Resend Failed',
+                                message: 'Verification email could not be sent at this time. Please try again later.',
+                                type: NotificationType.ERROR
+                            }])
+                        })
+                    }
+                }])
+            } else {
+                setNotifications([...notifications, {
+                    title: 'Login Error',
+                    message: 'Could not log you in. Please check your username/email and password and try again.',
+                    type: NotificationType.ERROR,
+                    timeout: 3500
+                }])
+            }
         });
     };
 
@@ -53,18 +75,18 @@ export default function Login(props: Props) {
             <h3>Login</h3>
             <Form>
                 <FormGroup row className={'align-items-center justify-content-center'}>
-                    <Label for={'email-username-login'} xs={4}>
+                    <Label for={'email-username-login'} xs={4} sm={2}>
                         Username or Email
                     </Label>
-                    <Col xs={8}>
+                    <Col xs={8} sm={10}>
                         <Input name={'email'} id={'email-username-login'} onChange={onEmailChange} placeholder={'Username or Email'}/>
                     </Col>
                 </FormGroup>
                 <FormGroup row className={'align-items-center justify-content-center'}>
-                    <Label for={'password-login'} xs={4}>
+                    <Label for={'password-login'} xs={4} sm={2}>
                         Password
                     </Label>
-                    <Col xs={8}>
+                    <Col xs={8} sm={10}>
                         <Input type={'password'} name={'password'} id={'password-login'} onChange={onPasswordChange} placeholder={'Password'}/>
                     </Col>
                 </FormGroup>

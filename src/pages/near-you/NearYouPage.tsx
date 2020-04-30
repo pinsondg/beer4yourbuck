@@ -20,7 +20,8 @@ import {BeerNearYouBrick} from "../../component/brick/BeerNearYouBrick";
 import {NotificationContext, NotificationType} from "../../context/NotificationContext";
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
-import {IoMdOptions, MdClose} from "react-icons/all";
+import {IoMdOptions} from "react-icons/io";
+import {MdClose} from 'react-icons/md';
 
 
 enum Mode {

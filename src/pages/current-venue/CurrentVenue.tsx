@@ -2,7 +2,8 @@ import React, {useContext, useEffect, useState} from "react";
 import {BeerVenueContext} from "../../context/BeerVenueContext";
 import {Badge, Button, Col, Container, Input, Row} from "reactstrap";
 import './current-venue.css'
-import {IoMdSearch, MdAdd} from "react-icons/all";
+import {MdAdd} from "react-icons/md";
+import {IoMdSearch} from "react-icons/io";
 import BeerAddModal, {ModalType} from "../../component/modal/beerAdd/BeerAddModal";
 import {Beer} from "../../model/Beer";
 import Beer4YourBuckAPI from "../../controller/api/Beer4YourBuckAPI";
