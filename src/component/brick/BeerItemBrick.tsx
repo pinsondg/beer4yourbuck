@@ -1,10 +1,13 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Beer} from "../../model/Beer";
-import {Col, Jumbotron, Row} from "reactstrap";
+import {Button, Col, Jumbotron, Row} from "reactstrap";
 import classNames from "classnames";
 import './beer-item-brick.css'
 import {BeerVenue} from "../../model/BeerVenue";
 import {isMobile} from "../../controller/Utils";
+import './brick.css'
+import CircularBeerLogo from "../image/CircularBeerLogo";
+import {LoadingSpinner} from "../load/LoadSpinner";
 
 export default interface Props {
     beer: Beer;
@@ -15,6 +18,7 @@ export default interface Props {
     isDeletable?: boolean;
     isEditable?: boolean
     place: Place;
+    onPublish?: (id: string) => void;
 }
 
 export enum Place {
@@ -23,12 +27,18 @@ export enum Place {
 
 export function BeerItemBrick(props: Props) {
     const [isHovering, setIsHovering] = useState<boolean>(false);
+    const [published, setPublished] = useState<boolean>(false);
+    const [isPublishing, setIsPublishing] = useState<boolean>(false);
 
-    const classes = classNames('beer-item-brick', {
+    const classes = classNames('brick', {
         'first': props.place === Place.FIRST,
         'second' : props.place === Place.SECOND,
         'third' : props.place === Place.THIRD,
         'invalid' : props.place === Place.INVALID
+    });
+
+    const placeClasses = classNames('place-div', {
+        'show': props.place !== Place.INVALID && props.place !== Place.NONE
     });
 
     const handleEditClick = () => {
@@ -37,6 +47,34 @@ export function BeerItemBrick(props: Props) {
 
     const handleDeleteClick = () => {
         props.onDeleteSelect(props.id)
+    };
+
+    const determinePlace = () => {
+        let retString = '';
+        switch (props.place) {
+            case Place.FIRST:
+                retString = '1st';
+                break;
+            case Place.SECOND:
+                retString = '2nd';
+                break;
+            case Place.THIRD:
+                retString = '3rd';
+                break;
+        }
+        return retString;
+    };
+
+    useEffect(() => {
+        setPublished(props.beer.isPublished ? props.beer.isPublished : false);
+        setIsPublishing(false);
+    }, [props]);
+
+    const onPublishClick = () => {
+        if (props.onPublish) {
+            setIsPublishing(true);
+            props.onPublish(props.id);
+        }
     };
 
     return (
@@ -48,6 +86,11 @@ export function BeerItemBrick(props: Props) {
                 {(props.isDeletable && (isHovering || isMobile()))
                 && <button className={'edit-button'} onClick={handleDeleteClick}>Delete</button>}
             </div>
+            <div className={placeClasses}>
+                <h3>
+                    {determinePlace()}
+                </h3>
+            </div>
             {
                 props.place === Place.INVALID && <Row>
                     <Col xs={'auto'} className={'section'}>
@@ -57,18 +100,21 @@ export function BeerItemBrick(props: Props) {
             }
             <Row>
                 <Col xs={'auto'} className={'section'}>
-                    <img
-                        className={'beer-logo'}
-                        src={props.beer.labels ? props.beer.labels.contentAwareMedium : ''}
-                        alt={'Beer Logo'}
+                    <CircularBeerLogo
                         height={100}
                         width={100}
+                        src={props.beer.label ? props.beer.label : ''}
+                        alt={'Beer Logo'}
                     />
                 </Col>
                 <Col xs={'auto'} className={'section'}>
                     <h1>{props.beer.name}</h1>
                     <h5>{props.beer.abv ? props.beer.abv : 'N/A'}% ABV - {props.beer.volume ? props.beer.volume : 'N/A'} fl oz</h5>
                     <h5>{props.venue && props.venue.name ? 'Location: ' + props.venue.name : ''}</h5>
+                    <Button hidden={!(!!props.onPublish) || published || isPublishing} onClick={onPublishClick}>Publish</Button>
+                    {
+                        isPublishing && <LoadingSpinner message={`Publishing...`}/>
+                    }
                 </Col>
                 <Col xs={'auto'} className={'section'}>
                     <h1>${props.beer.price ? props.beer.price.toPrecision(3) : 'N/A'}</h1>

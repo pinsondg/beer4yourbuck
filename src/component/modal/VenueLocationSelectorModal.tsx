@@ -11,32 +11,47 @@ import {
     ModalFooter,
     ModalHeader
 } from "reactstrap";
-import {BeerVenue, VenueLocationInfo} from "../../model/BeerVenue";
-import BreweryDBAPI from "../../controller/api/BreweryDBAPI";
+import {BeerVenue, GooglePlace} from "../../model/BeerVenue";
+import Beer4YourBuckAPI from "../../controller/api/Beer4YourBuckAPI";
 import {getLocation} from "../../controller/LocationController";
+import {NotificationContext, NotificationType} from "../../context/NotificationContext";
 
-const breweryApi = new BreweryDBAPI();
+const breweryApi = new Beer4YourBuckAPI();
 
 interface Props {
-
+    onNoVenuesFound?: () => void;
 }
 
 export function VenueLocationSelectorModal(props: Props) {
-    const [venueLocations, setVenueLocations] = useState<VenueLocationInfo<BeerVenue>[] | null>(null);
-    const [selectedVenue, setSelectedVenue] = useState<VenueLocationInfo<BeerVenue> | null>(null);
+    const [venueLocations, setVenueLocations] = useState<GooglePlace[] | null>(null);
+    const [selectedVenue, setSelectedVenue] = useState<GooglePlace | null>(null);
     const [appearAutomatically, setAppearAutomatically] = useState<boolean>(true);
     const {venue, setVenue} = useContext(BeerVenueContext);
+    const {notifications, setNotifications} = useContext(NotificationContext);
 
 
-    const onSelected = (location: VenueLocationInfo<BeerVenue>) => {
+    const onSelected = (location: GooglePlace) => {
         setSelectedVenue(location)
     };
 
     const activateVenue = () => {
         if (selectedVenue && setVenue) {
-            setVenue(selectedVenue.venue);
+            breweryApi.getVenueByGooglePlacesId(selectedVenue.placeId).then(data => {
+                const foundVenue: BeerVenue | null = data.data;
+                if (foundVenue) {
+                    setVenue(foundVenue);
+                    setNotifications([...notifications, {
+                        title: 'Help Us Out!',
+                        message: `Thanks for setting your venue to ${foundVenue.name}. Take a second to upvote/downvote beers
+                        to help us provide accurate data.`,
+                        type: NotificationType.INFO
+                    }]);
+                } else {
+                    breweryApi.createNewVenue(selectedVenue, []).then(data => setVenue(data.data))
+                }
+            });
         }
-        close()
+        close();
     };
 
     const close = () => {
@@ -48,16 +63,20 @@ export function VenueLocationSelectorModal(props: Props) {
     useEffect(() => {
         if (appearAutomatically && !venue) {
             getLocation((position => {
-                breweryApi.searchBreweryByLocation(position.coords.latitude, position.coords.longitude)
+                breweryApi.searchPossibleVenueNearYou(position.coords.latitude, position.coords.longitude, 50)
                     .then(response => {
-                        const rawResponse = response.data;
-                        const locations: VenueLocationInfo<BeerVenue>[] = response.data;
-                        if (locations) {
-                            locations.forEach((location, i) => location.venue = rawResponse[i].brewery);
+                        const locations: GooglePlace[] = response.data;
+                        setVenueLocations(locations);
+                        if (locations.length === 0 && props.onNoVenuesFound) {
+                            props.onNoVenuesFound();
                         }
-                        setVenueLocations(locations)
                     })
-            }))
+                    .catch(err => {
+                        if (props.onNoVenuesFound) {
+                            props.onNoVenuesFound();
+                        }
+                    });
+            }));
         }
     }, [props, appearAutomatically, venue]);
 
@@ -65,15 +84,19 @@ export function VenueLocationSelectorModal(props: Props) {
         return (
             <Modal isOpen={true}>
                 <ModalHeader>
-                    We noticed that you are near {venueLocations.length} location{venueLocations.length > 1 ? "s" : ''} that we know serves cold brews!
+                    We noticed that you are near {venueLocations.length} venue{venueLocations.length > 1 ? "s" : ''} that we know serves cold brews!
                 </ModalHeader>
                 <ModalBody>
-                    <p>Would you like to set your location? Setting your location helps us fill in more info automatically!</p>
+                    <p>Would you like to set your venue? Setting your venue allows you to publish beers to it, which helps other users find the best beers near them!</p>
                     <VenueDropdown venues={venueLocations} onSelect={onSelected}/>
                 </ModalBody>
                 <ModalFooter>
                     <Button disabled={selectedVenue == null} color={'primary'} onClick={activateVenue}>Set Location!</Button>
-                    <Button color={'secondary'} onClick={close}>Don't Set Location</Button>
+                    <Button color={'secondary'} onClick={() => {
+                        close();
+                        if (props.onNoVenuesFound) {
+                            props.onNoVenuesFound()
+                        }}}>Don't Set Location</Button>
                 </ModalFooter>
             </Modal>
         )
@@ -83,8 +106,8 @@ export function VenueLocationSelectorModal(props: Props) {
 }
 
 interface DropdownItems {
-    venues: VenueLocationInfo<BeerVenue>[] | null;
-    onSelect: (venueLocation: VenueLocationInfo<BeerVenue>) => void;
+    venues: GooglePlace[] | null;
+    onSelect: (venueLocation: GooglePlace) => void;
 }
 
 let dropdownItemKey = 0;
@@ -97,7 +120,7 @@ const VenueDropdown = (props: DropdownItems) => {
 
     const onItemClick = (index: number) => {
         if (props.venues) {
-            setText(props.venues[index].venue.name);
+            setText(props.venues[index].name);
             props.onSelect(props.venues[index])
         }
     };
@@ -105,11 +128,11 @@ const VenueDropdown = (props: DropdownItems) => {
     return (
         <Dropdown isOpen={dropdownOpen} toggle={toggle}>
             <DropdownToggle caret>
-                {text ? text : "Select Brewery"}
+                {text ? text : "Select Venue"}
             </DropdownToggle>
             <DropdownMenu>
                 {props.venues && props.venues.map((venue, index) => (
-                    <IndexedDropdownItem index={index} key={dropdownItemKey++} onClick={onItemClick} element={<div>{venue.venue.name}</div>}/>
+                    <IndexedDropdownItem index={index} key={dropdownItemKey++} onClick={onItemClick} element={<div>{venue.name}</div>}/>
                 ))}
             </DropdownMenu>
         </Dropdown>

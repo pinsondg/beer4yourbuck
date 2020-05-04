@@ -1,0 +1,38 @@
+.notification {
+    justify-content: center;
+    margin: 5px auto;
+    width: 50%;
+}
+
+.notification.mobile {
+    width: 95%;
+}
+
+.notification.clickable {
+
+}
+
+.icon-holder {
+    align-self: center;
+}
+
+.notification.clickable:hover {
+    cursor: pointer;
+}
+
+.dismiss-button {
+    align-self: center;
+}
+
+.text-holder {
+    padding-left: 10px;
+    padding-right: 10px;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    text-align: left;
+}
+
+.text-holder p {
+    margin-bottom: 0;
+}

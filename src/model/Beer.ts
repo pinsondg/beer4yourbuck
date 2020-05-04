@@ -5,27 +5,31 @@ import {OttawayCalculator} from "../controller/OttawayCalculator";
 
 export interface BeerInterface {
     name?: string;
+    untappedId?: number;
+    breweryName?: string
     id?: string;
-    nameDisplay?: string;
     description?: string;
     abv?: string;
-    isRetired?: string;
-    labels?: BeerIconLabels;
-    price?: number
-    volume?: number
+    label?: string;
+    price?: number;
+    volume?: number;
+    verified?: boolean;
+    isPublished?: boolean;
 }
 
 export class Beer implements BeerInterface {
 
     name?: string;
+    breweryName?: string;
+    untappedId?: number;
     id?: string;
-    nameDisplay?: string;
     description?: string;
     abv?: string;
-    isRetired?: string;
-    labels?: BeerIconLabels;
+    label?: string;
     price?: number;
     volume?: number;
+    verified?: boolean;
+    isPublished?: boolean;
 
     getOttawayScore(): number {
         if (this.volume && this.abv && this.price) {
@@ -36,17 +40,24 @@ export class Beer implements BeerInterface {
 
     static Builder =  class Builder {
         private name?: string;
+        private breweryName?: string;
+        private untappedId?: number;
         private id?: string;
-        private nameDisplay?: string;
         private description?: string;
         private abv?: string;
-        private isRetired?: string;
-        private labels?: BeerIconLabels;
+        private label?: string;
         private price?: number;
         private volume?: number;
+        private verified?: boolean;
+        private isPublished?: boolean;
 
         withName(name: string): Builder {
             this.name = name;
+            return this;
+        }
+
+        withBreweryName(breweryName: string): Builder {
+            this.breweryName = breweryName;
             return this;
         }
 
@@ -55,8 +66,8 @@ export class Beer implements BeerInterface {
             return this;
         }
 
-        withNameDisplay(nameDisplay: string): Builder {
-            this.nameDisplay = nameDisplay;
+        withUntappedId(id: number): Builder {
+            this.untappedId = id;
             return this;
         }
 
@@ -70,13 +81,8 @@ export class Beer implements BeerInterface {
             return this;
         }
 
-        withIsRetired(isRetired: string): Builder {
-            this.isRetired = isRetired;
-            return this;
-        }
-
-        withLabels(labels: BeerIconLabels): Builder {
-            this.labels = labels;
+        withLabel(label: string): Builder {
+            this.label = label;
             return this;
         }
 
@@ -90,45 +96,47 @@ export class Beer implements BeerInterface {
             return this;
         }
 
+        withVerified(verified: boolean): Builder {
+            this.verified = verified;
+            return this;
+        }
+
+        withIsPublished(isPublished: boolean): Builder {
+            this.isPublished = isPublished;
+            return this;
+        }
+
         withBeer(beer: BeerInterface): Builder {
             this.volume = beer.volume;
-            this.nameDisplay = beer.nameDisplay;
+            this.untappedId = beer.untappedId;
+            this.breweryName = beer.breweryName;
             this.price = beer.price;
             this.abv = beer.abv;
             this.name = beer.name;
-            this.labels = beer.labels;
-            this.isRetired = beer.isRetired;
             this.id = beer.id;
             this.description = beer.description;
+            this.verified = beer.verified;
+            this.label = beer.label;
+            this.isPublished = beer.isPublished;
             return this;
         }
 
         build(): Beer {
             let beer = new Beer();
             beer.name = this.name;
+            beer.untappedId = this.untappedId;
             beer.id = this.id;
             beer.volume = this.volume;
             beer.price = this.price;
-            beer.nameDisplay = this.nameDisplay;
             beer.description = this.description;
             beer.abv = this.abv;
             beer.volume = this.volume;
-            beer.isRetired = this.isRetired;
-            beer.labels = this.labels;
+            beer.verified = this.verified;
+            beer.label = this.label;
+            beer.breweryName = this.breweryName;
+            beer.isPublished = this.isPublished;
             return beer;
         }
     }
 
-}
-
-/**
- * Contains links to a beer icon/label image.
- */
-export interface BeerIconLabels {
-    icon?: string;
-    medium?: string;
-    large?: string;
-    contentAwareIcon?: string;
-    contentAwareMedium?: string;
-    contentAwareLarge?: string;
 }

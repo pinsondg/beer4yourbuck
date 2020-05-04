@@ -1,11 +1,13 @@
 import React, {useEffect, useState} from "react";
-import BeerSearcher from "../input/beer-searcher/BeerSearcher";
-import {Button, Form, Modal, ModalBody, ModalHeader} from "reactstrap";
-import ABVInput from "../input/apv-input/ABVInput";
-import {Beer} from "../../model/Beer";
-import CostInput from "../input/cost-input/CostInput";
-import VolumeInput from "../input/volume-input/VolumeInput";
-import {OttawayCalculator} from "../../controller/OttawayCalculator";
+import BeerSearcher from "../../input/beer-searcher/BeerSearcher";
+import {Button, Form, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
+import ABVInput from "../../input/apv-input/ABVInput";
+import {Beer} from "../../../model/Beer";
+import CostInput from "../../input/cost-input/CostInput";
+import VolumeInput from "../../input/volume-input/VolumeInput";
+import {OttawayCalculator} from "../../../controller/OttawayCalculator";
+import PoweredByUntapped from "../../misc/untapped/PoweredByUntapped";
+import './beer-add-modal.css'
 
 interface BeerAddModalProps {
     initialBeer?: Beer
@@ -65,7 +67,7 @@ export default function BeerAddModal(props: BeerAddModalProps) {
     useEffect(() => {
         const beer = props.initialBeer;
         if (beer) {
-            if (beer.labels) {
+            if (beer.label) {
                 setSelectedBeer(beer);
             }
             setBeerName(beer.name ? beer.name : '');
@@ -124,7 +126,6 @@ export default function BeerAddModal(props: BeerAddModalProps) {
                     .withAbv(apvInput.toString())
                     .withPrice(cost)
                     .withVolume(volume)
-                    .withNameDisplay(beerName)
                     .build();
                 props.onConfirm(beer);
             }
@@ -167,9 +168,12 @@ export default function BeerAddModal(props: BeerAddModalProps) {
                         props.showScore && score && score > -1 &&
                             <p>{"Ottaway Score: " + score.toFixed(2)}</p>
                     }
-                    <Button onClick={onAdd} color={'primary'} disabled={score === -1}>{props.modalType === ModalType.ADD ? 'Add' : 'Update'}</Button>
                 </Form>
+                <PoweredByUntapped className={'untapped'} text={'Beer Search is '}/>
             </ModalBody>
+            <ModalFooter>
+                <Button onClick={onAdd} color={'primary'} disabled={score === -1}>{props.modalType === ModalType.ADD ? 'Add' : 'Update'}</Button>
+            </ModalFooter>
         </Modal>
     )
 }

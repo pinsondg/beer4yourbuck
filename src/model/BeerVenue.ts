@@ -12,15 +12,19 @@ export interface Brewery extends BeerVenue {
     established: string;
     mailingListUrl: string;
     isOrganic: boolean;
-    beers?: Array<Beer>
 }
 
 /**
  * Represents any place that serves beer (i.e. Brewery, Restaurant)
  */
 export interface BeerVenue {
-    id: string
-    name: string
+    id: string;
+    name: string;
+    beers: Array<Beer>;
+    lat: number;
+    lon: number;
+    address: string;
+    venueType: string;
 }
 
 /**
@@ -31,4 +35,11 @@ export interface VenueLocationInfo<T extends BeerVenue> {
     streetAddress: string;
     latitude: number;
     longitude: number;
+}
+
+export interface GooglePlace {
+    formattedAddress: string;
+    name: string;
+    placeId: string;
+    vicinity: string;
 }

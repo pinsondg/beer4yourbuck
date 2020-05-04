@@ -4,6 +4,6 @@ import {BeerVenue} from "../model/BeerVenue";
 export const BeerVenueContext = createContext<BeerVenueContextData>({setVenue: () => {}});
 
 export interface BeerVenueContextData {
-    venue?: BeerVenue;
-    setVenue?: (venue: BeerVenue) => void;
+    venue?: BeerVenue | null;
+    setVenue: (venue: BeerVenue | null) => void;
 }
