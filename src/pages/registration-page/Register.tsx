@@ -162,8 +162,11 @@ export default function Register() {
                 // })
                 setRegisterSuccess(true);
             }).catch(err => {
-                handleRegistrationError(err);
-                console.log(JSON.stringify(err.response));
+                if (err.response && err.response.data) {
+                    handleRegistrationError(err);
+                } else {
+                    console.log(err)
+                }
             });
         } else if (state.confirmPassword !== state.password){
             setNotifications([...notifications, {

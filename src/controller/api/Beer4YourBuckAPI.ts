@@ -2,7 +2,9 @@ import {BeerVenue, GooglePlace} from "../../model/BeerVenue";
 import {Beer} from "../../model/Beer";
 import {UserType} from "../../model/User";
 
-const axios = require('axios').default;
+const axios = require('axios').default.create({
+    withCredentials: true
+});
 
 export default class Beer4YourBuckAPI {
     private url: string = process.env.REACT_APP_BACKEND_URL!;
@@ -92,7 +94,7 @@ export default class Beer4YourBuckAPI {
         if (rememberMe) {
             formData.append('remember-me','on');
         }
-        return axios.post(this.url + '/auth/login', formData, {
+        return axios.post(this.url + 'auth/login', formData, {
             headers: {
                 'content-type': 'application/x-www-form-urlencoded',
                 'accept': 'application/json'
@@ -104,7 +106,7 @@ export default class Beer4YourBuckAPI {
         if (lastName === '') {
             lastName = 'secret';
         }
-        return axios.post(this.url + '/auth/register', {
+        return axios.post(this.url + 'auth/register', {
             userName: userName,
             email: email,
             password: password,
@@ -119,7 +121,7 @@ export default class Beer4YourBuckAPI {
     }
 
     async requestNewEmail(userName: string) {
-        return axios.get(this.url + "/auth/register/resend", {
+        return axios.get(this.url + "auth/register/resend", {
             params: {
                 'username': userName
             }
@@ -127,11 +129,11 @@ export default class Beer4YourBuckAPI {
     }
 
     async getUserDetails() {
-        return axios.get(this.url + '/auth/user');
+        return axios.get(this.url + 'auth/user');
     }
 
     async logout() {
-        return axios.post(this.url + '/auth/logout');
+        return axios.post(this.url + 'auth/logout');
     }
 
     async getTotalNumberReportedBeers() {

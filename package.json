@@ -37,7 +37,7 @@
   },
   "scripts": {
     "start": "react-scripts start --no-cache",
-    "build": "react-scripts --max_old_space_size=896 build",
+    "build": "react-scripts build",
     "test": "react-scripts test --no-cache",
     "eject": "react-scripts eject",
     "test-ci": "CI=true react-scripts test"
@@ -64,6 +64,5 @@
     "@types/rc-slider": "^8.6.5",
     "@types/react-sidebar": "^3.0.0",
     "@types/styled-components": "^5.0.1"
-  },
-  "proxy": "http://localhost:8080"
+  }
 }

@@ -56,7 +56,7 @@ function App() {
                                               <MenuUpload/>
                                           </Route>
                                           <Route path={'/compare'}>
-                                              <MultiCompareFlow uploadNotificationShown={[uploadNotificationShown, setUploadNotificationShown]}/>
+                                              <MultiCompareFlow/>
                                           </Route>
                                           <Route path={'/near'}>
                                               <NearYouPage/>
