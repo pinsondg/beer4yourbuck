@@ -7,7 +7,7 @@ import './beer-searcher.css'
 import {CustomInput} from "../CustomInput";
 import {CalculationItemInput} from "../../modal/beerAdd/BeerAddModal";
 
-const beerApi = new Beer4YourBuckAPI();
+const beerApi = Beer4YourBuckAPI.getInstance();
 
 export interface BeerSearcherProp extends CustomInput{
     getSelected: (beer: Beer) => void

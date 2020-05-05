@@ -12,7 +12,7 @@ interface Props {
 
 }
 
-const api = new Beer4YourBuckAPI();
+const api = Beer4YourBuckAPI.getInstance();
 
 export function TopNavBar(props: Props) {
     const location = useLocation();

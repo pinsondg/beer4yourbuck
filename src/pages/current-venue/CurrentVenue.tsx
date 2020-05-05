@@ -14,7 +14,7 @@ import RegistrationModal from "../../component/modal/RegistrationModal";
 import {LoadingSpinner} from "../../component/load/LoadSpinner";
 import {VenueLocationSelectorModal} from "../../component/modal/VenueLocationSelectorModal";
 
-const api = new Beer4YourBuckAPI();
+const api = Beer4YourBuckAPI.getInstance();
 
 interface Props {
 }

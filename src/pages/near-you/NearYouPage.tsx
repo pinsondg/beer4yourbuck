@@ -98,7 +98,7 @@ export function NearYouPage() {
 
     useEffect(() => {
         setIsLoading(true);
-        const api = new Beer4YourBuckAPI();
+        const api = Beer4YourBuckAPI.getInstance();
         getLocation((position) => {
             console.log("Accuracy: " + position.coords.accuracy.toFixed(2) + " m");
             setCurrPos(position);

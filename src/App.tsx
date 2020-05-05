@@ -18,8 +18,9 @@ import User from "./model/User";
 import Login from "./pages/login-page/Login";
 import Beer4YourBuckAPI from "./controller/api/Beer4YourBuckAPI";
 import Register from "./pages/registration-page/Register";
+import PasswordReset from "./pages/password-reset/PasswordReset";
 
-const api = new Beer4YourBuckAPI();
+const api = Beer4YourBuckAPI.getInstance();
 function App() {
     console.log("Running app in " + process.env.NODE_ENV + " environment.");
     const [venue, setVenue] = useState<BeerVenue | null>();
@@ -69,6 +70,9 @@ function App() {
                                           </Route>
                                           <Route path={'/register'}>
                                               <Register/>
+                                          </Route>
+                                          <Route path={'/resetPassword'}>
+                                              <PasswordReset/>
                                           </Route>
                                       </CompareBeerContext.Provider>
                                   </Switch>
