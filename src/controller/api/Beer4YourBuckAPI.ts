@@ -6,8 +6,20 @@ const axios = require('axios').default.create({
     withCredentials: true
 });
 
+/**
+ * Singleton api instance.
+ */
 export default class Beer4YourBuckAPI {
     private url: string = process.env.REACT_APP_BACKEND_URL!;
+    private static instance: Beer4YourBuckAPI = new Beer4YourBuckAPI();
+
+    private constructor() {
+
+    }
+
+    static getInstance() {
+        return this.instance;
+    }
 
     async searchBeer(name: string) {
         return axios.get(this.url + "beer/search", {
@@ -120,7 +132,7 @@ export default class Beer4YourBuckAPI {
         });
     }
 
-    async requestNewEmail(userName: string) {
+    async requestNewActivationEmail(userName: string) {
         return axios.get(this.url + "auth/register/resend", {
             params: {
                 'username': userName
@@ -145,6 +157,30 @@ export default class Beer4YourBuckAPI {
     }
 
     async getBeerVotedScore(beer: Beer) {
-        return axios.get(this.url + `/beer/vote/${beer.id}`);
+        return axios.get(this.url + `beer/vote/${beer.id}`);
+    }
+
+    async getUserFromPasswordResetToken(token: string) {
+        return axios.get(this.url + `auth/user/passwordResetToken/${token}`);
+    }
+
+    async resetPassword(token: string, newPassword: string) {
+        return axios.post(this.url + `auth/user/changePassword/${token}`, {
+            newPassword: newPassword
+        });
+    }
+
+    async resetPasswordUserLoggedIn(newPassword: string) {
+        return axios.post(this.url + `auth/user/changePassword`, {
+            newPassword: newPassword
+        });
+    }
+
+    async requestResetPasswordEmail(usernameOrEmail: string) {
+        return axios.post(`${this.url}auth/user/changePassword`, {}, {
+            params: {
+                username: usernameOrEmail
+            }
+        });
     }
 }

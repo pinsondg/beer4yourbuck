@@ -53,7 +53,9 @@ export default function NotificationCenter() {
 
     return (
         <Collapse isOpen={notifications.length > 0}>
-            {active && <NotificationComponent notification={active} onClose={getNext}/>}
+            <div>
+                {active && <NotificationComponent notification={active} onClose={getNext}/>}
+            </div>
         </Collapse>
     )
 }

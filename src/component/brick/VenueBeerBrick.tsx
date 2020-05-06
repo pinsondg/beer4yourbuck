@@ -10,7 +10,7 @@ import './venue-beer-brick.css'
 import './brick.css'
 import classNames from "classnames";
 
-const api = new Beer4YourBuckAPI();
+const api = Beer4YourBuckAPI.getInstance();
 
 interface Props {
     upVoted?: boolean;

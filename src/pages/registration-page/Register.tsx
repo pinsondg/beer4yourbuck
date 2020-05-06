@@ -1,11 +1,11 @@
 import React, {useContext, useEffect, useReducer, useState} from "react";
-import {Button, Col, Container, Form, FormGroup, Input, Label, Row, UncontrolledCollapse} from "reactstrap";
+import {Button, Col, Container, Form, FormGroup, Input, Label} from "reactstrap";
 import Beer4YourBuckAPI from "../../controller/api/Beer4YourBuckAPI";
 import {NotificationContext, NotificationType} from "../../context/NotificationContext";
-import {useHistory} from "react-router-dom";
-import {UserContext} from "../../context/UserContext";
 import './register.css'
 import classNames from "classnames";
+import PasswordInput from "../../component/input/password-input/PasswordInput";
+import {passwordRegex} from "../../controller/Utils";
 
 interface FieldData {
     email: string;
@@ -15,9 +15,6 @@ interface FieldData {
     firstName: string;
     lastName: string;
 }
-
-var passwordRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
-
 
 type Action =
     | {type: 'setEmail', val: string}
@@ -53,13 +50,11 @@ function reducer(state: FieldData, action: Action): FieldData {
     }
 }
 
-const api = new Beer4YourBuckAPI();
+const api = Beer4YourBuckAPI.getInstance();
 
 export default function Register() {
     const [state, dispatch] = useReducer(reducer, initialState);
     const {notifications, setNotifications} = useContext(NotificationContext);
-    const {user, setUser} = useContext(UserContext);
-    const history = useHistory();
     const [hideInput, setHideInput] = useState<boolean>(false);
     const [registerSuccess, setRegisterSuccess] = useState<boolean>(false);
 
@@ -68,14 +63,8 @@ export default function Register() {
             case 'username':
                 dispatch({type: 'setUsername', val: e.target.value});
                 break;
-            case 'password':
-                dispatch({type: 'setPassword', val: e.target.value});
-                break;
             case 'email':
                 dispatch({type: 'setEmail', val: e.target.value});
-                break;
-            case 'confirm-password':
-                dispatch({type: 'setConfirmPassword', val: e.target.value});
                 break;
             case 'last-name':
                 dispatch({type: 'setLastName', val: e.target.value});
@@ -241,36 +230,10 @@ export default function Register() {
                                        onChange={onInputChange}/>
                             </Col>
                         </FormGroup>
-                        <FormGroup row className={'justify-content-center align-items-center'}>
-                            <Label xs={4} sm={2} for={'password'}>
-                                Password
-                            </Label>
-                            <Col xs={8} sm={10}>
-                                <Input type={'password'} name={'password'} id={'password'} placeholder={'Password'}
-                                       onChange={onInputChange}/>
-                            </Col>
-                        </FormGroup>
-                        <FormGroup row className={'justify-content-center align-items-center'}>
-                            <Label xs={4} sm={2} for={'confirm-password'}>
-                                Confirm Password
-                            </Label>
-                            <Col xs={8} sm={10}>
-                                <Input type={'password'} name={'confirm-password'} id={'confirm-password'}
-                                       placeholder={'Confirm Password'} onChange={onInputChange}/>
-                            </Col>
-                        </FormGroup>
-                        <Row>
-                            <Col>
-                                <Button id={'toggler'} color={'link'}>View Password Guidelines</Button>
-                                <UncontrolledCollapse toggler={'#toggler'}>
-                                    <p>Must contain at least 1 lowercase alphabetical character</p>
-                                    <p>Must contain at least 1 uppercase alphabetical character</p>
-                                    <p>Must contain at least 1 numeric character</p>
-                                    <p>Must contain at least one special character (!@#$%^&*)</p>
-                                    <p>Must be eight characters or longer</p>
-                                </UncontrolledCollapse>
-                            </Col>
-                        </Row>
+                        <PasswordInput
+                            onPasswordChange={(val) => dispatch({type: 'setPassword', val: val})}
+                            onConfirmPasswordChange={(val) => dispatch({type: 'setConfirmPassword', val: val})}
+                        />
                         <FormGroup row>
                             <Col>
                                 <Button color={'primary'} onClick={handleRegister}>Register</Button>

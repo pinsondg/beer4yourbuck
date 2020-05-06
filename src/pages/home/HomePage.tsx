@@ -6,7 +6,7 @@ import {IoIosArrowDown} from 'react-icons/io'
 import {MdCompareArrows, MdMyLocation} from 'react-icons/md'
 import Beer4YourBuckAPI from "../../controller/api/Beer4YourBuckAPI";
 
-const api = new Beer4YourBuckAPI();
+const api = Beer4YourBuckAPI.getInstance();
 
 export function HomePage() {
     const [reportedBeers, setReportedBeers] = useState<number | null>(null);

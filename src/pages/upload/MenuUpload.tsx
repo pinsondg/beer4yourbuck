@@ -28,7 +28,7 @@ let myRotationFunction = async (file: File) => {
     return blobOfArray;
 };
 
-const api = new Beer4YourBuckAPI();
+const api = Beer4YourBuckAPI.getInstance();
 
 let uploadChecker: number;
 

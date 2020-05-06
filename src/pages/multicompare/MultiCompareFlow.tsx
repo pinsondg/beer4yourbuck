@@ -15,7 +15,7 @@ import Beer4YourBuckAPI from "../../controller/api/Beer4YourBuckAPI";
 interface Props {
 }
 
-const api = new Beer4YourBuckAPI();
+const api = Beer4YourBuckAPI.getInstance();
 
 function sortList(list: BeerItem[]): BeerItem[] {
     const newList = [...list];

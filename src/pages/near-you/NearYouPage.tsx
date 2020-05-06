@@ -50,19 +50,6 @@ export function NearYouPage() {
     const [range, setRange] = useState<number>(0.5);
     const [nameFilter, setNameFilter] = useState<string>('');
 
-    useEffect(() => {
-        const filtered = venues.filter(venue => {
-            if (currPos) {
-                const distance = metersToMiles(getDistance(currPos.coords.latitude, currPos.coords.longitude, venue.lat, venue.lon));
-                return distance <= range;
-            }
-            return false;
-        });
-        if (JSON.stringify(filtered) !== JSON.stringify(venues)) {
-            setVenues(filtered);
-        }
-    }, [venues, range, currPos]);
-
     const getNearYouLocationBricks = (): ReactNode => {
         return [...venues].sort((venue1, venue2)=> {
             let distance1 = 0;
@@ -98,7 +85,7 @@ export function NearYouPage() {
 
     useEffect(() => {
         setIsLoading(true);
-        const api = new Beer4YourBuckAPI();
+        const api = Beer4YourBuckAPI.getInstance();
         getLocation((position) => {
             console.log("Accuracy: " + position.coords.accuracy.toFixed(2) + " m");
             setCurrPos(position);
@@ -107,7 +94,7 @@ export function NearYouPage() {
                     setIsLoading(false);
                     const newVenues: BeerVenue[] = data.data;
                     console.log(JSON.stringify(newVenues));
-                    if (newVenues.length > 0 && JSON.stringify(newVenues) !== JSON.stringify(venues)) {
+                    if (JSON.stringify(newVenues) !== JSON.stringify(venues)) {
                         setVenues(newVenues);
                     } else if (newVenues.filter((venue) => venue.beers.length > 0).length === 0) {
                         setNotifications([...notifications, {

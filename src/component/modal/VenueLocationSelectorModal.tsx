@@ -16,7 +16,7 @@ import Beer4YourBuckAPI from "../../controller/api/Beer4YourBuckAPI";
 import {getLocation} from "../../controller/LocationController";
 import {NotificationContext, NotificationType} from "../../context/NotificationContext";
 
-const breweryApi = new Beer4YourBuckAPI();
+const breweryApi = Beer4YourBuckAPI.getInstance();
 
 interface Props {
     onNoVenuesFound?: () => void;
