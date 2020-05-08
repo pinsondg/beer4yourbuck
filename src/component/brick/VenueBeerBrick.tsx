@@ -68,8 +68,6 @@ export default function VenueBeerBrick(props: Props) {
 
     useEffect(() => {
         api.getBeerVotedScore(props.beer).then(data => {
-            console.log(data.data);
-            console.log(voteCount);
             if (voteCount !== data.data) {
                 setVoteCount(data.data);
             }
@@ -138,7 +136,7 @@ export default function VenueBeerBrick(props: Props) {
                         <Col sm={4} md={'auto'}>
                             <Row>
                                 <Col>
-                                    <h5>{props.beer.name}</h5>
+                                    <h5>{props.beer.name}{props.beer.count && props.beer.count > 1 ? ` (x${props.beer.count})` : ''}</h5>
                                 </Col>
                             </Row>
                             <Row>

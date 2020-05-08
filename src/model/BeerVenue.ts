@@ -24,7 +24,7 @@ export interface BeerVenue {
     lat: number;
     lon: number;
     address: string;
-    venueType: string;
+    venueTypes: string[];
 }
 
 /**

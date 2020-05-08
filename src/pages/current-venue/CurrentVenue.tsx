@@ -31,7 +31,7 @@ export default function CurrentVenue(props: Props) {
     const [showRegisterModal, setShowRegisterModal] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [searchTerm, setSearchTerm] = useState<string>('');
-    const [noVeneusFound, setNoVenuesFound] = useState<boolean>();
+    const [noVenuesFound, setNoVenuesFound] = useState<boolean>();
 
     const onBeerAdded = (beer: Beer) => {
         if (venue) {
@@ -94,11 +94,13 @@ export default function CurrentVenue(props: Props) {
                 <Container fluid={true}>
                     <Row className={'align-items-center top-row'}>
                         <Col xs={6} sm={'4'}>
-                            <h5>{venue.name} <Badge color={'primary'}>{venue.venueType}</Badge></h5>
+                            <h5>{venue.name} <Badge color={'primary'}>{venue.venueTypes.join("/")}</Badge></h5>
                         </Col>
-                        <Col xs={6} sm={{offset: 4, size: 4}}>
-                            <h6>Happy Hour: 5pm-7pm</h6>
-                        </Col>
+                        {
+                            !venue.venueTypes.includes("STORE") && <Col xs={6} sm={{offset: 4, size: 4}}>
+                                <h6>Happy Hour: 5pm-7pm</h6>
+                            </Col>
+                        }
                     </Row>
                     <Row className={'justify-content-center top-row'}>
                         <Col xs={6} sm={6}>
@@ -137,6 +139,7 @@ export default function CurrentVenue(props: Props) {
                         show={showAddModal}
                         onConfirm={onBeerAdded}
                         onClose={() => setShowAddModal(false)}
+                        showCount={venue.venueTypes.includes("STORE")}
                     />
                 }
                 {showRegisterModal && <RegistrationModal
@@ -151,8 +154,8 @@ export default function CurrentVenue(props: Props) {
         return (
             <div>
                 <VenueLocationSelectorModal onNoVenuesFound={() => setNoVenuesFound(true)}/>
-                {noVeneusFound === undefined && <LoadingSpinner message={'Searching for possible venues near you...'}/>}
-                {noVeneusFound && <h4>Could not find any venues near you.</h4>}
+                {noVenuesFound === undefined && <LoadingSpinner message={'Searching for possible venues near you...'}/>}
+                {noVenuesFound && <h4>Could not find any venues near you.</h4>}
             </div>
         )
     }
