@@ -8,6 +8,7 @@ import VolumeInput from "../../input/volume-input/VolumeInput";
 import {OttawayCalculator} from "../../../controller/OttawayCalculator";
 import PoweredByUntapped from "../../misc/untapped/PoweredByUntapped";
 import './beer-add-modal.css'
+import {CountInput} from "../../input/count-input/CountInput";
 
 interface BeerAddModalProps {
     initialBeer?: Beer
@@ -18,6 +19,7 @@ interface BeerAddModalProps {
     onConfirm: (beer: Beer) => void;
     show?: boolean;
     onClose?: () => void;
+    showCount?: boolean;
 }
 
 export enum ModalType {
@@ -40,6 +42,7 @@ export default function BeerAddModal(props: BeerAddModalProps) {
     const [apvInput, setApvInput] = useState<number | null>(null);
     const [cost, setCost] = useState<number | null>(null);
     const [volume, setVolume] = useState<number | null>(null);
+    const [count, setCount] = useState<number>(1);
     const [inputErrors] = useState<InputErrors>({
         beerError: false,
         apvError: false,
@@ -55,14 +58,14 @@ export default function BeerAddModal(props: BeerAddModalProps) {
     useEffect(() => {
         let ottawayScore = -1;
         if (apvInput && cost && volume) {
-            ottawayScore = OttawayCalculator.calculate(apvInput, cost, volume);
+            ottawayScore = OttawayCalculator.calculate(apvInput, cost, volume, count);
         }
         console.log("Ottaway Score is: " + ottawayScore);
         if (ottawayScore > -1 && onScoreCalculated && ottawayScore !== score) {
             onScoreCalculated(ottawayScore);
         }
         setScore(ottawayScore);
-    }, [onScoreCalculated, score, cost, volume, apvInput]);
+    }, [onScoreCalculated, score, cost, volume, apvInput, count]);
 
     useEffect(() => {
         const beer = props.initialBeer;
@@ -119,6 +122,7 @@ export default function BeerAddModal(props: BeerAddModalProps) {
             if (selectedBeer) {
                 selectedBeer.price = cost;
                 selectedBeer.volume = volume;
+                selectedBeer.count = count;
                 props.onConfirm(selectedBeer);
             } else {
                 const beer: Beer = new Beer.Builder()
@@ -126,6 +130,7 @@ export default function BeerAddModal(props: BeerAddModalProps) {
                     .withAbv(apvInput.toString())
                     .withPrice(cost)
                     .withVolume(volume)
+                    .withCount(count)
                     .build();
                 props.onConfirm(beer);
             }
@@ -164,6 +169,9 @@ export default function BeerAddModal(props: BeerAddModalProps) {
                         text={volume ? volume.toString() : ''}
                         error={inputErrors.volumeError}
                     />
+                    {props.showCount && <CountInput
+                        onValueChange={(val) => setCount(+val)}
+                    />}
                     {
                         props.showScore && score && score > -1 &&
                             <p>{"Ottaway Score: " + score.toFixed(2)}</p>

@@ -13,6 +13,7 @@ export interface BeerInterface {
     label?: string;
     price?: number;
     volume?: number;
+    count?: number
     verified?: boolean;
     isPublished?: boolean;
 }
@@ -28,12 +29,13 @@ export class Beer implements BeerInterface {
     label?: string;
     price?: number;
     volume?: number;
+    count?: number;
     verified?: boolean;
     isPublished?: boolean;
 
     getOttawayScore(): number {
-        if (this.volume && this.abv && this.price) {
-            return OttawayCalculator.calculate(+this.abv, this.price, this.volume);
+        if (this.volume && this.abv && this.price && this.count) {
+            return OttawayCalculator.calculate(+this.abv, this.price, this.volume, this.count);
         }
         return -1;
     }
@@ -50,6 +52,7 @@ export class Beer implements BeerInterface {
         private volume?: number;
         private verified?: boolean;
         private isPublished?: boolean;
+        private count?: number;
 
         withName(name: string): Builder {
             this.name = name;
@@ -96,6 +99,11 @@ export class Beer implements BeerInterface {
             return this;
         }
 
+        withCount(count: number): Builder {
+            this.count = count;
+            return this;
+        }
+
         withVerified(verified: boolean): Builder {
             this.verified = verified;
             return this;
@@ -118,6 +126,7 @@ export class Beer implements BeerInterface {
             this.verified = beer.verified;
             this.label = beer.label;
             this.isPublished = beer.isPublished;
+            this.count = beer.count
             return this;
         }
 
@@ -135,6 +144,7 @@ export class Beer implements BeerInterface {
             beer.label = this.label;
             beer.breweryName = this.breweryName;
             beer.isPublished = this.isPublished;
+            beer.count = this.count;
             return beer;
         }
     }

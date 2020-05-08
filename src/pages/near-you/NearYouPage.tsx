@@ -36,7 +36,7 @@ const mockVenue: BeerVenue = {
     lat: 37.87604,
     lon: -77.98573,
     name: "Sticky Rice",
-    venueType: "BREWERY",
+    venueTypes: ["BREWERY"],
     address: "1234 Something Rd."
 };
 

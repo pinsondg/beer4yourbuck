@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@n8tb1t/use-scroll-position": "^1.0.43",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
@@ -15,6 +16,7 @@
     "@types/reactstrap": "^8.4.2",
     "@types/request-promise-native": "^1.0.17",
     "axios": "^0.18.1",
+    "body-scroll-lock": "^3.0.2",
     "classnames": "^2.2.6",
     "fitty": "^2.3.0",
     "fix-image-rotation": "^2.0.0",
