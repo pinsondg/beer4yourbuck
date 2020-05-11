@@ -60,7 +60,7 @@ export function LocationNearYouBrick(props: Props) {
                                             </div>
                                         </Col>
                                         <Col lg={6}>
-                                            <h6>{beer.name}</h6>
+                                            <h6>{beer.name}{beer.count && beer.count > 1 ? ` (x${beer.count})` : ''}</h6>
                                             <h6>${beer.price ? beer.price.toFixed(2) : 'N/A'}</h6>
                                         </Col>
                                         <Col lg={4}>
