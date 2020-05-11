@@ -2,15 +2,22 @@
     justify-content: center;
     margin: 5px auto;
     width: 50%;
-    box-shadow: darkgray;
     position: relative;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .notification-center {
     width: 100%;
     position: absolute;
-    top: 0;
     z-index: 1;
+}
+
+.notification-center.active {
+    top: 0;
+}
+
+.notification-center.hidden {
+    bottom: 0;
 }
 
 .close-button {

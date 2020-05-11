@@ -3,6 +3,10 @@
     flex-direction: row;
 }
 
+.venue-controls {
+    border-bottom: darkgray solid 1px;
+}
+
 .current-venue-content {
     display: flex;
     flex-direction: column;
@@ -11,7 +15,7 @@
 }
 
 .beers-list {
-    margin-top: 5px;
+    padding-top: 5px;
     flex: 1 1 100%;
     background-color: #f8f9fa;
     overflow-y: scroll;

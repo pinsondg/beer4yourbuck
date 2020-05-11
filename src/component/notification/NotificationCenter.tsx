@@ -1,6 +1,7 @@
 import React, {useContext, useEffect, useState} from "react";
 import {Notification, NotificationContext} from "../../context/NotificationContext";
 import NotificationComponent from "./Notification";
+import classNames from "classnames";
 
 export default function NotificationCenter() {
     const {notifications, setNotifications} = useContext(NotificationContext);
@@ -50,8 +51,13 @@ export default function NotificationCenter() {
         }
     }, [notifications, setNotifications, timeoutId]);
 
+    const notificationCenterClasses = classNames('notification-center', {
+        'hidden': notifications.length === 0,
+        'active': notifications.length > 0
+    });
+
     return (
-        <div className={'notification-center'}>
+        <div className={notificationCenterClasses}>
             {active && <NotificationComponent notification={active} onClose={getNext}/>}
         </div>
     )

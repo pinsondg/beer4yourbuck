@@ -91,7 +91,7 @@ export default function CurrentVenue(props: Props) {
     if (venue) {
         return (
             <div className={'current-venue-content'}>
-                <Container fluid={true}>
+                <Container fluid={true} className={'venue-controls'}>
                     <Row className={'align-items-center top-row'}>
                         <Col xs={6} sm={'4'}>
                             <h5>{venue.name} <Badge color={'primary'}>{venue.venueTypes.join("/")}</Badge></h5>
