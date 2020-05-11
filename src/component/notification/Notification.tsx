@@ -1,9 +1,9 @@
 import React, {ReactNode, useEffect, useState} from "react";
-import {Alert, Button, Col, Container, Row} from "reactstrap";
+import {Alert, Col, Container, Row} from "reactstrap";
 import {Notification, NotificationType} from "../../context/NotificationContext";
 import classNames from "classnames";
 import './notification.css'
-import {MdCheckCircle, MdError, MdInfo, MdWarning} from "react-icons/md";
+import {MdCheckCircle, MdClose, MdError, MdInfo, MdWarning} from "react-icons/md";
 import {isMobile} from "../../controller/Utils";
 
 interface NotificationProps {
@@ -70,17 +70,20 @@ export default function NotificationComponent(props: NotificationProps) {
         <Alert className={notificationClass} color={typeProperties.color} onClick={onClick}>
             <Container fluid={true}>
                 <Row style={{alignItems: 'center'}}>
-                    <Col sm={'2'} lg={2}>
+                    <Col sm={2}>
                         {typeProperties.icon}
                     </Col>
-                    <Col sm={6} lg={8} style={{textAlign: 'left', fontSize: '14px'}}>
+                    <Col sm={10} style={{textAlign: 'left', fontSize: '14px'}}>
                         <h6>{props.notification.title}</h6>
                         {props.notification.message}
                     </Col>
-                    <Col sm={4} lg={2}>
-                        <Button style={{fontSize: '14px'}} className={'dismiss-button'} onClick={onCloseClick}>Dismiss</Button>
-                    </Col>
+                    {/*<Col sm={4} lg={2}>*/}
+                    {/*    <Button style={{fontSize: '14px'}} className={'dismiss-button'} onClick={onCloseClick}>Dismiss</Button>*/}
+                    {/*</Col>*/}
                 </Row>
+                <div onClick={onCloseClick} className={'close-button'}>
+                    <MdClose size={25}/>
+                </div>
             </Container>
         </Alert>
     )

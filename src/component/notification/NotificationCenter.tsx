@@ -1,6 +1,5 @@
 import React, {useContext, useEffect, useState} from "react";
 import {Notification, NotificationContext} from "../../context/NotificationContext";
-import {Collapse} from "reactstrap";
 import NotificationComponent from "./Notification";
 
 export default function NotificationCenter() {
@@ -52,10 +51,8 @@ export default function NotificationCenter() {
     }, [notifications, setNotifications, timeoutId]);
 
     return (
-        <Collapse isOpen={notifications.length > 0}>
-            <div>
-                {active && <NotificationComponent notification={active} onClose={getNext}/>}
-            </div>
-        </Collapse>
+        <div className={'notification-center'}>
+            {active && <NotificationComponent notification={active} onClose={getNext}/>}
+        </div>
     )
 }

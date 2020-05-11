@@ -2,6 +2,28 @@
     justify-content: center;
     margin: 5px auto;
     width: 50%;
+    box-shadow: darkgray;
+    position: relative;
+}
+
+.notification-center {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    z-index: 1;
+}
+
+.close-button {
+    color: darkgray;
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin: 10px;
+}
+
+.close-button:hover {
+    cursor: pointer;
+    color: dimgray;
 }
 
 .notification.mobile {
