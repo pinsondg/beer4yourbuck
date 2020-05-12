@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './App.css';
 import {BeerVenue} from "./model/BeerVenue";
 import {BeerVenueContext, BeerVenueContextData} from "./context/BeerVenueContext";
@@ -33,9 +33,15 @@ function App() {
     const compareBeerContext: CompareBeerContextData = {compareBeers, setCompareBeers};
     const notificationContext: NotificationContext = {setNotifications, notifications};
 
-    if (!user) {
-        api.getUserDetails().then(data => setUser(data.data))
-    }
+    useEffect(() => {
+        if (!user) {
+            api.getUserDetails().then(data => {
+                if (JSON.stringify(user) !== data.data) {
+                    setUser(data.data);
+                }
+            })
+        }
+    }, [user]);
 
   return (
       <BeerVenueContext.Provider value={venueContext}>

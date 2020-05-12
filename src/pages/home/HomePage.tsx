@@ -10,22 +10,28 @@ const api = Beer4YourBuckAPI.getInstance();
 
 export function HomePage() {
     const [reportedBeers, setReportedBeers] = useState<number | null>(null);
-    const [repotedVenues, setReportedVenues] = useState<number | null>(null);
+    const [reportedVenues, setReportedVenues] = useState<number | null>(null);
 
     useEffect(() => {
-        api.getTotalNumberReportedBeers().then(data => {
-            const count = data.data;
-            if (count !== reportedBeers) {
-                setReportedBeers(data.data);
+        const callAPI = async () => {
+            try {
+                let newReportedBeers = await  api.getTotalNumberReportedBeers();
+                if (newReportedBeers.data !== reportedBeers) {
+                    setReportedBeers(newReportedBeers.data);
+                }
+                let newReportedVenues = await api.getTotalNumberReportedVenues();
+                if (newReportedVenues.data !== reportedVenues) {
+                    setReportedVenues(newReportedVenues.data);
+                }
+            } catch (e) {
+                setReportedBeers(null);
+                setReportedVenues(null);
             }
-        }).catch(err => setReportedBeers(null));
-        api.getTotalNumberReportedVenues().then(data => {
-            const count = data.data;
-            if (count !== repotedVenues) {
-                setReportedVenues(data.data);
-            }
-        })
-    }, [reportedBeers, repotedVenues]);
+        };
+        if (!reportedBeers || !reportedVenues) {
+            callAPI();
+        }
+    }, [reportedBeers, reportedVenues]);
 
     return (
         <div className={'page-content'}>
@@ -33,7 +39,7 @@ export function HomePage() {
                 <div className={'intro-text'}>
                     <h1>The Go-To Place To Find Cheap Beer</h1>
                     <h5 style={{margin: '0 auto', maxWidth: '32.4102564rem'}}>We compare beers across multiple different restaurants, bars, breweries and stores to help you find the best deals near you!</h5>
-                    {reportedBeers !== null && repotedVenues !== null && <h5 style={{margin: '0 auto', marginTop: '50px', maxWidth: '32.4102564rem'}}>{`${reportedBeers.toString()} beers and ${repotedVenues.toString()} venues added by our users!`}</h5>}
+                    {reportedBeers !== null && reportedVenues !== null && <h5 style={{margin: '0 auto', marginTop: '50px', maxWidth: '32.4102564rem'}}>{`${reportedBeers.toString()} beers and ${reportedVenues.toString()} venues added by our users!`}</h5>}
                     <div style={{position: 'absolute', bottom: 0, display: "flex", flexDirection: 'column', justifyContent: 'center', alignItems: "center"}}>
                         Find Out More
                         <IoIosArrowDown size={50} color={'white'}/>
