@@ -6,8 +6,21 @@
 
 }
 
+.navbar {
+    height: 70px;
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+}
+.navbar-brand>img {
+    padding: 7px 14px;
+}
+
 .brand {
-    color: #fafad2!important;
+    color: #f6c101!important;
+    height: 100%;
 }
 
 .selected-nav {

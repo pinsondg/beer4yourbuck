@@ -7,6 +7,7 @@ import {isMobile} from "../../controller/Utils";
 import {UserContext} from "../../context/UserContext";
 import Beer4YourBuckAPI from "../../controller/api/Beer4YourBuckAPI";
 import {NotificationContext, NotificationType} from "../../context/NotificationContext";
+import Beer4YourBuckLogo from '../../image/domain/logos/LogoMakr_3Klh9R.png'
 
 interface Props {
 
@@ -60,7 +61,7 @@ export function TopNavBar(props: Props) {
 
     return (
         <Navbar color={'dark'} expand="sm" dark style={{marginBottom: '0 !important'}}>
-            <NavbarBrand className={'brand clickable'} onClick={() => history.push('/')}>Beer 4 Your Buck</NavbarBrand>
+            <NavbarBrand className={'brand clickable'} onClick={() => history.push('/')}><div style={{height: '100%'}}><img style={{maxHeight: '100%', marginRight: '5px', borderRadius: '.25rem'}} src={Beer4YourBuckLogo}/>Beer 4 Your Buck</div></NavbarBrand>
             <NavbarToggler onClick={toggle} />
             <Collapse isOpen={isOpen} navbar>
                 <Nav className="mr-auto" navbar>
