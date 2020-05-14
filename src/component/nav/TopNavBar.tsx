@@ -61,7 +61,7 @@ export function TopNavBar(props: Props) {
 
     return (
         <Navbar color={'dark'} expand="sm" dark style={{marginBottom: '0 !important'}}>
-            <NavbarBrand className={'brand clickable'} onClick={() => history.push('/')}><div style={{height: '100%'}}><img style={{maxHeight: '100%', marginRight: '5px', borderRadius: '.25rem'}} src={Beer4YourBuckLogo}/>Beer 4 Your Buck</div></NavbarBrand>
+            <NavbarBrand className={'brand clickable'} onClick={() => history.push('/')}><div style={{height: '100%'}}><img style={{height: '45px', marginRight: '5px', borderRadius: '.25rem'}} src={Beer4YourBuckLogo}/>Beer 4 Your Buck</div></NavbarBrand>
             <NavbarToggler onClick={toggle} />
             <Collapse isOpen={isOpen} navbar>
                 <Nav className="mr-auto" navbar>
