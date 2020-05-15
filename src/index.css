@@ -21,13 +21,8 @@ html, body, #root, #root>div {
   height: 100%;
 }
 
-html {
-  position: static;
+html, body {
+  position: relative;
   overflow: hidden;
   height: 100%;
-}
-
-body {
-  height: 100%;
-  overflow: auto;
 }

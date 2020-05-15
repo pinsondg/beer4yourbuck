@@ -19,6 +19,8 @@ import Login from "./pages/login-page/Login";
 import Beer4YourBuckAPI from "./controller/api/Beer4YourBuckAPI";
 import Register from "./pages/registration-page/Register";
 import PasswordReset from "./pages/password-reset/PasswordReset";
+import MobileNavBar from "./component/nav/MobileNavBar";
+import MobileTopBar from "./component/nav/MobileTopBar";
 
 const api = Beer4YourBuckAPI.getInstance();
 function App() {
@@ -32,6 +34,13 @@ function App() {
     const venueContext: BeerVenueContextData = {venue, setVenue};
     const compareBeerContext: CompareBeerContextData = {compareBeers, setCompareBeers};
     const notificationContext: NotificationContext = {setNotifications, notifications};
+    const [isMobileWidth, setIsMobileWidth] = useState<boolean>(window.innerWidth < 768);
+
+    useEffect(() => {
+        window.addEventListener('resize', () => {
+            setIsMobileWidth(window.innerWidth < 768);
+        }, false);
+    });
 
     useEffect(() => {
         if (!user) {
@@ -39,6 +48,8 @@ function App() {
                 if (JSON.stringify(user) !== data.data) {
                     setUser(data.data);
                 }
+            }).catch(err => {
+                setUser(null);
             })
         }
     }, [user]);
@@ -49,9 +60,8 @@ function App() {
               <Router>
                   <div className="App">
                           <NotificationContext.Provider value={notificationContext}>
-                              <header>
-                                  <TopNavBar/>
-                              </header>
+                              {!isMobileWidth && <TopNavBar/>}
+                              {isMobileWidth && <MobileTopBar/>}
                               <div className={'content'}>
                                   <NotificationCenter/>
                                   <Switch>
@@ -83,9 +93,7 @@ function App() {
                                       </CompareBeerContext.Provider>
                                   </Switch>
                               </div>
-                              <footer style={{backgroundColor: '#343a40'}}>
-                                  <a href={"https://github.com/pinsondg/beer4yourbuck"}>Contribute to this project</a>
-                              </footer>
+                              {isMobileWidth && <MobileNavBar/>}
                           </NotificationContext.Provider>
                   </div>
               </Router>

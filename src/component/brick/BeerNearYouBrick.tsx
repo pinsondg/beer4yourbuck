@@ -7,6 +7,7 @@ import {UnverifiedBadge, VerifiedBadge} from "../badge/VerificationBadges";
 import './beer-near-you-brick.css'
 import CircularBeerLogo from "../image/CircularBeerLogo";
 import ShowInMapsButton from "../button/show-map-button/ShowInMapsButton";
+import Beer4YourBuckLogo from "../../image/domain/logos/LogoMakr_3Klh9R.png";
 
 interface Props {
     beer: Beer;
@@ -22,7 +23,7 @@ export function BeerNearYouBrick(props: Props) {
                     <Col className={'beer-holder-2'} lg={'8'}>
                         <div className={'logo-holder'}>
                             <CircularBeerLogo
-                                src={props.beer.label ? props.beer.label : ''}
+                                src={props.beer.label ? props.beer.label : Beer4YourBuckLogo}
                                 alt={'Beer Logo'}
                             />
                         </div>

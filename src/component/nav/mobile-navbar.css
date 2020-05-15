@@ -1,0 +1,11 @@
+.mobile-nav-item {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.mobile-nav-item:hover {
+    cursor: pointer;
+}
+
+.mobile-nav-item.active {
+    color: #f6c101;
+}
