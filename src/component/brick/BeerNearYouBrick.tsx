@@ -20,6 +20,11 @@ export function BeerNearYouBrick(props: Props) {
         <Jumbotron className={'brick'}>
             <Container>
                 <Row>
+                    <Col>
+                        <h6>{props.beer.verified ? (<VerifiedBadge/>) : (<UnverifiedBadge/>)}</h6>
+                    </Col>
+                </Row>
+                <Row>
                     <Col className={'beer-holder-2'} lg={'8'}>
                         <div className={'logo-holder'}>
                             <CircularBeerLogo
@@ -30,7 +35,6 @@ export function BeerNearYouBrick(props: Props) {
                         <div className={'beer-info-2'}>
                             <div className={'beer-heading'}>
                                 <h4>{props.beer.name}</h4>
-                                <h6>{props.beer.verified ? (<VerifiedBadge/>) : (<UnverifiedBadge/>)}</h6>
                             </div>
                             <div className={'beer-content'}>
                                 <p>{props.beer.abv} %ABV - {props.beer.volume} fl. oz.</p>
