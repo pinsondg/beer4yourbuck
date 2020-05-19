@@ -1,17 +1,27 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import './home-page.css'
 import Background from '../../image/domain/stock/selective-focus-photography-of-people-having-a-toast-1269043.jpg'
 import {GiGears} from "react-icons/gi";
 import {IoIosArrowDown} from 'react-icons/io'
 import {MdCompareArrows, MdMyLocation} from 'react-icons/md'
 import Beer4YourBuckAPI from "../../controller/api/Beer4YourBuckAPI";
+import {UserContext} from "../../context/UserContext";
+import {useHistory} from "react-router-dom";
 
 
 const api = Beer4YourBuckAPI.getInstance();
 
 export function HomePage() {
+    const {user} = useContext(UserContext);
+    const history = useHistory();
     const [reportedBeers, setReportedBeers] = useState<number | null>(null);
     const [reportedVenues, setReportedVenues] = useState<number | null>(null);
+
+    useEffect(() => {
+        if (user !== null) {
+            history.push('/near');
+        }
+    });
 
     useEffect(() => {
         const callAPI = async () => {

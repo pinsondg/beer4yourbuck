@@ -3,7 +3,6 @@ import {LocationNearYouBrick} from "../../component/brick/LocationNearYouBrick";
 import {BeerVenue} from "../../model/BeerVenue";
 import {
     Button,
-    Collapse,
     DropdownItem,
     DropdownMenu,
     DropdownToggle,
@@ -22,6 +21,7 @@ import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import {IoMdOptions} from "react-icons/io";
 import {MdClose} from 'react-icons/md';
+import PopoverMenu, {PopoverDirection} from "../../component/popover-menu/PopoverMenu";
 
 
 enum Mode {
@@ -79,7 +79,7 @@ export function NearYouPage() {
             beers.filter(beer => (beer.beer.name && beer.beer.name.includes(nameFilter)) || beer.venue.name.includes(nameFilter)).sort((item1 , item2) => {
                 return new Beer.Builder().withBeer(item2.beer).build().getOttawayScore()
                     - new Beer.Builder().withBeer(item1.beer).build().getOttawayScore()
-            }).map(item => <BeerNearYouBrick beer={new Beer.Builder().withBeer(item.beer).build()} venue={item.venue}/>)
+            }).map(item => <BeerNearYouBrick key={key++} beer={new Beer.Builder().withBeer(item.beer).build()} venue={item.venue}/>)
         );
     };
 
@@ -143,6 +143,7 @@ export function NearYouPage() {
                 onModeChange={(mode) => setMode(mode)}
                 isOpen={sideBarOpen}
                 onSearchChange={(nameFilter) => setNameFilter(nameFilter)}
+                setIsOpen={setSidebarOpen}
             />
             {
                 isLoading ? (
@@ -170,6 +171,7 @@ interface NearYouSearchFilterProps {
     onModeChange: (mode: Mode) => void;
     onSearchChange: (search: string) => void;
     isOpen: boolean;
+    setIsOpen: (isOpen: boolean) => void;
 }
 
 function NearYouSearchFilter(props: NearYouSearchFilterProps) {
@@ -181,16 +183,16 @@ function NearYouSearchFilter(props: NearYouSearchFilterProps) {
     }, [props]);
 
     return (
-        <Collapse className={'filter-settings-holder'} isOpen={props.isOpen}>
-            <p>Search Settings</p>
+        <PopoverMenu isOpen={props.isOpen} popoverDirection={PopoverDirection.LEFT} titleText={'Search Settings'} onClose={() => props.setIsOpen(false)}>
             <div className={'filter-settings'}>
                 <div className={'setting'}>
                     Search
                     <Input placeholder={'Filter by beer/venue name'} onChange={(e) => {props.onSearchChange(e.target.value)}}/>
                 </div>
+                <hr/>
                 <div className={'setting'}>
                     Sort By
-                    <UncontrolledDropdown>
+                    <UncontrolledDropdown style={{marginLeft: '10px'}}>
                         <DropdownToggle caret>
                             {mode === Mode.LOCATION ? "Location" : "Beer"}
                         </DropdownToggle>
@@ -200,12 +202,13 @@ function NearYouSearchFilter(props: NearYouSearchFilterProps) {
                         </DropdownMenu>
                     </UncontrolledDropdown>
                 </div>
+                <hr/>
                 <div className={'setting range-holder'}>
                     Search Range
                     <Slider className={'range-slider'} defaultValue={0.5} min={0.5} max={50} step={0.5} onAfterChange={() => props.onRangeChange(range)} onChange={(i) => setRange(i)}/>
                     {range}<br/>miles
                 </div>
             </div>
-        </Collapse>
+        </PopoverMenu>
     )
 }

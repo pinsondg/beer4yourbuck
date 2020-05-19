@@ -8,6 +8,7 @@ import {isMobile} from "../../controller/Utils";
 import './brick.css'
 import CircularBeerLogo from "../image/CircularBeerLogo";
 import {LoadingSpinner} from "../load/LoadSpinner";
+import Beer4YourBuckLogo from "../../image/domain/logos/LogoMakr_3Klh9R.png";
 
 export default interface Props {
     beer: Beer;
@@ -103,7 +104,7 @@ export function BeerItemBrick(props: Props) {
                     <CircularBeerLogo
                         height={100}
                         width={100}
-                        src={props.beer.label ? props.beer.label : ''}
+                        src={props.beer.label ? props.beer.label : Beer4YourBuckLogo}
                         alt={'Beer Logo'}
                     />
                 </Col>

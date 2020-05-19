@@ -26,10 +26,8 @@
 
 .filter-settings {
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-evenly;
-    flex-wrap: wrap;
+    flex-direction: column;
+    padding: 5px;
 }
 
 .slider {
@@ -62,7 +60,6 @@
 }
 
 .setting {
-    flex: 1 1 200px;
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;

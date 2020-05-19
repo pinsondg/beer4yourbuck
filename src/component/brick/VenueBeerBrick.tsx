@@ -9,6 +9,7 @@ import {FaArrowAltCircleDown, FaArrowAltCircleUp} from "react-icons/fa";
 import './venue-beer-brick.css'
 import './brick.css'
 import classNames from "classnames";
+import Beer4YourBuckLogo from '../../image/domain/logos/LogoMakr_3Klh9R.png';
 
 const api = Beer4YourBuckAPI.getInstance();
 
@@ -130,7 +131,7 @@ export default function VenueBeerBrick(props: Props) {
                     <Row className={'justify-content-center align-items-center'} style={userAddedBeer ? {} : {height: '100%'}}>
                         <Col sm={8} md={'auto'} style={{display: 'flex', justifyContent: 'center'}}>
                             <div className={'logo-holder venue'}>
-                                <CircularBeerLogo src={props.beer.label}/>
+                                <CircularBeerLogo src={props.beer.label ? props.beer.label : Beer4YourBuckLogo}/>
                             </div>
                         </Col>
                         <Col sm={4} md={'auto'}>
