@@ -42,8 +42,9 @@ export default function MobileTopBar() {
                 onClose={() => setProfileMenuOpen(false)}
                 isOpen={profileMenuOpen} titleText={'User Profile'}
                 popoverDirection={PopoverDirection.RIGHT}
-                bodyContent={<ProfileMenuContent onCloseEvent={() => setProfileMenuOpen(false)}/>}
-            />
+            >
+                <ProfileMenuContent onCloseEvent={() => setProfileMenuOpen(false)}/>
+            </PopoverMenu>
         </div>
     )
 }

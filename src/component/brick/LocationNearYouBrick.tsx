@@ -41,12 +41,12 @@ export function LocationNearYouBrick(props: Props) {
                         <ShowInMapsButton address={props.venue.address}/>
                     </Col>
                     <Col md={'6'} className={'beer-info-holder'}>
-                        <Row className={'beer-info-heading'}>
+                        <Row style={{margin: '0 auto'}} className={'beer-info-heading'}>
                             <Col xs={'auto'} style={{borderBottom: 'darkgray 1px solid'}}>
                                 <h5>Beers 4 Your Buck</h5>
                             </Col>
                         </Row>
-                        <Row className={'beer-list-holder'}>
+                        <Row style={{margin: '0 auto'}} className={'beer-list-holder'}>
                             <Col sm={'auto'} style={{width: '100%', margin: "auto", display: "flex", flexDirection: "column", overflow: "hidden"}}>
                             {
                                 props.venue.beers.map(beer => new Beer.Builder().withBeer(beer).build()).sort(beerSort).slice(0, 3).map(beer =>

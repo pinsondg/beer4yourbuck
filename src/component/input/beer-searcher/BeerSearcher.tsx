@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from "react";
 import Beer4YourBuckAPI from "../../../controller/api/Beer4YourBuckAPI";
 import {Beer, BeerInterface} from "../../../model/Beer";
 import SelectableList from "../../list/selectable-list/SelectableList";
-import {Col, FormGroup, Input, Label, Row} from "reactstrap";
+import {Col, FormGroup, FormText, Input, Label, Row} from "reactstrap";
 import './beer-searcher.css'
 import {CustomInput} from "../CustomInput";
 import {CalculationItemInput} from "../../modal/beerAdd/BeerAddModal";
@@ -111,7 +111,7 @@ export default function BeerSearcher(prop: BeerSearcherProp) {
                     {
                         foundBeers && foundBeers.length > 0 &&
                         <SelectableList components={foundBeers.map((beer) => (
-                            <Row key={beer.id}>
+                            <Row key={beer.id} style={{borderBottom: 'solid 1px darkgray'}}>
                                 <Col>
                                     <p>{beer.breweryName}</p>
                                 </Col>
@@ -128,6 +128,7 @@ export default function BeerSearcher(prop: BeerSearcherProp) {
                                         showShadow={true}
                         />
                     }
+                    <FormText>For best results, search for Brewery Name + Beer Name</FormText>
                 </Col>
             </FormGroup>
         </div>
