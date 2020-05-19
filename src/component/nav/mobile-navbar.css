@@ -1,5 +1,24 @@
 .mobile-nav-item {
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.1);
+}
+
+.icon-background {
+    transition: background-color 0.5s ease;
+    margin: 0 auto;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-background:active {
+    background-color: rgba(246, 193, 1, 0.6);
+}
+
+.icon-holder:hover {
+
 }
 
 .mobile-nav-item:hover {

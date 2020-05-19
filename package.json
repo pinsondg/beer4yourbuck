@@ -8,6 +8,7 @@
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "@types/classnames": "^2.2.9",
+    "@types/color": "^3.0.1",
     "@types/jest": "^24.9.1",
     "@types/node": "^12.12.28",
     "@types/react": "^16.9.23",
@@ -19,6 +20,7 @@
     "body-scroll-lock": "^3.0.2",
     "bootstrap": "^4.5.0",
     "classnames": "^2.2.6",
+    "color": "^3.1.2",
     "fitty": "^2.3.0",
     "fix-image-rotation": "^2.0.0",
     "rc-slider": "^9.2.4",
@@ -32,6 +34,7 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.0",
     "react-sidebar": "^3.0.2",
+    "react-styleguidist": "^11.0.6",
     "reactstrap": "^8.4.1",
     "request": "^2.88.2",
     "request-promise-native": "^1.0.8",
@@ -39,6 +42,8 @@
     "typescript": "^3.7.5"
   },
   "scripts": {
+    "styleguide": "styleguidist server",
+    "styleguide:build": "styleguidist build",
     "start": "react-scripts start --no-cache",
     "build": "react-scripts build",
     "test": "react-scripts test --no-cache",
