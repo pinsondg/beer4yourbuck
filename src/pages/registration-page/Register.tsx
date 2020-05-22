@@ -1,11 +1,12 @@
 import React, {useContext, useEffect, useReducer, useState} from "react";
-import {Button, Col, Container, Form, FormGroup, Input, Label} from "reactstrap";
+import {Col, Container, Form, FormGroup, Input, Label} from "reactstrap";
 import Beer4YourBuckAPI from "../../controller/api/Beer4YourBuckAPI";
 import {NotificationContext, NotificationType} from "../../context/NotificationContext";
 import './register.css'
 import classNames from "classnames";
 import PasswordInput from "../../component/input/password-input/PasswordInput";
 import {passwordRegex} from "../../controller/Utils";
+import {Beer4YourBuckBtn, BtnType} from "../../component/button/custom-btns/ThemedButtons";
 
 interface FieldData {
     email: string;
@@ -236,7 +237,7 @@ export default function Register() {
                         />
                         <FormGroup row>
                             <Col>
-                                <Button color={'primary'} onClick={handleRegister}>Register</Button>
+                                <Beer4YourBuckBtn customStyle={BtnType.SECONDARY} onClick={(e) => {e.preventDefault();handleRegister()}}>Register</Beer4YourBuckBtn>
                             </Col>
                         </FormGroup>
                     </Form>
@@ -246,7 +247,7 @@ export default function Register() {
                     <h1>You're Almost Done!</h1>
                     <p>We've sent a verification email to {state.email}.
                         Please click on the link in the email to activate your account!
-                        The email should be from notifications_donotreply@beer4yourbuck.com, if you do not see an email
+                        The email will be from notifications_donotreply@beer4yourbuck.com, if you do not see an email
                         from us within 10 minutes, check your spam folder.
                     </p>
                 </div>

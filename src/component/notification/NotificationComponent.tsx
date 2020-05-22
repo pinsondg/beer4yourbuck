@@ -77,9 +77,6 @@ export default function NotificationComponent(props: NotificationProps) {
                         <h6>{props.notification.title}</h6>
                         {props.notification.message}
                     </Col>
-                    {/*<Col sm={4} lg={2}>*/}
-                    {/*    <Button style={{fontSize: '14px'}} className={'dismiss-button'} onClick={onCloseClick}>Dismiss</Button>*/}
-                    {/*</Col>*/}
                 </Row>
                 <div onClick={onCloseClick} className={'close-button'}>
                     <MdClose size={25}/>

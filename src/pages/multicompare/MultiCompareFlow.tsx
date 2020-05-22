@@ -11,6 +11,7 @@ import {ConformationModal} from "../../component/modal/ConformationModal";
 import {NotificationContext, NotificationType} from "../../context/NotificationContext";
 import {BeerVenueContext} from "../../context/BeerVenueContext";
 import Beer4YourBuckAPI from "../../controller/api/Beer4YourBuckAPI";
+import {Beer4YourBuckBtn, BtnType} from "../../component/button/custom-btns/ThemedButtons";
 
 interface Props {
 }
@@ -160,7 +161,7 @@ export function MultiCompareFlow(props: Props) {
 
     return (
         <div style={{width: '100%', position: 'relative', flex: '1 1 auto', maxHeight: '100%', overflow: 'hidden'}}>
-            <Button className={'add-button'} color={'primary'} onClick={() => setShowAddModal(true)}><MdAdd size={25}/></Button>
+            <Beer4YourBuckBtn className={'add-button'} customStyle={BtnType.PRIMARY} onClick={() => setShowAddModal(true)}><MdAdd size={25}/></Beer4YourBuckBtn>
             <div className={'list-holder'}>
                 <Flipper flipKey={JSON.stringify(beerBricks.map(x => x.id))}>
                     {

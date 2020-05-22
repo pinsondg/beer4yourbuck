@@ -38,22 +38,22 @@ export default function MobileNavBar() {
                 <Row className={'justify-content-center align-items-center'}>
                     <Col>
                         <MenuCircleClick onClick={() => history.push('/near')} isCurrent={!!active && active === 'near'}>
-                            <MdNearMe size={35}/>
+                            <MdNearMe size={27}/>
                         </MenuCircleClick>
                     </Col>
                     <Col>
                         <MenuCircleClick onClick={() => history.push('/compare')}  isCurrent={!!active && active === 'compare'}>
-                            <MdCompareArrows size={35}/>
+                            <MdCompareArrows size={27}/>
                         </MenuCircleClick>
                     </Col>
                     <Col>
                         <MenuCircleClick onClick={() => history.push('/upload')} isCurrent={!!active && active === 'upload'}>
-                            <MdCameraAlt size={35}/>
+                            <MdCameraAlt size={27}/>
                         </MenuCircleClick>
                     </Col>
                     <Col>
                         <MenuCircleClick onClick={() => history.push('/current-venue')} isCurrent={!!active && active === 'venue'}>
-                            <MdMyLocation size={35}/>
+                            <MdMyLocation size={27}/>
                         </MenuCircleClick>
                     </Col>
                 </Row>
@@ -70,7 +70,7 @@ interface MenuCircleClickProps {
 
 function MenuCircleClick(props: MenuCircleClickProps) {
     return (
-        <CircleClick size={'45px'}
+        <CircleClick size={'30px'}
                      nonActiveColor={new Color('rgba(255, 255, 255, 0.1)')}
                      activeColor={new Color('rgb(246, 193, 1)')}
                      isCurrent={props.isCurrent}

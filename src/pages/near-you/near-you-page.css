@@ -80,3 +80,11 @@
     margin: 15px;
     max-width: 50%;
 }
+
+.checklist-row {
+    padding: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}

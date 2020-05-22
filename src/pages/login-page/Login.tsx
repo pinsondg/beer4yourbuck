@@ -5,6 +5,7 @@ import {useHistory} from "react-router-dom";
 import {NotificationContext, NotificationType} from "../../context/NotificationContext";
 import {UserContext} from "../../context/UserContext";
 import './login.css'
+import {Beer4YourBuckBtn, BtnType} from "../../component/button/custom-btns/ThemedButtons";
 
 interface Props {
 
@@ -32,53 +33,61 @@ export default function Login(props: Props) {
     };
 
     const onSubmit = () => {
-        if (!forgotPassword) {
-            api.login(name, password, rememberMe).then(data => {
-                api.getUserDetails().then(data => {
-                    setUser(data.data);
-                    history.push('/')
-                });
-            }).catch(err => {
-                console.log(err);
-                if (err.response.data && err.response.data.exception === 'User is disabled') {
-                    setNotifications([...notifications, {
-                        title: 'Your Account is Disabled!',
-                        message: 'Your account had not yet been enabled.' +
-                            ' Check your inbox for a verification email or click this notification to request another one.',
-                        type: NotificationType.ERROR,
-                        action: () => {
-                            api.requestNewActivationEmail(name).then(data => {
-                                setNotifications([...notifications, {
-                                    title: 'Email Resent',
-                                    message: 'Verification email had been resent.',
-                                    type: NotificationType.SUCCESS,
-                                }])
-                            }).catch(() => {
-                                setNotifications([...notifications, {
-                                    title: 'Email Resend Failed',
-                                    message: 'Verification email could not be sent at this time. Please try again later.',
-                                    type: NotificationType.ERROR
-                                }])
-                            })
-                        }
-                    }])
-                } else {
-                    setNotifications([...notifications, {
-                        title: 'Login Error',
-                        message: 'Could not log you in. Please check your username/email and password and try again.',
-                        type: NotificationType.ERROR,
-                        timeout: 3500
-                    }])
-                }
-            });
+        if (name === '') {
+            setNotifications([...notifications, {
+                title: 'Username/Email is Blank',
+                message: 'Please fill in the Username/email.',
+                type: NotificationType.ERROR
+            }]);
         } else {
-            api.requestResetPasswordEmail(name).finally(() => {
-                setNotifications([...notifications, {
-                    title: 'Change Password Email Requested',
-                    message: 'If account exists, an email will be sent with further instructions.',
-                    type: NotificationType.INFO
-                }])
-            })
+            if (!forgotPassword) {
+                api.login(name, password, rememberMe).then(data => {
+                    api.getUserDetails().then(data => {
+                        setUser(data.data);
+                        history.push('/')
+                    });
+                }).catch(err => {
+                    console.log(err);
+                    if (err.response.data && err.response.data.exception === 'User is disabled') {
+                        setNotifications([...notifications, {
+                            title: 'Your Account is Disabled!',
+                            message: 'Your account had not yet been enabled.' +
+                                ' Check your inbox for a verification email or click this notification to request another one.',
+                            type: NotificationType.ERROR,
+                            action: () => {
+                                api.requestNewActivationEmail(name).then(data => {
+                                    setNotifications([...notifications, {
+                                        title: 'Email Resent',
+                                        message: 'Verification email had been resent.',
+                                        type: NotificationType.SUCCESS,
+                                    }])
+                                }).catch(() => {
+                                    setNotifications([...notifications, {
+                                        title: 'Email Resend Failed',
+                                        message: 'Verification email could not be sent at this time. Please try again later.',
+                                        type: NotificationType.ERROR
+                                    }])
+                                })
+                            }
+                        }])
+                    } else {
+                        setNotifications([...notifications, {
+                            title: 'Login Error',
+                            message: 'Could not log you in. Please check your username/email and password and try again.',
+                            type: NotificationType.ERROR,
+                            timeout: 3500
+                        }])
+                    }
+                });
+            } else {
+                api.requestResetPasswordEmail(name).finally(() => {
+                    setNotifications([...notifications, {
+                        title: 'Change Password Email Requested',
+                        message: 'If account exists, an email will be sent with further instructions.',
+                        type: NotificationType.INFO
+                    }])
+                });
+            }
         }
     };
 
@@ -109,7 +118,12 @@ export default function Login(props: Props) {
                 </Collapse>
                 <FormGroup row className={'align-items-center justify-content-center'}>
                     <Col>
-                        <Button color={'primary'} onClick={onSubmit}>{forgotPassword ? 'Email Me A Recovery Link' : 'Login'}</Button>
+                        <Beer4YourBuckBtn
+                            customStyle={BtnType.PRIMARY}
+                            onClick={(e) => {e.preventDefault();onSubmit();}}
+                        >
+                            {forgotPassword ? 'Email Me A Recovery Link' : 'Login'}
+                        </Beer4YourBuckBtn>
                     </Col>
                 </FormGroup>
                 <FormGroup row className={'align-items-center justify-content-center'}>

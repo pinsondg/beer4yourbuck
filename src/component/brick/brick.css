@@ -2,7 +2,7 @@
     min-width: 320px;
     display: flex;
     flex-direction: column;
-    padding: 10px;
+    padding: 15px!important;
     position: relative;
     width: 75%;
     border-style: solid;
@@ -13,16 +13,13 @@
     overflow: hidden;
     margin: 0 auto 10px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-
-.brick:hover {
-    background-color: lightblue;
+    /*background-color: #f6c101!important;*/
 }
 
 .logo-holder img {
-    max-height: 100%;
+    max-height: inherit;
     margin: auto;
-    max-width: 100%;
+    max-width: inherit;
 }
 
 .logo-holder.location {

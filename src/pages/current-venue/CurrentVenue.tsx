@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from "react";
 import {BeerVenueContext} from "../../context/BeerVenueContext";
-import {Badge, Button, Col, Container, Input, Row} from "reactstrap";
+import {Badge, Col, Container, Input, Row} from "reactstrap";
 import './current-venue.css'
 import {MdAdd} from "react-icons/md";
 import {IoMdSearch} from "react-icons/io";
@@ -13,6 +13,7 @@ import {UserContext} from "../../context/UserContext";
 import RegistrationModal from "../../component/modal/RegistrationModal";
 import {LoadingSpinner} from "../../component/load/LoadSpinner";
 import {VenueLocationSelectorModal} from "../../component/modal/VenueLocationSelectorModal";
+import {Beer4YourBuckBtn, BtnType} from "../../component/button/custom-btns/ThemedButtons";
 
 const api = Beer4YourBuckAPI.getInstance();
 
@@ -104,10 +105,10 @@ export default function CurrentVenue(props: Props) {
                     </Row>
                     <Row className={'justify-content-center top-row'}>
                         <Col xs={6} sm={6}>
-                            <Button onClick={() => setVenue(null)}>Change Venue</Button>
+                            <Beer4YourBuckBtn customStyle={BtnType.SECONDARY_CLEAR} onClick={() => setVenue(null)}>Change Venue</Beer4YourBuckBtn>
                         </Col>
                         <Col xs={{size: 6}} sm={{offset: 2, size: 4}}>
-                            <Button onClick={onAddBeerClicked} color={'success'}><MdAdd/> Add Beer</Button>
+                            <Beer4YourBuckBtn onClick={onAddBeerClicked} customStyle={BtnType.PRIMARY_CLEAR}><MdAdd/> Add Beer</Beer4YourBuckBtn>
                         </Col>
                     </Row>
                     <Row className={'justify-content-center top-row'}>

@@ -1,6 +1,7 @@
 import React, {useState} from "react";
-import {Button, Col, Container, Modal, ModalBody, ModalHeader, Row} from "reactstrap";
+import {Col, Container, Modal, ModalBody, ModalHeader, Row} from "reactstrap";
 import {useHistory} from "react-router-dom";
+import {Beer4YourBuckBtn, BtnType} from "../button/custom-btns/ThemedButtons";
 
 interface Props {
     message?: string;
@@ -42,10 +43,10 @@ export default function RegistrationModal(props: Props) {
                     <hr/>
                     <Row className={'align-items-center'}>
                         <Col xs={6} style={{display: 'flex'}} sm={{offset: 2, size: 4}}>
-                            <Button style={{margin: '0 auto'}} onClick={onLogin}>Login</Button>
+                            <Beer4YourBuckBtn customStyle={BtnType.PRIMARY_CLEAR} style={{margin: '0 auto'}} onClick={onLogin}>Login</Beer4YourBuckBtn>
                         </Col>
                         <Col xs={6} style={{display: "flex"}} className={'align-items-center'} sm={4}>
-                            <Button style={{margin: '0 auto'}} color={'primary'} onClick={onRegister}>Register</Button>
+                            <Beer4YourBuckBtn customStyle={BtnType.SECONDARY} style={{margin: '0 auto'}} color={'primary'} onClick={onRegister}>Register</Beer4YourBuckBtn>
                         </Col>
                     </Row>
                 </Container>
