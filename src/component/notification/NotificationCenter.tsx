@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from "react";
 import {Notification, NotificationContext} from "../../context/NotificationContext";
-import NotificationComponent from "./Notification";
+import NotificationComponent from "./NotificationComponent";
 import classNames from "classnames";
 
 export default function NotificationCenter() {

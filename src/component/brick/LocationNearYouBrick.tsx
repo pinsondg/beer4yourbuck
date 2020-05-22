@@ -1,5 +1,5 @@
 import React from "react";
-import {Col, Container, Jumbotron, Row} from "reactstrap";
+import {Badge, Col, Container, Jumbotron, Row} from "reactstrap";
 import {Beer} from "../../model/Beer";
 import {BeerVenue} from "../../model/BeerVenue";
 import './brick.css'
@@ -35,7 +35,7 @@ export function LocationNearYouBrick(props: Props) {
             <Container>
                 <Row>
                     <Col md={'6'} className={venueInfoHolderClasses}>
-                        <h5>{props.venue.name}</h5>
+                        <h5>{props.venue.name}<Badge color={'primary'}>{props.venue.venueTypes.join('/')}</Badge></h5>
                         <p>{props.venue.address}</p>
                         <p>{props.distance.toFixed(2)} miles away</p>
                         <ShowInMapsButton address={props.venue.address}/>

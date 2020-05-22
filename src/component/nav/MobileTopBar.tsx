@@ -5,9 +5,9 @@ import Beer4YourBuckLogo from "../../image/domain/logos/LogoMakr_3Klh9R.png";
 import {FaUser} from "react-icons/all";
 import PopoverMenu, {PopoverDirection} from "../popover-menu/PopoverMenu";
 import {UserContext} from "../../context/UserContext";
-import {Button} from "reactstrap";
 import {useHistory} from "react-router-dom";
 import Beer4YourBuckAPI from "../../controller/api/Beer4YourBuckAPI";
+import {Beer4YourBuckBtn, BtnType} from "../button/custom-btns/ThemedButtons";
 
 const api = Beer4YourBuckAPI.getInstance();
 
@@ -79,7 +79,7 @@ function ProfileMenuContent(props: ProfileMenuContentProps) {
         return (
             <div style={{height: '100%', width: '100%', display: "flex", flexDirection: 'column', alignItems: 'center', justifyContent: 'space-around'}}>
                 <h5>{`Username: ${user.username}`}</h5>
-                <Button onClick={handleLogoutClicked}>Logout</Button>
+                <Beer4YourBuckBtn customStyle={BtnType.PRIMARY} onClick={handleLogoutClicked}>Logout</Beer4YourBuckBtn>
             </div>
         )
     } else {
@@ -87,9 +87,9 @@ function ProfileMenuContent(props: ProfileMenuContentProps) {
             <div style={{height: '100%', width: '100%', display: "flex", flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
                 <h5>You are not logged in.</h5>
                 <div style={{display: "flex", flexDirection: "row", alignItems: 'center', justifyContent: 'space-between', margin: '10px'}}>
-                    <Button id={'login-btn'} onClick={handleLoginButtonClick} style={{backgroundColor: '#f6c101'}}>Login</Button>
+                    <Beer4YourBuckBtn id={'login-btn'} onClick={handleLoginButtonClick} customStyle={BtnType.PRIMARY_CLEAR}>Login</Beer4YourBuckBtn>
                     <p style={{margin: '5px'}}>or</p>
-                    <Button id={'register-btn'} onClick={handleRegisterButtonClick} color={'primary'}>Sign Up</Button>
+                    <Beer4YourBuckBtn id={'register-btn'} onClick={handleRegisterButtonClick} customStyle={BtnType.SECONDARY}>Sign Up</Beer4YourBuckBtn>
                 </div>
             </div>
         )
