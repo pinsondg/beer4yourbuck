@@ -25,6 +25,9 @@ export interface BeerVenue {
     lon: number;
     address: string;
     venueTypes: string[];
+    happyHourDayOfWeek?: string[];
+    happyHourEnd?: string;
+    happyHourStart?: string;
 }
 
 /**

@@ -76,6 +76,10 @@ h1 {
 
 }
 
+.add-to-home-banner {
+  position: relative!important;
+}
+
 .content {
   flex: 1 1 auto;
   width: 100%;

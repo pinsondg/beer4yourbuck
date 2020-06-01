@@ -21,6 +21,8 @@ import Register from "./pages/registration-page/Register";
 import PasswordReset from "./pages/password-reset/PasswordReset";
 import MobileNavBar from "./component/nav/MobileNavBar";
 import MobileTopBar from "./component/nav/MobileTopBar";
+// @ts-ignore
+import AddToHomescreen from 'react-add-to-homescreen';
 
 const api = Beer4YourBuckAPI.getInstance();
 function App() {
@@ -53,6 +55,15 @@ function App() {
             })
         }
     }, [user]);
+
+    const onAddToHomescreenClick = () => {
+        alert(`
+            To add to your IPhone's homescreen:
+            1. Make sure you are using Safari as your browser.
+            2. Open Share menu.
+            3. Click on add to homescreen option.
+        `)
+    };
 
   return (
       <BeerVenueContext.Provider value={venueContext}>
@@ -92,6 +103,9 @@ function App() {
                                           </Route>
                                       </CompareBeerContext.Provider>
                                   </Switch>
+                              </div>
+                              <div>
+                                  <AddToHomescreen onAddToHomescreenClick={onAddToHomescreenClick} title={'Add to homescreen for a better user experience'}/>
                               </div>
                               {isMobileWidth && <MobileNavBar/>}
                           </NotificationContext.Provider>

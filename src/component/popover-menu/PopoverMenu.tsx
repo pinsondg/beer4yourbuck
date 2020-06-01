@@ -1,7 +1,7 @@
 import React, {ReactNode, useEffect, useRef, useState} from "react";
 import './popover-menu.css'
 import classNames from "classnames";
-import {MdClose} from "react-icons/all";
+import {MdClose} from "react-icons/md";
 import {CircleClick} from "../misc/circle-click/CircleClick";
 import Color from 'color'
 

@@ -1,6 +1,6 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {ReactNode, useContext, useEffect, useState} from "react";
 import {BeerVenueContext} from "../../context/BeerVenueContext";
-import {Badge, Col, Container, Input, Row} from "reactstrap";
+import {Badge, Button, Col, Container, Input, Row} from "reactstrap";
 import './current-venue.css'
 import {MdAdd} from "react-icons/md";
 import {IoMdSearch} from "react-icons/io";
@@ -14,10 +14,66 @@ import RegistrationModal from "../../component/modal/RegistrationModal";
 import {LoadingSpinner} from "../../component/load/LoadSpinner";
 import {VenueLocationSelectorModal} from "../../component/modal/VenueLocationSelectorModal";
 import {Beer4YourBuckBtn, BtnType} from "../../component/button/custom-btns/ThemedButtons";
+import {DateTime} from "luxon";
+import TimeChooseModal from "../../component/modal/timeChooser/TimeChooseModal";
 
 const api = Beer4YourBuckAPI.getInstance();
 
 interface Props {
+}
+
+interface IIndexible {
+    [key: string] : number
+}
+
+const sorter: IIndexible = {
+    "sunday": 0, // << if sunday is first day of week
+    "monday": 1,
+    "tuesday": 2,
+    "wednesday": 3,
+    "thursday": 4,
+    "friday": 5,
+    "saturday": 6
+};
+
+export function formatDaysOfWeek(days: string[]): string {
+    days.sort((a, b) => {
+        let day1 = a.toLowerCase();
+        let day2 = b.toLowerCase();
+        return sorter[day1] - sorter[day2];
+    });
+    let daysPrint = '';
+    for (let i = 0; i < days.length; i++) {
+        let z = i + 1;
+        if (z >= days.length) {
+            daysPrint += `${days[i].substring(0, 3)}`;
+            break;
+        }
+        let curr = sorter[days[i].toLowerCase()];
+        let next = sorter[days[z].toLowerCase()];
+        while (curr + (z - i) === next) {
+            z++;
+            if (z >= days.length) {
+                break;
+            }
+            next = sorter[days[z].toLowerCase()];
+        }
+        if (z === i + 1) {
+            daysPrint += `${days[i].substring(0, 3)}, `;
+        } else {
+            if (sorter[days[i].toLowerCase()] + 1 === sorter[days[z - 1].toLowerCase()]) {
+                daysPrint += `${days[i].substring(0, 3)}, ${days[z - 1].substring(0, 3)}, `;
+            } else {
+                daysPrint += `${days[i].substring(0, 3)}-${days[z - 1].substring(0, 3)}, `;
+            }
+        }
+        i = z - 1;
+    }
+    daysPrint = daysPrint.trim();
+    if (daysPrint.lastIndexOf(',') === daysPrint.length - 1) {
+        daysPrint = daysPrint.substring(0, daysPrint.length  - 1);
+    }
+    return daysPrint;
 }
 
 export default function CurrentVenue(props: Props) {
@@ -33,6 +89,7 @@ export default function CurrentVenue(props: Props) {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [noVenuesFound, setNoVenuesFound] = useState<boolean>();
+    const [showHHReporter, setShowHHReporter] = useState<boolean>(false);
 
     const onBeerAdded = (beer: Beer) => {
         if (venue) {
@@ -89,9 +146,33 @@ export default function CurrentVenue(props: Props) {
         }
     };
 
+    const getHappyHourTime = (): ReactNode => {
+        if (venue) {
+            console.log(`Venue happy hour start: ${venue.happyHourStart}; happy hour end: ${venue.happyHourEnd}; daysOfWeek: ${venue.happyHourDayOfWeek}`);
+        }
+        if (venue && venue.happyHourStart && venue.happyHourEnd && venue.happyHourDayOfWeek) {
+            return <h6>{`Happy Hour: ${DateTime.fromISO(venue.happyHourStart).toLocaleString(DateTime.TIME_SIMPLE)}-${DateTime.fromISO(venue.happyHourEnd).toLocaleString(DateTime.TIME_SIMPLE)} ${formatDaysOfWeek(venue.happyHourDayOfWeek)}`}</h6>;
+        } else {
+            return (
+                <div>
+                    <p>Happy Hour:<br/>Not Reported</p>
+                    <Button color={'link'} onClick={() => {
+                        if (user) {
+                            setShowHHReporter(true);
+                        } else {
+                            setShowRegisterModal(true);
+                        }
+                    }}>Click to report</Button>
+                </div>
+            )
+        }
+    };
+
+
     if (venue) {
         return (
             <div className={'current-venue-content'}>
+                <TimeChooseModal onClose={() => setShowHHReporter(false)} show={showHHReporter} venue={venue}/>
                 <Container fluid={true} className={'venue-controls'}>
                     <Row className={'align-items-center top-row'}>
                         <Col xs={6} sm={'4'}>
@@ -99,7 +180,7 @@ export default function CurrentVenue(props: Props) {
                         </Col>
                         {
                             !venue.venueTypes.includes("STORE") && <Col xs={6} sm={{offset: 4, size: 4}}>
-                                <h6>Happy Hour: 5pm-7pm</h6>
+                                {getHappyHourTime()}
                             </Col>
                         }
                     </Row>

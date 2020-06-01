@@ -183,4 +183,16 @@ export default class Beer4YourBuckAPI {
             }
         });
     }
+
+    async updateHappyHour(venueId: number, daysOfWeek: string[], startTime: string, endTime: string) {
+        return axios.post(`${this.url}venue/${venueId}/happyHour`, {
+            daysOfWeek: daysOfWeek,
+            startTime: startTime,
+            endTime: endTime
+        }, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+    }
 }

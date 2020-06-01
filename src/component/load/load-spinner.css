@@ -17,4 +17,5 @@ p.processing-holder {
     animation-duration: 1000ms;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
+    margin: 5px;
 }
