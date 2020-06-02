@@ -12,7 +12,9 @@ export default function CustomCheckbox(props: Props) {
     const [isSelected, setIsSelected] = useState<boolean>(false);
 
     useEffect(() => {
-        setIsSelected(props.selected ? props.selected : false);
+        if (!!props.selected) {
+            setIsSelected(props.selected);
+        }
     }, [props, props.selected]);
 
     return (

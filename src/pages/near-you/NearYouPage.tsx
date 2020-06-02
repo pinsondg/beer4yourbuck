@@ -176,9 +176,10 @@ export function NearYouPage() {
 
     return (
         <div className={'near-you-page-content'}>
-            <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: '5px'}}>
+            <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: '5px', maxWidth: '500px'}}>
                 <Beer4YourBuckBtn id={'filterButton'} customStyle={BtnType.PRIMARY} onClick={() => {setSidebarOpen(!sideBarOpen)}}><IoMdOptions size={15}/></Beer4YourBuckBtn>
                 <Input style={{marginLeft: '5px'}} placeholder={'Filter by beer/venue name'} onChange={(e) => {setNameFilter(e.target.value)}}/>
+
                 <UncontrolledTooltip target={'filterButton'}>Edit Search Settings</UncontrolledTooltip>
             </div>
             <NearYouSearchFilter
@@ -261,18 +262,6 @@ function NearYouSearchFilter(props: NearYouSearchFilterProps) {
     useEffect(() => {
         setMode(props.mode);
     }, [props]);
-
-    const getTickMarks = (): ReactNode => {
-        const options: ReactNode[] = [];
-        for (let i = 0.5; i < 10; i = i += 0.5) {
-            options.push(<option value={i} label={i % 5 === 0 || i === 0.5 ? i.toString() : ''}/>)
-        }
-        return <datalist id={'tickmarks'}>
-            {
-                options
-            }
-        </datalist>
-    };
 
     return (
         <PopoverMenu isOpen={props.isOpen} popoverDirection={PopoverDirection.LEFT} titleText={'Search Settings'} onClose={() => props.setIsOpen(false)}>

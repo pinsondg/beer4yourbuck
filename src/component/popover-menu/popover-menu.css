@@ -6,10 +6,10 @@
     width: 75%;
     height: 100%;
     top: 0;
-    z-index: 999;
+    z-index: 1050;
     background-color: white;
     transition: .1s linear;
-    transition-delay: .2s;
+    transition-delay: .1s;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     max-width: 400px;
 }
@@ -60,9 +60,10 @@
 }
 
 .popover-close-button {
-
+    color: red;
 }
 
 .popover-close-button:hover {
     cursor: pointer;
+    color: darkred;
 }
