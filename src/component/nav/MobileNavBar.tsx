@@ -1,6 +1,6 @@
 import React, {ReactNode, useEffect, useState} from "react";
 import {Col, Container, Row} from "reactstrap";
-import {MdCameraAlt, MdCompareArrows, MdMyLocation, MdNearMe} from "react-icons/all";
+import {MdCameraAlt, MdCompareArrows, MdMyLocation, MdNearMe} from "react-icons/md";
 import './mobile-navbar.css'
 import {useHistory, useLocation} from "react-router-dom";
 import {CircleClick} from "../misc/circle-click/CircleClick";

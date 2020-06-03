@@ -1,7 +1,19 @@
 import React, {ReactNode, useContext, useEffect, useState} from "react";
 import {LocationNearYouBrick} from "../../component/brick/LocationNearYouBrick";
 import {BeerVenue} from "../../model/BeerVenue";
-import {DropdownItem, DropdownMenu, DropdownToggle, Input, UncontrolledDropdown, UncontrolledTooltip} from "reactstrap";
+import {
+    Col,
+    CustomInput,
+    DropdownItem,
+    DropdownMenu,
+    DropdownToggle,
+    Form,
+    FormGroup,
+    Input,
+    Label,
+    UncontrolledDropdown,
+    UncontrolledTooltip
+} from "reactstrap";
 import './near-you-page.css'
 import {Beer} from "../../model/Beer";
 import Beer4YourBuckAPI from "../../controller/api/Beer4YourBuckAPI";
@@ -9,10 +21,9 @@ import {getDistance, getLocation, metersToMiles, milesToMeters} from "../../cont
 import {LoadingSpinner} from "../../component/load/LoadSpinner";
 import {BeerNearYouBrick} from "../../component/brick/BeerNearYouBrick";
 import {NotificationContext, NotificationType} from "../../context/NotificationContext";
-import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import {IoMdOptions} from "react-icons/io";
-import PopoverMenu, {PopoverDirection} from "../../component/popover-menu/PopoverMenu";
+import PopoverMenu, {PopoverDirection} from "../../component/menu/popover-menu/PopoverMenu";
 import {Beer4YourBuckBtn, BtnType} from "../../component/button/custom-btns/ThemedButtons";
 import DropdownSection from "../../component/misc/dropdown-section/DropdownSection";
 import CustomCheckbox from "../../component/misc/checkbox/CustomCheckbox";
@@ -63,7 +74,7 @@ export function NearYouPage() {
             }
             return distance1 - distance2;
         }).filter(venue => venue.beers.length > 0)
-            .filter(venue => venue.name.includes(nameFilter) || venue.beers.some(beer => beer.name && beer.name.includes(nameFilter)))
+            .filter(venue => venue.name.toLowerCase().includes(nameFilter.toLowerCase()) || venue.beers.some(beer => beer.name && beer.name.toLowerCase().includes(nameFilter.toLowerCase())))
             .filter(venue => venue.venueTypes.some(venueType => venueTypeFilter.includes(venueType.toLowerCase())))
             .map(venue => {
             let distance = 0;
@@ -80,7 +91,7 @@ export function NearYouPage() {
         let beers: {beer: Beer, venue: BeerVenue}[] = [];
         venues.forEach(venue => venue.beers.forEach(beer => beers.push({venue: venue, beer: beer})));
         return (
-            beers.filter(beer => (beer.beer.name && beer.beer.name.includes(nameFilter)) || beer.venue.name.includes(nameFilter))
+            beers.filter(beer => (beer.beer.name && beer.beer.name.toLowerCase().includes(nameFilter.toLowerCase())) || beer.venue.name.toLowerCase().includes(nameFilter.toLowerCase()))
                 .filter(beer => beer.venue.venueTypes.some(venueType => venueTypeFilter.includes(venueType.toLowerCase())))
                 .sort((item1 , item2) => {
                 return new Beer.Builder().withBeer(item2.beer).build().getOttawayScore()
@@ -165,14 +176,16 @@ export function NearYouPage() {
 
     return (
         <div className={'near-you-page-content'}>
-            <Beer4YourBuckBtn id={'filterButton'} className={'filter-button'} customStyle={BtnType.PRIMARY} onClick={() => {setSidebarOpen(!sideBarOpen)}}><IoMdOptions size={15}/></Beer4YourBuckBtn>
-            <UncontrolledTooltip target={'filterButton'}>Edit Search Settings</UncontrolledTooltip>
+            <div className={'near-you-search-settings'}>
+                <Beer4YourBuckBtn id={'filterButton'} customStyle={BtnType.PRIMARY} onClick={() => {setSidebarOpen(!sideBarOpen)}}><IoMdOptions size={15}/></Beer4YourBuckBtn>
+                <Input style={{marginLeft: '5px'}} placeholder={'Filter by beer/venue name'} onChange={(e) => {setNameFilter(e.target.value)}}/>
+                <UncontrolledTooltip target={'filterButton'}>Edit Search Settings</UncontrolledTooltip>
+            </div>
             <NearYouSearchFilter
                 mode={mode}
                 onRangeChange={(range) => setRange(range)}
                 onModeChange={(mode) => setMode(mode)}
                 isOpen={sideBarOpen}
-                onSearchChange={(nameFilter) => setNameFilter(nameFilter)}
                 setIsOpen={setSidebarOpen}
                 onVenueTypeFilterChange={onVenueFilterChange}
             />
@@ -200,7 +213,6 @@ interface NearYouSearchFilterProps {
     mode: Mode;
     onRangeChange: (range: number) => void;
     onModeChange: (mode: Mode) => void;
-    onSearchChange: (search: string) => void;
     isOpen: boolean;
     setIsOpen: (isOpen: boolean) => void;
     onVenueTypeFilterChange: (typeFilter: VenueTypeFilter) => void;
@@ -237,6 +249,11 @@ function NearYouSearchFilter(props: NearYouSearchFilterProps) {
         }
     };
 
+    const handleRangeChange = (val: number) => {
+        props.onRangeChange(val);
+        setRange(val);
+    };
+
     useEffect(() => {
         props.onVenueTypeFilterChange(venueTypeFilter);
     }, [venueTypeFilter]);
@@ -248,9 +265,6 @@ function NearYouSearchFilter(props: NearYouSearchFilterProps) {
     return (
         <PopoverMenu isOpen={props.isOpen} popoverDirection={PopoverDirection.LEFT} titleText={'Search Settings'} onClose={() => props.setIsOpen(false)}>
             <div className={'filter-settings'}>
-                <DropdownSection title={'Search'}>
-                    <Input placeholder={'Filter by beer/venue name'} onChange={(e) => {props.onSearchChange(e.target.value)}}/>
-                </DropdownSection>
                 <DropdownSection title={'Result Type'}>
                     <UncontrolledDropdown style={{marginLeft: '10px'}}>
                         <DropdownToggle caret>
@@ -264,8 +278,14 @@ function NearYouSearchFilter(props: NearYouSearchFilterProps) {
                 </DropdownSection>
                 <DropdownSection title={'Range'}>
                     <div className={'setting range-holder'}>
-                        <Slider className={'range-slider'} defaultValue={0.5} min={0.5} max={50} step={0.5} onAfterChange={() => props.onRangeChange(range)} onChange={(i) => setRange(i)}/>
-                        {range}<br/>miles
+                        <Form>
+                            <FormGroup className={'align-items-center'} row>
+                                <Label xs={2}>{range}<br/>miles</Label>
+                                <Col xs={10}>
+                                    <CustomInput min={0.5} max={10} step={0.5} type={'range'} onChange={(e) => handleRangeChange(+e.target.value)} value={range}/>
+                                </Col>
+                            </FormGroup>
+                        </Form>
                     </div>
                 </DropdownSection>
                 <DropdownSection title={'Venue Type'}>

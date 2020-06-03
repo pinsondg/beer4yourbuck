@@ -2,8 +2,8 @@ import React, {useContext, useState} from "react";
 import {useLocation} from "react-router";
 // @ts-ignore
 import Beer4YourBuckLogo from "../../image/domain/logos/LogoMakr_3Klh9R.png";
-import {FaUser} from "react-icons/all";
-import PopoverMenu, {PopoverDirection} from "../popover-menu/PopoverMenu";
+import {FaUser} from "react-icons/fa";
+import PopoverMenu, {PopoverDirection} from "../menu/popover-menu/PopoverMenu";
 import {UserContext} from "../../context/UserContext";
 import {useHistory} from "react-router-dom";
 import Beer4YourBuckAPI from "../../controller/api/Beer4YourBuckAPI";
@@ -21,7 +21,6 @@ export default function MobileTopBar() {
                 return 'Near You';
             case '/compare':
                 return 'Quick Compare';
-                break;
             case '/upload':
                 return 'Menu Upload (Beta)';
             case '/current-venue':
@@ -34,9 +33,9 @@ export default function MobileTopBar() {
     return (
         <div style={{width: '100%'}}>
             <div style={{flex: '1 1 auto', color: '#f6c101', backgroundColor: '#343a40', padding: '10px', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
-                <img style={{height: '45px', marginRight: '5px', borderRadius: '.25rem'}} src={Beer4YourBuckLogo}/>
+                <img style={{height: '30px', marginRight: '5px', borderRadius: '.25rem'}} src={Beer4YourBuckLogo}/>
                 <h4>{determinePage()}</h4>
-                <FaUser size={30} onClick={() => setProfileMenuOpen(!profileMenuOpen)}/>
+                <FaUser size={25} onClick={() => setProfileMenuOpen(!profileMenuOpen)}/>
             </div>
             <PopoverMenu
                 onClose={() => setProfileMenuOpen(false)}

@@ -1,9 +1,9 @@
 import React, {ReactNode, useEffect, useRef, useState} from "react";
 import './popover-menu.css'
 import classNames from "classnames";
-import {MdClose} from "react-icons/all";
-import {CircleClick} from "../misc/circle-click/CircleClick";
+import {MdClose} from "react-icons/md";
 import Color from 'color'
+import {CircleClick} from "../../misc/circle-click/CircleClick";
 
 interface Props {
     isOpen: boolean;
@@ -62,15 +62,18 @@ export default function PopoverMenu(props: Props) {
     };
 
     return (
-        <div className={popoverClasses} ref={wrapperRef}>
-            <div className={popoverHeaderClasses}>
-                <h4>{props.titleText}</h4>
-                <CircleClick onClick={handleClose} activeColor={new Color('red')} nonActiveColor={new Color('red')} isCurrent={true} size={'35px'}>
-                    <MdClose style={{color: 'red'}} size={30}/>
-                </CircleClick>
-            </div>
-            <div className={'popover-menu-content'}>
-                {props.children}
+        <div>
+            <div style={{display: isOpen ? 'block': 'none', zIndex: 1000, position: "fixed", top: 0, left: 0, width: '100%', height: '100%', backgroundColor: '#000', opacity: '0.5', transition: 'opacity .1s linear'}}/>
+            <div className={popoverClasses} ref={wrapperRef}>
+                <div className={popoverHeaderClasses}>
+                    <h4>{props.titleText}</h4>
+                    <CircleClick onClick={handleClose} activeColor={new Color('red')} nonActiveColor={new Color('red')} isCurrent={true} size={'35px'}>
+                        <MdClose className={'popover-close-button'} size={30}/>
+                    </CircleClick>
+                </div>
+                <div className={'popover-menu-content'}>
+                    {props.children}
+                </div>
             </div>
         </div>
     )

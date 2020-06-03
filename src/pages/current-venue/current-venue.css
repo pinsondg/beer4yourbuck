@@ -4,23 +4,26 @@
 }
 
 .venue-controls {
-    border-bottom: darkgray solid 1px;
+    height: 100%;
 }
 
 .current-venue-content {
     display: flex;
     flex-direction: column;
-    flex: 1 1 100%;
-    overflow: hidden;
+    overflow-y: scroll;
+    flex: 1 0 100%;
+    background-color: #f8f9fa;
 }
 
 .beers-list {
     padding-top: 5px;
-    flex: 1 1 100%;
-    background-color: #f8f9fa;
-    overflow-y: scroll;
 }
 
 .top-row {
-    margin-bottom: 5px;
+    background-color: white;
+}
+
+.sticky {
+    position: -webkit-sticky;
+    position: sticky;
 }
