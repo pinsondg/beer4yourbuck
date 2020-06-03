@@ -184,37 +184,39 @@ export default function CurrentVenue(props: Props) {
                             </Col>
                         }
                     </Row>
-                    <Row className={'justify-content-center top-row'}>
-                        <Col xs={6} sm={6}>
-                            <Beer4YourBuckBtn customStyle={BtnType.SECONDARY_CLEAR} onClick={() => setVenue(null)}>Change Venue</Beer4YourBuckBtn>
-                        </Col>
-                        <Col xs={{size: 6}} sm={{offset: 2, size: 4}}>
-                            <Beer4YourBuckBtn onClick={onAddBeerClicked} customStyle={BtnType.PRIMARY_CLEAR}><MdAdd/> Add Beer</Beer4YourBuckBtn>
-                        </Col>
-                    </Row>
-                    <Row className={'justify-content-center top-row'}>
-                        <Col sm={4}>
-                            <Input onChange={(e) => setSearchTerm(e.target.value)} placeholder={'Search Beer'}><IoMdSearch/></Input>
-                        </Col>
+                    <div className={'sticky-top'}>
+                        <Row className={'justify-content-center top-row'} style={{backgroundColor: "white", marginBottom: '0', paddingTop: '5px'}}>
+                            <Col xs={6} sm={6}>
+                                <Beer4YourBuckBtn customStyle={BtnType.SECONDARY_CLEAR} onClick={() => setVenue(null)}>Change Venue</Beer4YourBuckBtn>
+                            </Col>
+                            <Col xs={{size: 6}} sm={{offset: 2, size: 4}}>
+                                <Beer4YourBuckBtn onClick={onAddBeerClicked} customStyle={BtnType.PRIMARY_CLEAR}><MdAdd/> Add Beer</Beer4YourBuckBtn>
+                            </Col>
+                        </Row>
+                        <Row style={{borderBottom: '1px solid lightgray', backgroundColor: "white", marginBottom: '0px', paddingTop: '5px', paddingBottom: '5px'}} className={'justify-content-center top-row'}>
+                            <Col sm={4}>
+                                <Input onChange={(e) => setSearchTerm(e.target.value)} placeholder={'Search Beer'}><IoMdSearch/></Input>
+                            </Col>
+                        </Row>
+                    </div>
+                    <Row className={'beers-list'}>
+                        {
+                            isLoading && <LoadingSpinner message={`Loading beers for ${venue.name}`}/>
+                        }
+                        {
+                            sortedBeers.length > 0 && !isLoading ? sortedBeers.map((beer, i) => <VenueBeerBrick
+                                key={beer.id}
+                                beer={beer}
+                                upVoted={upVotedBeers.some(voted => voted.id === beer.id)}
+                                downVoted={downVotedBeers.some(voted => voted.id === beer.id)}
+                                userAdded={userAddedBeers.some(added => added.id === beer.id)}
+                                place={i + 1}
+                            />).filter(item => item.props.beer.name.includes(searchTerm)) : (
+                                <p>Looks like you're the first user here! Add beer to start comparing for this venue.</p>
+                            )
+                        }
                     </Row>
                 </Container>
-                <div className={'beers-list'}>
-                    {
-                        isLoading && <LoadingSpinner message={`Loading beers for ${venue.name}`}/>
-                    }
-                    {
-                        sortedBeers.length > 0 && !isLoading ? sortedBeers.map((beer, i) => <VenueBeerBrick
-                            key={beer.id}
-                            beer={beer}
-                            upVoted={upVotedBeers.some(voted => voted.id === beer.id)}
-                            downVoted={downVotedBeers.some(voted => voted.id === beer.id)}
-                            userAdded={userAddedBeers.some(added => added.id === beer.id)}
-                            place={i + 1}
-                        />).filter(item => item.props.beer.name.includes(searchTerm)) : (
-                            <p>Looks like you're the first user here! Add beer to start comparing for this venue.</p>
-                        )
-                    }
-                </div>
                 {showAddModal &&
                     <BeerAddModal
                         modalType={ModalType.ADD}

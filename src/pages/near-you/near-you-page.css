@@ -4,6 +4,13 @@
     width: 100%;
 }
 
+.near-you-search-settings {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 5px;
+}
+
 .filter-button {
     position: absolute;
     left: 0;
@@ -16,7 +23,8 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: scroll;
 }
 
 .filter-settings-holder {
@@ -37,9 +45,6 @@
 
 .items-holder {
     padding-top: 10px;
-    flex: 1 1 100%;
-    overflow-y: scroll;
-    overflow-x: auto;
 }
 
 .spinner {
@@ -55,6 +60,8 @@
 }
 
 .list-holder {
+    position: -webkit-sticky;
+    position: sticky;
     overflow-y: scroll;
     overflow-x: hidden;
 }

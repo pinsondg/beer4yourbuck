@@ -3,7 +3,7 @@ import {useLocation} from "react-router";
 // @ts-ignore
 import Beer4YourBuckLogo from "../../image/domain/logos/LogoMakr_3Klh9R.png";
 import {FaUser} from "react-icons/fa";
-import PopoverMenu, {PopoverDirection} from "../popover-menu/PopoverMenu";
+import PopoverMenu, {PopoverDirection} from "../menu/popover-menu/PopoverMenu";
 import {UserContext} from "../../context/UserContext";
 import {useHistory} from "react-router-dom";
 import Beer4YourBuckAPI from "../../controller/api/Beer4YourBuckAPI";

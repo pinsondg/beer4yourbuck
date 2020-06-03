@@ -23,7 +23,7 @@ import {BeerNearYouBrick} from "../../component/brick/BeerNearYouBrick";
 import {NotificationContext, NotificationType} from "../../context/NotificationContext";
 import 'rc-slider/assets/index.css';
 import {IoMdOptions} from "react-icons/io";
-import PopoverMenu, {PopoverDirection} from "../../component/popover-menu/PopoverMenu";
+import PopoverMenu, {PopoverDirection} from "../../component/menu/popover-menu/PopoverMenu";
 import {Beer4YourBuckBtn, BtnType} from "../../component/button/custom-btns/ThemedButtons";
 import DropdownSection from "../../component/misc/dropdown-section/DropdownSection";
 import CustomCheckbox from "../../component/misc/checkbox/CustomCheckbox";
@@ -176,10 +176,9 @@ export function NearYouPage() {
 
     return (
         <div className={'near-you-page-content'}>
-            <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: '5px', maxWidth: '500px'}}>
+            <div className={'near-you-search-settings'}>
                 <Beer4YourBuckBtn id={'filterButton'} customStyle={BtnType.PRIMARY} onClick={() => {setSidebarOpen(!sideBarOpen)}}><IoMdOptions size={15}/></Beer4YourBuckBtn>
                 <Input style={{marginLeft: '5px'}} placeholder={'Filter by beer/venue name'} onChange={(e) => {setNameFilter(e.target.value)}}/>
-
                 <UncontrolledTooltip target={'filterButton'}>Edit Search Settings</UncontrolledTooltip>
             </div>
             <NearYouSearchFilter
