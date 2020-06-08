@@ -43,7 +43,7 @@ export default function NotificationComponent(props: NotificationProps) {
             case NotificationType.INFO:
                 setTypeProperties({
                     icon: <MdInfo size={iconSize}/>,
-                    color: 'primary'
+                    color: 'info'
                 });
                 break;
             case NotificationType.ERROR:

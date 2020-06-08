@@ -63,7 +63,7 @@ export default function PopoverMenu(props: Props) {
 
     return (
         <div>
-            <div style={{display: isOpen ? 'block': 'none', zIndex: 1000, position: "fixed", top: 0, left: 0, width: '100%', height: '100%', backgroundColor: '#000', opacity: '0.5', transition: 'opacity .1s linear'}}/>
+            <div style={{display: isOpen ? 'block': 'none', zIndex: 1040, position: "fixed", top: 0, left: 0, width: '100%', height: '100%', backgroundColor: '#000', opacity: '0.5', transition: 'opacity .1s linear'}}/>
             <div className={popoverClasses} ref={wrapperRef}>
                 <div className={popoverHeaderClasses}>
                     <h4>{props.titleText}</h4>

@@ -33,7 +33,7 @@ export default function MobileNavBar() {
     }, [location.pathname]);
 
     return (
-        <div style={{flex: '1 1 auto', backgroundColor: '#343a40'}}>
+        <div className={'mobile-nav-bar'}>
             <Container style={{margin: '0 auto', padding: '10px'}}>
                 <Row className={'justify-content-center align-items-center'}>
                     <Col>
