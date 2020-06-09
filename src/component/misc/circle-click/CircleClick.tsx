@@ -12,6 +12,10 @@ interface Props {
 }
 
 export const CircleClick = styled.div<Props>`
+    -moz-transition: background-color 0.2s ease;
+    -webkit-transition: background-color 0.2s ease; 
+    -o-transition: background-color 0.2s ease;
+    -ms-transition: background-color 0.2s ease;
     transition: background-color 0.2s ease;
     ${props => props.center ? 'margin: 0 auto;' : ''}
     border-radius: 50%;
@@ -22,6 +26,6 @@ export const CircleClick = styled.div<Props>`
     justify-content: center;
     color: ${props => props.isCurrent ? props.activeColor.hex() : props.nonActiveColor.toString()};
     :active {
-        background-color: ${props => props.activeColor ? new Color(props.activeColor).alpha(0.6).toString() : 'rgba(255, 255, 255, 1)'}
+        background-color: ${props => props.activeColor ? new Color(props.activeColor).alpha(0.6).toString() : 'rgba(255, 255, 255, 1)'};
     }
 `;

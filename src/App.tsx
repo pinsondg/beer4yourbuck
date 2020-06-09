@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useReducer, useState} from 'react';
 import './App.css';
 import {BeerVenue} from "./model/BeerVenue";
 import {BeerVenueContext, BeerVenueContextData} from "./context/BeerVenueContext";
@@ -23,16 +23,21 @@ import MobileNavBar from "./component/nav/MobileNavBar";
 import MobileTopBar from "./component/nav/MobileTopBar";
 // @ts-ignore
 import AddToHomescreen from 'react-add-to-homescreen';
+import {filterReducer, initialFilters, NearYouFilterContext} from "./context/NearYouFilterContext";
+import {NearYouVenuesContext, NearYouVenuesContextData} from "./context/NearYouVenuesContext";
 
 const api = Beer4YourBuckAPI.getInstance();
 function App() {
     console.log("Running app in " + process.env.NODE_ENV + " environment.");
+    const [filters, filterDispatch] = useReducer(filterReducer, initialFilters);
+    const [nearYouVenues, setNearYouVenues] = useState<BeerVenue[] | null>(null);
     const [venue, setVenue] = useState<BeerVenue | null>();
     const [compareBeers, setCompareBeers] = useState<Beer[]>([]);
     const [notifications, setNotifications] = useState<Notification[]>([]);
     const [uploadNotificationShown, setUploadNotificationShown] = useState<boolean>(false);
     const [user, setUser] = useState<User | null>(null);
     const userContext: UserContext = {user, setUser};
+    const nearYouVenuesContext: NearYouVenuesContextData = {nearYouVenues, setNearYouVenues};
     const venueContext: BeerVenueContextData = {venue, setVenue};
     const compareBeerContext: CompareBeerContextData = {compareBeers, setCompareBeers};
     const notificationContext: NotificationContext = {setNotifications, notifications};
@@ -86,9 +91,13 @@ function App() {
                                           <Route path={'/compare'}>
                                               <MultiCompareFlow/>
                                           </Route>
-                                          <Route path={'/near'}>
-                                              <NearYouPage/>
-                                          </Route>
+                                          <NearYouVenuesContext.Provider value={nearYouVenuesContext}>
+                                              <NearYouFilterContext.Provider value={{filters: filters, filterDispatch: filterDispatch}}>
+                                              <Route path={'/near'}>
+                                                  <NearYouPage/>
+                                              </Route>
+                                              </NearYouFilterContext.Provider>
+                                          </NearYouVenuesContext.Provider>
                                           <Route path={'/current-venue'}>
                                               <CurrentVenue/>
                                           </Route>
