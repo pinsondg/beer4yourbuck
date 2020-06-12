@@ -26,6 +26,7 @@
     "fitty": "^2.3.0",
     "fix-image-rotation": "^2.0.0",
     "luxon": "^1.24.1",
+    "node-sass": "^4.14.1",
     "rc-slider": "^9.2.4",
     "rc-time-picker": "^3.7.3",
     "react": "^16.13.0",

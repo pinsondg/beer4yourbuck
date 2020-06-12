@@ -28,3 +28,10 @@
 .mobile-nav-item.active {
     color: #f6c101;
 }
+
+.mobile-nav-bar {
+    flex: 1 1 auto;
+    background-color: #343a40;
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-bottom: constant(safe-area-inset-bottom);
+}

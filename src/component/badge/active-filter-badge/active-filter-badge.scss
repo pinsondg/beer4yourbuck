@@ -1,0 +1,51 @@
+@import "../../../bootstrapOverride";
+
+$remove-btn-size: 17px;
+
+.filter-badge-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 10px;
+
+  p {
+    white-space: nowrap;
+    margin-bottom: 0;
+    color: white;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently*/
+  }
+}
+
+.remove-button {
+  background-color: white;
+  border-radius: 50%;
+  height: $remove-btn-size;
+  width: $remove-btn-size;
+  color: theme-color("secondary");
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 7px;
+}
+
+.remove-button:hover {
+  background-color: lightgray;
+  cursor: pointer;
+}
+
+.remove-button:active {
+  background-color: darkgray;
+  cursor: pointer;
+}
+
+.filter-badge {
+  background-color: theme-color("secondary");
+  border-radius: 10rem;
+  width: fit-content;
+  height: fit-content;
+}

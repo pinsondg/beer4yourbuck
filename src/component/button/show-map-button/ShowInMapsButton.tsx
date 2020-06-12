@@ -17,6 +17,6 @@ export default function ShowInMapsButton(props: Props) {
     };
 
     return (
-        <Button color={'primary'} className={classes} onClick={showInMaps}><FaMapMarkerAlt/> Show In Maps</Button>
+        <Button color={'info'} className={classes} onClick={showInMaps}><FaMapMarkerAlt/> Show In Maps</Button>
     )
 }

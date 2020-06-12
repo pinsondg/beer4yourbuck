@@ -15,6 +15,7 @@ export interface BeerInterface {
     volume?: number;
     count?: number
     verified?: boolean;
+    beerType?: string
     isPublished?: boolean;
 }
 
@@ -31,6 +32,7 @@ export class Beer implements BeerInterface {
     volume?: number;
     count?: number;
     verified?: boolean;
+    beerType?: string;
     isPublished?: boolean;
 
     getOttawayScore(): number {
@@ -53,6 +55,7 @@ export class Beer implements BeerInterface {
         private verified?: boolean;
         private isPublished?: boolean;
         private count?: number;
+        private beerType?: string;
 
         withName(name: string): Builder {
             this.name = name;
@@ -61,6 +64,11 @@ export class Beer implements BeerInterface {
 
         withBreweryName(breweryName: string): Builder {
             this.breweryName = breweryName;
+            return this;
+        }
+
+        withType(type: string): Builder {
+            this.beerType = type;
             return this;
         }
 
@@ -126,7 +134,8 @@ export class Beer implements BeerInterface {
             this.verified = beer.verified;
             this.label = beer.label;
             this.isPublished = beer.isPublished;
-            this.count = beer.count
+            this.count = beer.count;
+            this.beerType = beer.beerType;
             return this;
         }
 
@@ -145,6 +154,7 @@ export class Beer implements BeerInterface {
             beer.breweryName = this.breweryName;
             beer.isPublished = this.isPublished;
             beer.count = this.count;
+            beer.beerType = this.beerType;
             return beer;
         }
     }

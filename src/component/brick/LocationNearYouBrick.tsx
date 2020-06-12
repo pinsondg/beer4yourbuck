@@ -35,7 +35,7 @@ export function LocationNearYouBrick(props: Props) {
             <Container>
                 <Row>
                     <Col md={'6'} className={venueInfoHolderClasses}>
-                        <h5>{props.venue.name}<Badge color={'primary'}>{props.venue.venueTypes.join('/')}</Badge></h5>
+                        <h5>{props.venue.name}<br/><Badge color={'primary'}>{props.venue.venueTypes.join('/')}</Badge></h5>
                         <p>{props.venue.address}</p>
                         <p>{props.distance.toFixed(2)} miles away</p>
                         <ShowInMapsButton address={props.venue.address}/>
@@ -51,7 +51,7 @@ export function LocationNearYouBrick(props: Props) {
                             {
                                 props.venue.beers.map(beer => new Beer.Builder().withBeer(beer).build()).sort(beerSort).slice(0, 3).map(beer =>
                                     <Row className={'justify-content-center align-items-center'} style={{marginTop: '10px'}}>
-                                        <Col lg={2} style={{display: 'flex', justifyContent: 'center'}}>
+                                        <Col md={4} lg={4} xl={4} style={{display: 'flex', justifyContent: 'center'}}>
                                             <div className={'logo-holder location'}>
                                                 <CircularBeerLogo
                                                     src={beer.label ? beer.label : ''}
@@ -59,11 +59,11 @@ export function LocationNearYouBrick(props: Props) {
                                                 />
                                             </div>
                                         </Col>
-                                        <Col lg={6}>
+                                        <Col md={4} lg={4} xl={4}>
                                             <h6>{beer.name}{beer.count && beer.count > 1 ? ` (x${beer.count})` : ''}</h6>
                                             <h6>${beer.price ? beer.price.toFixed(2) : 'N/A'}</h6>
                                         </Col>
-                                        <Col lg={4}>
+                                        <Col>
                                         {
                                             beer.verified && <VerifiedBadge/>
                                         }
