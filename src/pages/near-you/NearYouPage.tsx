@@ -2,6 +2,7 @@ import React, {ReactNode, useContext, useEffect, useState} from "react";
 import {LocationNearYouBrick} from "../../component/brick/LocationNearYouBrick";
 import {BeerVenue} from "../../model/BeerVenue";
 import {
+    Button,
     Col,
     Container,
     CustomInput,
@@ -15,7 +16,7 @@ import {
     Row,
     UncontrolledDropdown
 } from "reactstrap";
-import './near-you-page.css'
+import './near-you-page.scss'
 import {Beer} from "../../model/Beer";
 import Beer4YourBuckAPI from "../../controller/api/Beer4YourBuckAPI";
 import {getDistance, getLocation, metersToMiles, milesToMeters} from "../../controller/LocationController";
@@ -24,7 +25,6 @@ import {BeerNearYouBrick} from "../../component/brick/BeerNearYouBrick";
 import {NotificationContext, NotificationType} from "../../context/NotificationContext";
 import 'rc-slider/assets/index.css';
 import PopoverMenu, {PopoverDirection} from "../../component/menu/popover-menu/PopoverMenu";
-import {Beer4YourBuckBtn, BtnType} from "../../component/button/custom-btns/ThemedButtons";
 import DropdownSection from "../../component/misc/dropdown-section/DropdownSection";
 import CustomCheckbox from "../../component/misc/checkbox/CustomCheckbox";
 import {Filter, FilterType} from "../../model/Filter";
@@ -71,6 +71,7 @@ export function NearYouPage() {
     const [sideBarOpen, setSidebarOpen] = useState<boolean>(false);
     const [search, setSearch] = useState<string>('');
     const [range, setRange] = useState<number>(+getFiltersOfType(FilterType.DISTANCE)[0].value);
+    const [results, setResults] = useState<ReactNode[] | null>(null);
     const prevRange = usePrevious<number>(range);
 
     useEffect(() => {
@@ -80,9 +81,9 @@ export function NearYouPage() {
         }
     }, [filters, range]);
 
-    const getNearYouLocationBricks = (): ReactNode => {
+    const getNearYouLocationBricks = () => {
         if (!nearYouVenues) return [];
-        return [...nearYouVenues].sort((venue1, venue2)=> {
+        const results =  [...nearYouVenues].sort((venue1, venue2)=> {
             let distance1 = 0;
             let distance2 = 0;
             if (currPos) {
@@ -111,13 +112,14 @@ export function NearYouPage() {
                 <LocationNearYouBrick key={key++} distance={distance} venue={venue}/>
             )
         });
+        setResults(results);
     };
 
-    const getNearYouBeerBricks = (): ReactNode => {
+    const getNearYouBeerBricks = () => {
         let beers: {beer: Beer, venue: BeerVenue}[] = [];
         if (!nearYouVenues) return [];
         nearYouVenues.forEach(venue => venue.beers.forEach(beer => beers.push({venue: venue, beer: beer})));
-        return (
+        const results =  (
             beers.filter(beer => (beer.beer.name && beer.beer.name.toLowerCase().includes(search.toLowerCase())) || beer.venue.name.toLowerCase().includes(search.toLowerCase()))
                 .filter(beer => beer.venue.venueTypes.some(venueType => getFiltersOfType(FilterType.VENUE_TYPE).length === 0 || getFiltersOfType(FilterType.VENUE_TYPE).map(x => x.value).includes(venueType.toLowerCase())))
                 .filter(beer => getFiltersOfType(FilterType.MAX_PRICE).length === 0 || getFiltersOfType(FilterType.MAX_PRICE).map(filter => +filter.value).some(price => beer.beer.price && beer.beer.price <= price))
@@ -127,7 +129,16 @@ export function NearYouPage() {
                     - new Beer.Builder().withBeer(item1.beer).build().getOttawayScore()
             }).map(item => <BeerNearYouBrick key={key++} beer={new Beer.Builder().withBeer(item.beer).build()} venue={item.venue}/>)
         );
+        setResults(results);
     };
+
+    useEffect(() => {
+        if (mode === Mode.LOCATION) {
+            getNearYouLocationBricks();
+        } else {
+            getNearYouBeerBricks();
+        }
+    }, [mode, nearYouVenues, filters, search]);
 
     useEffect(() => {
         setIsLoading(true);
@@ -172,13 +183,13 @@ export function NearYouPage() {
             setIsLoading(false);
             setNotifications([...notifications, {
                 title: 'Error Getting Your Location',
-                message: 'There was an error getting your current location. Plase make sure you have given ' +
+                message: 'There was an error getting your current location. Please make sure you have given ' +
                     'your browser and this website permission to access your location.',
                 timeout: 6000,
                 type: NotificationType.ERROR
             }])
         });
-    }, [setNotifications, range, nearYouVenues]);
+    }, [setNotifications, range, nearYouVenues, setNearYouVenues]);
 
     const onSetOpen = (open: boolean) => {
         setSidebarOpen(open);
@@ -215,16 +226,21 @@ export function NearYouPage() {
                         </div>
                     </Col>
                 </Row>
-                <Row className={'align-items-center sticky-top'} style={{backgroundColor: 'white', padding: '5px', borderBottom: '1px solid lightgray'}}>
-                    <Col xs={2}>
-                        <Beer4YourBuckBtn id={'filterButton'} customStyle={BtnType.PRIMARY} onClick={() => {setSidebarOpen(!sideBarOpen)}}>Filter</Beer4YourBuckBtn>
+                <Row className={'align-items-center sticky-top'} style={{backgroundColor: 'white', padding: '5px'}}>
+                    <Col>
+                        <Input type={'search'} style={{marginLeft: '5px'}} placeholder={'Search beer/venue'} onChange={(e) => {setSearch(e.target.value)}}/>
                     </Col>
-                    <Col xs={6}>
-                        <Input style={{marginLeft: '5px'}} placeholder={'Search beer/venue'} onChange={(e) => {setSearch(e.target.value)}}/>
+                </Row>
+                <Row className={'align-items-center'} style={{backgroundColor: 'white', padding: '5px', borderBottom: '1px solid lightgray'}}>
+                    <Col xs={4} style={{borderRight: 'solid lightgray 1px'}}>
+                        <Button size={'sm'} id={'filterButton'} color={'link'} onClick={() => {setSidebarOpen(!sideBarOpen)}}>Filters{` (${filters.length})`}</Button>
                     </Col>
                     <Col xs={4}>
+                        <p>{`${results ? results.length : '0'} results`}</p>
+                    </Col>
+                    <Col xs={4} style={{borderLeft: 'solid lightgray 1px'}}>
                         <UncontrolledDropdown size={'sm'}>
-                            <DropdownToggle color={'primary'} style={{ whiteSpace: 'normal'}} caret>
+                            <DropdownToggle color={'link'} style={{ whiteSpace: 'normal'}} caret>
                                 {mode === Mode.LOCATION ? "Closest" : "Best Beer"}
                             </DropdownToggle>
                             <DropdownMenu>
@@ -235,7 +251,7 @@ export function NearYouPage() {
                     </Col>
                 </Row>
                 <Row>
-                    <Col>
+                    <Col style={{paddingLeft: '0', paddingRight: '0'}}>
                         {
                             isLoading ? (
                                 <LoadingSpinner className={'spinner'} message={"Finding places near you."}/>
@@ -243,12 +259,7 @@ export function NearYouPage() {
                                 <div style={{margin: 'auto'}}>We couldn't find any venues near you! Try expanding the search range.</div>
                             ) : (
                                 <div className={'items-holder'}>
-                                    {
-                                        mode === Mode.LOCATION && getNearYouLocationBricks()
-                                    }
-                                    {
-                                        mode === Mode.BEER && getNearYouBeerBricks()
-                                    }
+                                    {results}
                                 </div>
                             )
                         }
@@ -377,8 +388,12 @@ function NearYouSearchFilter(props: NearYouSearchFilterProps) {
         const nodes: ReactNode[] = [];
         beerTypes.forEach(type => {
             nodes.push(<div className={'checklist-row'}>
-                <h5>{type}</h5>
-                <CustomCheckbox selected={isBeerTypeFilterActive(type)} onChange={(val) => onBeerTypeFilterCheckboxClick(type, val)} size={30}/>
+                <div className={'title-holder'}>
+                    <h5>{type}</h5>
+                </div>
+                <div className={'checkbox-holder'}>
+                    <CustomCheckbox selected={isBeerTypeFilterActive(type)} onChange={(val) => onBeerTypeFilterCheckboxClick(type, val)} size={30}/>
+                </div>
             </div>)
         });
         return nodes;
