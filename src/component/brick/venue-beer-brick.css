@@ -49,5 +49,5 @@
 }
 
 .logo-holder.venue {
-    width: 65px;
+    max-width: 65px;
 }
