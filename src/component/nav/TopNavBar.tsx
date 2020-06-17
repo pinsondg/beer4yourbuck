@@ -46,17 +46,33 @@ export function TopNavBar(props: Props) {
         }
     }, [location.pathname]);
 
+    const logOutFrontend = () => {
+        setUser(null);
+        setNotifications([...notifications, {
+            title: 'Logout Successful',
+            message: 'You have logged out successfully.',
+            timeout: 4000,
+            type: NotificationType.SUCCESS
+        }]);
+        history.push('/');
+    };
+
     const logout = () => {
         api.logout().then(() => {
-            setUser(null);
-            setNotifications([...notifications, {
-                title: 'Log Out Successful',
-                message: 'You have logged out successfully.',
-                timeout: 4000,
-                type: NotificationType.SUCCESS
-            }]);
-            history.push('/');
-        })
+            logOutFrontend();
+        }).catch(err => {
+            if (err.response && err.response.status === 401) {
+                //user is probably not logged in if 401 from logout so log them out of frontend
+                logOutFrontend();
+            } else {
+                setNotifications([...notifications, {
+                    title: 'Logout Failed',
+                    message: 'Logout failed. Please try again later or refresh the page.',
+                    timeout: 4000,
+                    type: NotificationType.ERROR
+                }]);
+            }
+        });
     };
 
     return (

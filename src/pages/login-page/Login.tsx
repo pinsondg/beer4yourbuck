@@ -44,7 +44,7 @@ export default function Login(props: Props) {
                 api.login(name, password, rememberMe).then(data => {
                     api.getUserDetails().then(data => {
                         setUser(data.data);
-                        history.push('/')
+                        history.goBack();
                     });
                 }).catch(err => {
                     console.log(err);

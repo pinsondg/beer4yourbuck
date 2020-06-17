@@ -1,8 +1,7 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {ReactNode, useEffect, useRef, useState} from "react";
 import Beer4YourBuckAPI from "../../../controller/api/Beer4YourBuckAPI";
 import {Beer, BeerInterface} from "../../../model/Beer";
-import SelectableList from "../../list/selectable-list/SelectableList";
-import {Col, FormGroup, FormText, Input, Label, Row} from "reactstrap";
+import {Col, Dropdown, DropdownMenu, DropdownToggle, FormGroup, FormText, Input, Label, Table} from "reactstrap";
 import './beer-searcher.css'
 import {CustomInput} from "../CustomInput";
 import {CalculationItemInput} from "../../modal/beerAdd/BeerAddModal";
@@ -77,16 +76,16 @@ export default function BeerSearcher(prop: BeerSearcherProp) {
         }
     };
 
-    const onBeerSelected = (index: number) => {
-        const beer = foundBeers[index];
+    const onBeerSelected = (untappedId: number | undefined) => {
+        const beer = foundBeers.filter(x => x.untappedId === untappedId)[0];
         if (beer != null) {
             prop.getSelected(beer);
             if (beer.name) {
                 setText(beer.name);
             }
+            setSelectedBeer(beer);
         }
         setHideList(true);
-        setSelectedBeer(foundBeers[index]);
     };
 
     const handleFocus = () => {
@@ -95,11 +94,33 @@ export default function BeerSearcher(prop: BeerSearcherProp) {
         }
     };
 
+    const generateBody = (): ReactNode[] => {
+        const rows: ReactNode[] = [];
+        if (foundBeers) {
+            foundBeers.forEach(beer => {
+                rows.push(
+                    <tr onClick={() => onBeerSelected(beer.untappedId)} key={beer.untappedId}>
+                        <td>
+                            {beer.breweryName}
+                        </td>
+                        <td>
+                            {beer.name}
+                        </td>
+                        <td>
+                            {beer.abv}
+                        </td>
+                    </tr>
+                );
+            });
+        }
+        return rows;
+    };
+
     return (
         <div className={'beer-searcher'} ref={wrapperRef}>
             <FormGroup row>
                 <Label sm={'2'} for={'beer-search'}>Beer Name</Label>
-                <Col sm={'10'}>
+                <Col sm={'10'} style={{position: 'relative'}}>
                     <Input
                         id={'beer-search'}
                         className={'custom-input'}
@@ -108,26 +129,23 @@ export default function BeerSearcher(prop: BeerSearcherProp) {
                         onFocus={handleFocus}
                         name={'beer-search'}
                     />
-                    {
-                        foundBeers && foundBeers.length > 0 &&
-                        <SelectableList components={foundBeers.map((beer) => (
-                            <Row key={beer.id} style={{borderBottom: 'solid 1px darkgray'}}>
-                                <Col>
-                                    <p>{beer.breweryName}</p>
-                                </Col>
-                                <Col>
-                                    <p>{beer.name}</p>
-                                </Col>
-                                <Col>
-                                    <p>{beer.abv}</p>
-                                </Col>
-                            </Row>
-                        ))}
-                                        getSelected={onBeerSelected}
-                                        hide={hideList}
-                                        showShadow={true}
-                        />
-                    }
+                    <Dropdown isOpen={!hideList && foundBeers && foundBeers.length > 0} toggle={() => setHideList(!hideList)}>
+                        <DropdownToggle tag={"span"} style={{width: 0, height: 0, opacity: 0, padding: 0, margin: 0}}/>
+                        <DropdownMenu className={'beer-select'}>
+                            <Table className={'beer-select-table'} hover style={{maxHeight: '300px'}}>
+                                <thead>
+                                    <tr className={'header-row'}>
+                                        <th>Brewery</th>
+                                        <th>Beer Name</th>
+                                        <th>ABV</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {generateBody()}
+                                </tbody>
+                            </Table>
+                        </DropdownMenu>
+                    </Dropdown>
                     <FormText>For best results, search for Brewery Name + Beer Name</FormText>
                 </Col>
             </FormGroup>

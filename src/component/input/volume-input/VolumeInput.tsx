@@ -1,5 +1,15 @@
 import React, {useEffect, useState} from "react";
-import {Col, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, FormGroup, Input, Label} from "reactstrap";
+import {
+    Col,
+    DropdownItem,
+    DropdownMenu,
+    DropdownToggle,
+    FormGroup,
+    Input,
+    InputGroup,
+    InputGroupButtonDropdown,
+    Label
+} from "reactstrap";
 import classNames from "classnames";
 import './volume-input.css'
 
@@ -45,28 +55,30 @@ export default function VolumeInput(props: VolumeInputProps) {
             <Label for={'volume'} sm={'2'}>Volume (fl oz)</Label>
             <Col sm={'10'}>
                 <div className={'input-holder'}>
-                    <Input
-                        id={'volume'}
-                        className={classes}
-                        value={volume}
-                        step={'0.01'}
-                        type={'number'}
-                        name={'volume'}
-                        onChange={handleChange}
-                    />
-                    <Dropdown toggle={toggle} isOpen={dropdownOpen} className={'volume-dropdown'}>
-                        <DropdownToggle caret/>
-                        <DropdownMenu>
-                            <DropdownItem header>Choose Size</DropdownItem>
-                            <DropdownItem onClick={onDropdownItemSelected}>8 fl oz</DropdownItem>
-                            <DropdownItem onClick={onDropdownItemSelected}>12 fl oz</DropdownItem>
-                            <DropdownItem onClick={onDropdownItemSelected}>14 fl oz</DropdownItem>
-                            <DropdownItem onClick={onDropdownItemSelected}>16 fl oz</DropdownItem>
-                            <DropdownItem onClick={onDropdownItemSelected}>20 fl oz</DropdownItem>
-                            <DropdownItem onClick={onDropdownItemSelected}>24 fl oz</DropdownItem>
-                            <DropdownItem onClick={onDropdownItemSelected}>40 fl oz</DropdownItem>
-                        </DropdownMenu>
-                    </Dropdown>
+                    <InputGroup>
+                        <Input
+                            id={'volume'}
+                            className={classes}
+                            value={volume}
+                            step={'0.01'}
+                            type={'number'}
+                            name={'volume'}
+                            onChange={handleChange}
+                        />
+                        <InputGroupButtonDropdown addonType={"append"} toggle={toggle} isOpen={dropdownOpen}>
+                            <DropdownToggle caret/>
+                            <DropdownMenu>
+                                <DropdownItem header>Choose Size</DropdownItem>
+                                <DropdownItem onClick={onDropdownItemSelected}>8 fl oz</DropdownItem>
+                                <DropdownItem onClick={onDropdownItemSelected}>12 fl oz</DropdownItem>
+                                <DropdownItem onClick={onDropdownItemSelected}>14 fl oz</DropdownItem>
+                                <DropdownItem onClick={onDropdownItemSelected}>16 fl oz</DropdownItem>
+                                <DropdownItem onClick={onDropdownItemSelected}>20 fl oz</DropdownItem>
+                                <DropdownItem onClick={onDropdownItemSelected}>24 fl oz</DropdownItem>
+                                <DropdownItem onClick={onDropdownItemSelected}>40 fl oz</DropdownItem>
+                            </DropdownMenu>
+                        </InputGroupButtonDropdown>
+                    </InputGroup>
                 </div>
             </Col>
         </FormGroup>

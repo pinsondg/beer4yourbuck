@@ -36,7 +36,6 @@ export default function PasswordReset() {
 
     const onSubmit = () => {
         if (newPassword !== '' && confirmPassword !== '' && passwordRegex.test(newPassword) && newPassword === confirmPassword) {
-            console.log(`Change password token is: ${token}`);
             if (token) {
                 api.resetPassword(token, newPassword).then(handleResetPasswordSuccess).catch(handleResetPasswordError);
             } else {

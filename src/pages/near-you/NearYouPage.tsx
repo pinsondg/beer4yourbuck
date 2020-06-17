@@ -146,8 +146,6 @@ export function NearYouPage() {
         getLocation((position) => {
             console.log("Accuracy: " + position.coords.accuracy.toFixed(2) + " m");
             setCurrPos(position);
-            console.log(`Curr range filter: ${range}`);
-            console.log(`Prev range filter: ${prevRange}`);
             if ((!nearYouVenues && !prevRange) || (prevRange && prevRange !== range)) {
                 api.getVenuesNearYou(position.coords.latitude, position.coords.longitude, milesToMeters(range))
                     .then(data => {

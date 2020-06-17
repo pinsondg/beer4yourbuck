@@ -108,13 +108,22 @@ export default function TimeChooseModal(props: Props) {
                 }]);
                 setInputValidations({startTimeInvalid: false, endTimeInvalid: false, daysOfWeekInvalid: false});
                 dispatch({type: 'reset'});
-            }).catch(() => {
-                setNotifications([...notifications, {
-                    type: NotificationType.ERROR,
-                    title: 'Error Setting Happy Hour',
-                    timeout: 3000,
-                    message: `There was an error setting the happy hour for ${props.venue!.name}. Please try again later.`
-                }]);
+            }).catch((err) => {
+                if (err.response) {
+                    setNotifications([...notifications, {
+                        type: NotificationType.ERROR,
+                        title: 'Error Setting Happy Hour',
+                        timeout: 3000,
+                        message: `${err.response.data.message}`
+                    }]);
+                } else {
+                    setNotifications([...notifications, {
+                        type: NotificationType.ERROR,
+                        title: 'Error Setting Happy Hour',
+                        timeout: 3000,
+                        message: `There was an error setting the happy hour for ${props.venue!.name}. Please try again later.`
+                    }]);
+                }
             }).finally(() => {
                 setSubmitting(false);
                 toggle();
