@@ -6,3 +6,7 @@ export function isMobile() {
 }
 
 export const passwordRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
+
+export function getRndInteger(min: number, max: number): number {
+    return Math.floor(Math.random() * (max - min + 1) ) + min;
+}

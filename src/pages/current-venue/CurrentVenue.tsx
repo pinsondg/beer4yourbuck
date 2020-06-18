@@ -103,6 +103,10 @@ export default function CurrentVenue(props: Props) {
         setShowAddModal(false);
     };
 
+    function isHappyHour(): boolean {
+        return true;
+    }
+
     useEffect(() => {
         if (venue) {
             let sorted = [...venue.beers];
@@ -168,7 +172,6 @@ export default function CurrentVenue(props: Props) {
         }
     };
 
-
     if (venue) {
         return (
             <div className={'current-venue-content'}>
@@ -201,7 +204,7 @@ export default function CurrentVenue(props: Props) {
                     </div>
                     <Row className={'beers-list'}>
                         {
-                            isLoading && <LoadingSpinner message={`Loading beers for ${venue.name}`}/>
+                            isLoading && <div style={{margin: '0 auto'}}><LoadingSpinner message={`Loading beers for ${venue.name}`}/></div>
                         }
                         {
                             sortedBeers.length > 0 && !isLoading ? sortedBeers.map((beer, i) => <VenueBeerBrick
@@ -211,9 +214,9 @@ export default function CurrentVenue(props: Props) {
                                 downVoted={downVotedBeers.some(voted => voted.id === beer.id)}
                                 userAdded={userAddedBeers.some(added => added.id === beer.id)}
                                 place={i + 1}
-                            />).filter(item => item.props.beer.name.includes(searchTerm)) : (
+                            />).filter(item => item.props.beer.name.includes(searchTerm)) : !isLoading ? (
                                 <p>Looks like you're the first user here! Add beer to start comparing for this venue.</p>
-                            )
+                            ) : null
                         }
                     </Row>
                 </Container>
@@ -232,6 +235,7 @@ export default function CurrentVenue(props: Props) {
                     show={showRegisterModal}
                     onClose={() => setShowRegisterModal(false)}
                 />}
+                {/*{isHappyHour() && <ReactConfetti style={{zIndex: 9999}} recycle={false}/>}*/}
             </div>
         )
     } else {
