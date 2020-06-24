@@ -5,5 +5,5 @@ export interface Filter {
 }
 
 export enum FilterType {
-    MAX_PRICE, DISTANCE, VENUE_TYPE, BEER_TYPE
+    MAX_PRICE = 'Max Price', DISTANCE = 'Distance', VENUE_TYPE = 'Venue Type', BEER_TYPE = 'Beer Type', COUNT = 'Count'
 }

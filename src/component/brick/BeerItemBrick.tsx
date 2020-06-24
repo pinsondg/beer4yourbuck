@@ -1,13 +1,12 @@
 import React, {useEffect, useState} from "react";
 import {Beer} from "../../model/Beer";
-import {Button, Col, Jumbotron, Row} from "reactstrap";
+import {Col, Jumbotron, Row} from "reactstrap";
 import classNames from "classnames";
 import './beer-item-brick.css'
 import {BeerVenue} from "../../model/BeerVenue";
 import {isMobile} from "../../controller/Utils";
 import './brick.css'
 import CircularBeerLogo from "../image/CircularBeerLogo";
-import {LoadingSpinner} from "../load/LoadSpinner";
 import Beer4YourBuckLogo from "../../image/domain/logos/LogoMakr_3Klh9R.png";
 
 export default interface Props {
@@ -109,13 +108,9 @@ export function BeerItemBrick(props: Props) {
                     />
                 </Col>
                 <Col xs={'auto'} className={'section'}>
-                    <h1>{props.beer.name}</h1>
+                    <h1>{props.beer.name} {`(x${props.beer.count})`}</h1>
                     <h5>{props.beer.abv ? props.beer.abv : 'N/A'}% ABV - {props.beer.volume ? props.beer.volume : 'N/A'} fl oz</h5>
                     <h5>{props.venue && props.venue.name ? 'Location: ' + props.venue.name : ''}</h5>
-                    <Button hidden={!(!!props.onPublish) || published || isPublishing} onClick={onPublishClick}>Publish</Button>
-                    {
-                        isPublishing && <LoadingSpinner message={`Publishing...`}/>
-                    }
                 </Col>
                 <Col xs={'auto'} className={'section'}>
                     <h1>${props.beer.price ? props.beer.price.toPrecision(3) : 'N/A'}</h1>
