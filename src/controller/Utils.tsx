@@ -10,3 +10,12 @@ export const passwordRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*
 export function getRndInteger(min: number, max: number): number {
     return Math.floor(Math.random() * (max - min + 1) ) + min;
 }
+
+/**
+ * Capitalizes the first in the string and leaves the rest lower case.
+ * @param text the string to change
+ */
+export function capitalizeFirstLetter(text: string): string {
+    const firstLetter = text.substring(0 , 1);
+    return `${firstLetter.toUpperCase()}${text.substring(1).toLowerCase()}`;
+}

@@ -29,34 +29,17 @@ import DropdownSection from "../../component/misc/dropdown-section/DropdownSecti
 import CustomCheckbox from "../../component/misc/checkbox/CustomCheckbox";
 import {Filter, FilterType} from "../../model/Filter";
 import ActiveFilterBadge from "../../component/badge/active-filter-badge/ActiveFilterBadge";
-import {ActiveFilter, NearYouFilterContext} from "../../context/NearYouFilterContext";
+import {NearYouFilterContext} from "../../context/NearYouFilterContext";
 import {NearYouVenuesContext} from "../../context/NearYouVenuesContext";
 import {usePrevious} from "../../CustomHooks";
+import {capitalizeFirstLetter} from "../../controller/Utils";
 
 
 enum Mode {
     LOCATION, BEER
 }
 
-interface VenueTypeFilter {
-    brewery: boolean;
-    restaurant: boolean;
-    bar: boolean;
-    store: boolean;
-    other: boolean;
-}
-
 let key = 0;
-
-const mockVenue: BeerVenue = {
-    id: "1",
-    beers: [new Beer.Builder().withVolume(5.0).withAbv("6.0").withId("2").withName("Bud Light").withPrice(4.0).build()],
-    lat: 37.87604,
-    lon: -77.98573,
-    name: "Sticky Rice",
-    venueTypes: ["BREWERY"],
-    address: "1234 Something Rd."
-};
 
 export function NearYouPage() {
     const {filterDispatch, filters} = useContext(NearYouFilterContext);
@@ -64,7 +47,7 @@ export function NearYouPage() {
         return filters.map(x => x.filter).filter(x => x.type === filterType);
     };
     const {nearYouVenues, setNearYouVenues} = useContext(NearYouVenuesContext);
-    const [mode, setMode] = useState<Mode>(Mode.LOCATION);
+    const [mode, setMode] = useState<Mode>(Mode.BEER);
     const [currPos, setCurrPos] = useState<Position>();
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const {notifications, setNotifications} = useContext(NotificationContext);
@@ -94,6 +77,7 @@ export function NearYouPage() {
         })
             .filter(venue => venue.name.toLowerCase().includes(search.toLowerCase()) || venue.beers.some(beer => beer.name && beer.name.toLowerCase().includes(search.toLowerCase())))
             .filter(venue => venue.venueTypes.some(venueType => getFiltersOfType(FilterType.VENUE_TYPE).length === 0 || getFiltersOfType(FilterType.VENUE_TYPE).map(x => x.value).includes(venueType.toLowerCase())))
+            .filter(venue => venue.beers.some(beer => beer.beerType && (getFiltersOfType(FilterType.BEER_TYPE).length === 0 || getFiltersOfType(FilterType.BEER_TYPE).map(x => x.value.toString().toLowerCase()).includes(beer.beerType.toLowerCase()))))
             .filter(venue => {
                 const priceFilter = getFiltersOfType(FilterType.MAX_PRICE)[0];
                 if (!priceFilter) {
@@ -124,6 +108,7 @@ export function NearYouPage() {
                 .filter(beer => beer.venue.venueTypes.some(venueType => getFiltersOfType(FilterType.VENUE_TYPE).length === 0 || getFiltersOfType(FilterType.VENUE_TYPE).map(x => x.value).includes(venueType.toLowerCase())))
                 .filter(beer => getFiltersOfType(FilterType.MAX_PRICE).length === 0 || getFiltersOfType(FilterType.MAX_PRICE).map(filter => +filter.value).some(price => beer.beer.price && beer.beer.price <= price))
                 .filter(beer => getFiltersOfType(FilterType.BEER_TYPE).length === 0 || getFiltersOfType(FilterType.BEER_TYPE).map(filter => filter.value).some(type => beer.beer.beerType && beer.beer.beerType === type))
+                .filter(beer => getFiltersOfType(FilterType.COUNT).length === 0 || getFiltersOfType(FilterType.COUNT).map(filter => filter.value).some(type => beer.beer.count && beer.beer.count === +type))
                 .sort((item1 , item2) => {
                 return new Beer.Builder().withBeer(item2.beer).build().getOttawayScore()
                     - new Beer.Builder().withBeer(item1.beer).build().getOttawayScore()
@@ -282,47 +267,12 @@ interface ActiveVenueTypes {
     other: boolean
 }
 
-interface PriceFilter {
-    currValue: number | null;
-    maxValue: number;
-}
-
 function NearYouSearchFilter(props: NearYouSearchFilterProps) {
-    const [activeVenueTypes, setActiveVenueTypes] = useState<ActiveVenueTypes>({bar: false, brewery: false, other: false, store: false, restaurant: false});
-    const [priceFilter, setPriceFilter] = useState<PriceFilter>({maxValue: 0, currValue: null});
+    const [priceFilter, setPriceFilter] = useState<string>('');
     const {filters, filterDispatch} = useContext(NearYouFilterContext);
-    const getVenueTypeFilter = (type: string): ActiveFilter => {
-        return filters
-            .filter(x => x.filter.type === FilterType.VENUE_TYPE)
-            .filter(x => x.filter.value === type)[0]
-    };
-
-    const createVenueTypeFilter = (type: string): Filter => {
-        return {
-            type: FilterType.VENUE_TYPE,
-            value: type,
-            displayValue: `Venue Type: ${type.toUpperCase()}`
-        }
-    };
-
-    const onVenueTypeFilterCheckboxClick = (box: string, selected: boolean) => {
-        if (selected) {
-            filterDispatch({type: "add", filter: createVenueTypeFilter(box)});
-        } else {
-            filterDispatch({type: "remove", filterId: getVenueTypeFilter(box).filterId});
-        }
-    };
 
     const getRangeValue = () => {
         return filters.filter(x => x.filter.type === FilterType.DISTANCE)[0].filter.value;
-    };
-
-    const isVenueTypeActive = (type: string) => {
-        return filters
-            .map(x => x.filter)
-            .filter(x => x.type === FilterType.VENUE_TYPE)
-            .filter(x => x.value === type)
-            .length > 0;
     };
 
     const handleRangeChange = (val: number) => {
@@ -333,79 +283,94 @@ function NearYouSearchFilter(props: NearYouSearchFilterProps) {
         filterDispatch({type: "add", filter: {type: FilterType.DISTANCE, value: val, displayValue: `Distance: ${val} miles`}});
     };
 
-    const handlePriceChange = (val: number) => {
-        setPriceFilter({...priceFilter, currValue: val});
+    const handlePriceChange = (val: string | null) => {
+        console.log(val);
+        const convertedVal: number = val !== null && val.includes('$') ? +val.substring(val.indexOf('$') + 1).trim() : -1;
         const currPriceFilter = filters.filter(x => x.filter.type === FilterType.MAX_PRICE)[0];
         if (currPriceFilter) {
             filterDispatch({type: "remove", filterId: currPriceFilter.filterId});
         }
-        filterDispatch({type: "add", filter: {type: FilterType.MAX_PRICE, value: val, displayValue: `Max Price: $${val.toFixed(2)}`}})
+        if (convertedVal !== -1) {
+            filterDispatch({type: "add", filter: {type: FilterType.MAX_PRICE, value: convertedVal, displayValue: `Max Price: $${convertedVal.toFixed(2)}`}});
+        }
     };
 
     useEffect(() => {
-        let maxPrice = 0;
-        props.venues.forEach(venue => venue.beers.forEach(beer => {
-            if (beer.price && beer.price > maxPrice) {
-                maxPrice = beer.price;
-            }
-        }));
-        const priceFilter = filters.map(x => x.filter).filter(filter => filter.type === FilterType.MAX_PRICE);
-        if (priceFilter && priceFilter[0]) {
-            setPriceFilter({maxValue: maxPrice, currValue: +priceFilter[0].value})
+        const priceFilter = filters.filter(filter => filter.filter.type === FilterType.MAX_PRICE).map(x => x.filter)[0];
+        if (priceFilter && typeof priceFilter.value === 'number') {
+            console.log(`Set price filter to: $${priceFilter.value.toFixed(2)}`);
+            setPriceFilter(`$${priceFilter.value.toFixed(2)}`);
         } else {
-            setPriceFilter({maxValue: maxPrice, currValue: null})
+            setPriceFilter('None');
         }
-    }, [props]);
+    }, [filters]);
 
-    const isBeerTypeFilterActive = (type: string): boolean  => {
-        return filters.filter(filter => filter.filter.type === FilterType.BEER_TYPE)
-            .some(filter => filter.filter.value === type)
-    };
-
-    const onBeerTypeFilterCheckboxClick = (type: string, val: boolean) => {
-        const beerTypeFilters = filters.filter(x => x.filter.type === FilterType.BEER_TYPE);
-        if (!val) {
-            const filterId = beerTypeFilters.filter(x => x.filter.value === type)[0].filterId;
+    const onFilterCheckboxClick = (value: string, checked: boolean, filterType: FilterType) => {
+        const beerTypeFilters = filters.filter(x => x.filter.type === filterType);
+        if (!checked) {
+            const filterId = beerTypeFilters.filter(x => x.filter.value === value)[0].filterId;
             filterDispatch({type: "remove", filterId: filterId});
         } else {
             filterDispatch({type: "add", filter: {
-                    type: FilterType.BEER_TYPE,
-                    value: type,
-                    displayValue: `Beer Type: ${type}`
+                    type: filterType,
+                    value: value,
+                    displayValue: `${filterType}: ${value}`
                 }});
         }
     };
 
-    const getBeerTypes = (): ReactNode => {
-        const beerTypes: Set<string> = new Set<string>();
+    const isFilterActive = (val: string, filterType: FilterType): boolean => {
+        return filters.filter(filter => filter.filter.type === filterType)
+            .some(filter => filter.filter.value === val)
+    };
+
+    const getCheckboxNodesForFilter = (filter: FilterType): ReactNode => {
+        const vals: Set<string> = new Set<string>();
         props.venues.forEach(venue => venue.beers.forEach(beer => {
-            if (beer.beerType) {
-                beerTypes.add(beer.beerType);
+            switch (filter) {
+                case FilterType.BEER_TYPE:
+                    if (beer.beerType) vals.add(beer.beerType);
+                    break;
+                case FilterType.COUNT:
+                    if (beer.count) vals.add(beer.count.toFixed(0));
+                    break;
+                case FilterType.VENUE_TYPE:
+                    venue.venueTypes.forEach(type => vals.add(capitalizeFirstLetter(type)));
+                    break;
             }
         }));
         const nodes: ReactNode[] = [];
-        beerTypes.forEach(type => {
+        vals.forEach(val => {
             nodes.push(<div className={'checklist-row'}>
                 <div className={'title-holder'}>
-                    <h5>{type}</h5>
+                    <h5>{val}</h5>
                 </div>
                 <div className={'checkbox-holder'}>
-                    <CustomCheckbox selected={isBeerTypeFilterActive(type)} onChange={(val) => onBeerTypeFilterCheckboxClick(type, val)} size={30}/>
+                    <CustomCheckbox selected={isFilterActive(val, filter)} onChange={(checked) => onFilterCheckboxClick(val, checked, filter)} size={30}/>
                 </div>
             </div>)
         });
         return nodes;
     };
 
-    useEffect(() => {
-        setActiveVenueTypes({
-            brewery: isVenueTypeActive('brewery'),
-            bar: isVenueTypeActive('bar'),
-            restaurant: isVenueTypeActive('restaurant'),
-            other: isVenueTypeActive('other'),
-            store: isVenueTypeActive('store')
-        });
-    }, [filters]);
+    const getMaxPriceOptions = (): ReactNode => {
+        let max: number = 0;
+        let min: number = Number.MAX_VALUE;
+        props.venues.forEach(venue => venue.beers.forEach(beer => {
+            if (beer.price && beer.price > max) {
+                max = beer.price;
+            }
+            if (beer.price && (beer.price < min)) {
+                min = beer.price;
+            }
+        }));
+        const nodes: ReactNode[] = [];
+        nodes.push(<option>None</option>);
+        for (let i = Math.floor(min); i <= max; i = i + 0.5) {
+            nodes.push(<option>{`$${i.toFixed(2)}`}</option>)
+        }
+        return nodes;
+    };
 
     return (
         <PopoverMenu isOpen={props.isOpen} popoverDirection={PopoverDirection.LEFT} titleText={'Search Settings'} onClose={() => props.setIsOpen(false)}>
@@ -423,44 +388,29 @@ function NearYouSearchFilter(props: NearYouSearchFilterProps) {
                     </div>
                 </DropdownSection>
                 <DropdownSection title={'Max Price'}>
-                    <div className={'setting range-holder'}>
+                    <div>
                         <Form>
-                            <FormGroup className={'align-items-center'} row>
-                                <Label xs={2}>{priceFilter.currValue ? `$${priceFilter.currValue}` : 'Not Selected'}</Label>
-                                <Col xs={10}>
-                                    <CustomInput id={'price-input'} min={0} max={priceFilter.maxValue} step={0.5} type={'range'} onChange={(e) => handlePriceChange(+e.target.value)} value={priceFilter.currValue ? priceFilter.currValue : 0}/>
-                                </Col>
+                            <FormGroup>
+                                <Input value={priceFilter} type={'select'} onChange={(e) => handlePriceChange(e.target.value)}>
+                                    {getMaxPriceOptions()}
+                                </Input>
                             </FormGroup>
                         </Form>
                     </div>
                 </DropdownSection>
                 <DropdownSection title={'Venue Type'}>
                     <div style={{display: "flex", flexDirection: "column"}}>
-                        <div className={'checklist-row'}>
-                            <h5>Bar</h5>
-                            <CustomCheckbox selected={activeVenueTypes.bar} onChange={(val) => onVenueTypeFilterCheckboxClick('bar', val)} size={30}/>
-                        </div>
-                        <div className={'checklist-row'}>
-                            <h5>Restaurant</h5>
-                            <CustomCheckbox selected={activeVenueTypes.restaurant} onChange={(val) => onVenueTypeFilterCheckboxClick('restaurant', val)} size={30}/>
-                        </div>
-                        <div className={'checklist-row'}>
-                            <h5>Brewery</h5>
-                            <CustomCheckbox selected={activeVenueTypes.brewery} onChange={(val) => onVenueTypeFilterCheckboxClick('brewery', val)} size={30}/>
-                        </div>
-                        <div className={'checklist-row'}>
-                            <h5>Store</h5>
-                            <CustomCheckbox selected={activeVenueTypes.store} onChange={(val) => onVenueTypeFilterCheckboxClick('store', val)} size={30}/>
-                        </div>
-                        <div className={'checklist-row'}>
-                            <h5>Other</h5>
-                            <CustomCheckbox selected={activeVenueTypes.other} onChange={(val) => onVenueTypeFilterCheckboxClick('other', val)} size={30}/>
-                        </div>
+                        {getCheckboxNodesForFilter(FilterType.VENUE_TYPE)}
                     </div>
                 </DropdownSection>
                 <DropdownSection title={'Beer Type'}>
                     <div style={{display: 'flex', flexDirection: "column"}}>
-                        {getBeerTypes()}
+                        {getCheckboxNodesForFilter(FilterType.BEER_TYPE)}
+                    </div>
+                </DropdownSection>
+                <DropdownSection title={'Count'}>
+                    <div style={{display: 'flex', flexDirection: 'column'}}>
+                        {getCheckboxNodesForFilter(FilterType.COUNT)}
                     </div>
                 </DropdownSection>
             </div>
