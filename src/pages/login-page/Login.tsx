@@ -19,7 +19,7 @@ export default function Login(props: Props) {
     const [rememberMe, setRememberMe] = useState<boolean>(false);
     const history = useHistory();
     const {notifications, setNotifications} = useContext(NotificationContext);
-    const {user, setUser} = useContext(UserContext);
+    const {setUser} = useContext(UserContext);
     const [forgotPassword, setForgotPassword] = useState<boolean>(false);
 
     const onEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {

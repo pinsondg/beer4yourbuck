@@ -1,6 +1,5 @@
 import React, {useContext, useEffect, useState} from "react";
 import {Collapse, Nav, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink} from "reactstrap";
-import {BeerVenueContext} from "../../context/BeerVenueContext";
 import {useHistory, useLocation} from "react-router-dom";
 import './top-nav-bar.css'
 import {isMobile} from "../../controller/Utils";
@@ -19,7 +18,6 @@ export function TopNavBar(props: Props) {
     const location = useLocation();
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [selected, setSelected] = useState<string | null>(null);
-    const {venue} = useContext(BeerVenueContext);
     const {user, setUser} = useContext(UserContext);
     const {notifications, setNotifications} = useContext(NotificationContext);
     const history = useHistory();
@@ -77,7 +75,7 @@ export function TopNavBar(props: Props) {
 
     return (
         <Navbar color={'dark'} expand="sm" dark style={{marginBottom: '0 !important'}}>
-            <NavbarBrand className={'brand clickable'} onClick={() => history.push('/')}><div style={{height: '100%'}}><img style={{height: '45px', marginRight: '5px', borderRadius: '.25rem'}} src={Beer4YourBuckLogo}/>Beer 4 Your Buck</div></NavbarBrand>
+            <NavbarBrand className={'brand clickable'} onClick={() => history.push('/')}><div style={{height: '100%'}}><img alt={'Logo'} style={{height: '45px', marginRight: '5px', borderRadius: '.25rem'}} src={Beer4YourBuckLogo}/>Beer 4 Your Buck</div></NavbarBrand>
             <NavbarToggler onClick={toggle} />
             <Collapse isOpen={isOpen} navbar>
                 <Nav className="mr-auto" navbar>

@@ -123,6 +123,7 @@ export function NearYouPage() {
         } else {
             getNearYouBeerBricks();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mode, nearYouVenues, filters, search]);
 
     useEffect(() => {
@@ -172,11 +173,8 @@ export function NearYouPage() {
                 type: NotificationType.ERROR
             }])
         });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [setNotifications, range, nearYouVenues, setNearYouVenues]);
-
-    const onSetOpen = (open: boolean) => {
-        setSidebarOpen(open);
-    };
 
     const removeFilter = (id: number): void => {
         filterDispatch({type: "remove", filterId: id});

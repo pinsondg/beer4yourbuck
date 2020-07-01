@@ -24,3 +24,5 @@ jobs:
         run: npm install
       - name: Test Project
         run: npm run test-ci
+      - name: Build Prod Release
+        run: npm run build

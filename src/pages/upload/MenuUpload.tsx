@@ -103,6 +103,7 @@ export function MenuUpload(props: Props) {
         } else if (uploadChecker && !isUploading) {
             clearInterval(uploadChecker);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isUploading, history, jobId, setCompareBeers]);
 
     const upload = () => {
