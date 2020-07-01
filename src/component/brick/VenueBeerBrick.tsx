@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from "react";
 import {Beer} from "../../model/Beer";
-import {Badge, Col, Container, Jumbotron, Row, UncontrolledTooltip} from "reactstrap";
+import {Badge, Button, Col, Container, Jumbotron, Row, UncontrolledTooltip} from "reactstrap";
 import CircularBeerLogo from "../image/CircularBeerLogo";
 import Beer4YourBuckAPI from "../../controller/api/Beer4YourBuckAPI";
 import {UserContext} from "../../context/UserContext";
@@ -19,6 +19,7 @@ interface Props {
     userAdded?: boolean;
     beer: Beer;
     place: number;
+    onEditClick?: (beer: Beer) => void;
 }
 
 export default function VenueBeerBrick(props: Props) {
@@ -101,8 +102,17 @@ export default function VenueBeerBrick(props: Props) {
         return `${props.place}${suffix}`;
     };
 
+    const handleEditClick = () => {
+        if (props.onEditClick) {
+            props.onEditClick(props.beer);
+        }
+    };
+
     return (
         <Jumbotron className={'brick'} style={{flexDirection: 'row', justifyContent: 'center', width: '60%'}}>
+            {userAddedBeer && <div style={{margin: '5px', position: 'absolute', right: '0', top: '0'}}>
+                <Button onClick={handleEditClick} color={'link'}>Edit</Button>
+            </div>}
             <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', flex: '1 1 500px'}}>
                 <div className={'vote-buttons-group'}>
                     <h4>

@@ -1,0 +1,133 @@
+@import "../../../bootstrapOverride";
+
+$animation-time: 2s;
+
+#glass-border, #glass-clip {
+  animation-name: rotate;
+  animation-iteration-count: infinite;
+  animation-duration: $animation-time;
+  transform-origin: center center;
+  animation-timing-function: ease-in-out;
+  -webkit-animation-name: rotate;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-duration: $animation-time;
+  -webkit-transform-origin: center center;
+  -webkit-animation-timing-function: ease-in-out;
+}
+
+.fill {
+  -webkit-animation: fillAction $animation-time linear forwards infinite;
+  animation: fillAction $animation-time linear forwards infinite;
+  transform-origin: center bottom;
+  -webkit-transform-origin: center bottom;
+  stroke: theme-color("primary");
+  fill: theme-color("primary");
+  transform: scaleY(0);
+  stroke-width: 2px;
+}
+
+.bubble {
+  -webkit-animation: bubbleUp $animation-time ease-in-out infinite;
+  animation: bubbleUp $animation-time ease-in-out infinite;
+  stroke: black;
+  -webkit-transform-origin: center;
+  transform-origin: center bottom;
+  opacity: 0;
+  fill-opacity: 0;
+  stroke-width: 1px;
+  transform: translate(0);
+
+  circle {
+    -webkit-animation: wobble .6s ease-in-out infinite;
+    animation: wobble .6s ease-in-out infinite;
+  }
+}
+
+@keyframes bubbleUp {
+  10% {
+    opacity: 1;
+    transform: translate(0);
+  }
+
+  75% {
+    transform: translateY(-550px);
+    opacity: 0;
+  }
+}
+
+@keyframes wobble {
+
+  33% {
+    transform: translateX(-10px);
+  }
+
+  66% {
+    transform: translateX(10px);
+  }
+}
+
+@-webkit-keyframes wobble {
+  33% {
+    transform: translateX(-10px);
+  }
+
+  66% {
+    transform: translateX(10px);
+  }
+}
+
+@-webkit-keyframes bubbleUp {
+  10% {
+    opacity: 1;
+    transform: translate(0);
+  }
+
+  75% {
+    transform: translateY(-550px);
+    opacity: 0;
+  }
+}
+
+@-webkit-keyframes rotate {
+  80% {
+    transform: rotate(0);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rotate {
+  80% {
+    transform: rotate(0);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@-webkit-keyframes fillAction {
+  0% {
+    transform: scaleY(0);
+  }
+  65%, 80% {
+    transform: scaleY(1);
+  }
+  100%{
+    transform: scaleY(0);
+  }
+}
+
+@keyframes fillAction {
+  0% {
+    transform: scaleY(0);
+  }
+  65%, 80% {
+    transform: scaleY(1);
+  }
+  100%{
+    transform: scaleY(0);
+  }
+}

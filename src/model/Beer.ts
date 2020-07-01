@@ -15,8 +15,9 @@ export interface BeerInterface {
     volume?: number;
     count?: number
     verified?: boolean;
-    beerType?: string
+    beerType?: string;
     isPublished?: boolean;
+    isHappyHourDeal?: boolean;
 }
 
 export class Beer implements BeerInterface {
@@ -34,6 +35,7 @@ export class Beer implements BeerInterface {
     verified?: boolean;
     beerType?: string;
     isPublished?: boolean;
+    isHappyHourDeal?: boolean;
 
     getOttawayScore(): number {
         if (this.volume && this.abv && this.price && this.count) {
@@ -56,6 +58,7 @@ export class Beer implements BeerInterface {
         private isPublished?: boolean;
         private count?: number;
         private beerType?: string;
+        private isHappyHourDeal?: boolean;
 
         withName(name: string): Builder {
             this.name = name;
@@ -122,6 +125,11 @@ export class Beer implements BeerInterface {
             return this;
         }
 
+        withIsHappyHour(happyHour: boolean): Builder {
+            this.isHappyHourDeal = happyHour;
+            return this;
+        }
+
         withBeer(beer: BeerInterface): Builder {
             this.volume = beer.volume;
             this.untappedId = beer.untappedId;
@@ -136,6 +144,7 @@ export class Beer implements BeerInterface {
             this.isPublished = beer.isPublished;
             this.count = beer.count;
             this.beerType = beer.beerType;
+            this.isHappyHourDeal = beer.isHappyHourDeal;
             return this;
         }
 
@@ -155,6 +164,7 @@ export class Beer implements BeerInterface {
             beer.isPublished = this.isPublished;
             beer.count = this.count;
             beer.beerType = this.beerType;
+            beer.isHappyHourDeal = this.isHappyHourDeal;
             return beer;
         }
     }

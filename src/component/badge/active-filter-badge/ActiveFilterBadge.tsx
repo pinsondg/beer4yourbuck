@@ -1,7 +1,7 @@
 import React from "react";
 import {Filter} from "../../../model/Filter";
 import './active-filter-badge.scss'
-import {MdClose} from "react-icons/all";
+import {MdClose} from "react-icons/md";
 
 interface Props {
     filterId: number;

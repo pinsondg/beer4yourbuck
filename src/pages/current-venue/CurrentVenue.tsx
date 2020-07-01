@@ -16,6 +16,7 @@ import {VenueLocationSelectorModal} from "../../component/modal/VenueLocationSel
 import {Beer4YourBuckBtn, BtnType} from "../../component/button/custom-btns/ThemedButtons";
 import {DateTime} from "luxon";
 import TimeChooseModal from "../../component/modal/timeChooser/TimeChooseModal";
+import ReactConfetti from "react-confetti";
 
 const api = Beer4YourBuckAPI.getInstance();
 
@@ -90,10 +91,23 @@ export default function CurrentVenue(props: Props) {
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [noVenuesFound, setNoVenuesFound] = useState<boolean>();
     const [showHHReporter, setShowHHReporter] = useState<boolean>(false);
+    const [isHappyHour, setIsHappyHour] = useState<boolean>(false);
+    const [editBeer, setEditBeer] = useState<Beer | null>(null);
+
+    const updateVenue = () => {
+        if (venue) {
+            api.getVenueById(venue.id).then(data => {
+                setVenue(data.data);
+            }).catch((e) => {
+                console.log(JSON.stringify(e));
+            })
+        }
+    };
 
     const onBeerAdded = (beer: Beer) => {
         if (venue) {
-            api.addBeersToVenue(venue, [beer]).then(data => setVenue(data.data)).catch(() => setNotifications([...notifications, {
+            api.addBeersToVenue(venue, [beer]).then(updateVenue)
+                .catch(() => setNotifications([...notifications, {
                 title: 'Error Adding Beer To Venue',
                 message: `We could not add ${beer.name} to ${venue.name} at this time. Please try again later`,
                 timeout: 5000,
@@ -102,6 +116,28 @@ export default function CurrentVenue(props: Props) {
         }
         setShowAddModal(false);
     };
+
+    useEffect(() => {
+        if (venue) {
+            const {happyHourDayOfWeek, happyHourStart, happyHourEnd} = venue;
+            if (happyHourDayOfWeek && happyHourStart && happyHourEnd) {
+                try {
+                    const isDay = happyHourDayOfWeek.map(day => sorter[day.toLowerCase()]).includes(new Date().getDay());
+                    const startTime = DateTime.fromISO(happyHourStart);
+                    const endTime = DateTime.fromISO(happyHourEnd);
+                    const now = DateTime.local();
+                    const isTime = startTime <= now && now >= endTime;
+                    setIsHappyHour(isDay && isTime);
+                } catch (e) {
+                    console.error(e);
+                    setIsHappyHour(false);
+                }
+            }
+        } else {
+            setIsHappyHour(false);
+        }
+    }, [venue]);
+
 
     useEffect(() => {
         if (venue) {
@@ -147,9 +183,6 @@ export default function CurrentVenue(props: Props) {
     };
 
     const getHappyHourTime = (): ReactNode => {
-        if (venue) {
-            console.log(`Venue happy hour start: ${venue.happyHourStart}; happy hour end: ${venue.happyHourEnd}; daysOfWeek: ${venue.happyHourDayOfWeek}`);
-        }
         if (venue && venue.happyHourStart && venue.happyHourEnd && venue.happyHourDayOfWeek) {
             return <h6>{`Happy Hour: ${DateTime.fromISO(venue.happyHourStart).toLocaleString(DateTime.TIME_SIMPLE)}-${DateTime.fromISO(venue.happyHourEnd).toLocaleString(DateTime.TIME_SIMPLE)} ${formatDaysOfWeek(venue.happyHourDayOfWeek)}`}</h6>;
         } else {
@@ -168,18 +201,44 @@ export default function CurrentVenue(props: Props) {
         }
     };
 
+    const handleBeerEdit = (beer: Beer) => {
+        setEditBeer(beer);
+    };
+
+    const onBeerEditConfirm = (updated: Beer) => {
+        api.updateBeer(updated).then(data => {
+            setNotifications([...notifications, {
+                type: NotificationType.SUCCESS,
+                title: 'Successfully Updated Beer!',
+                message: `Updated ${updated.name} successfully.`,
+                timeout: 4000
+            }]);
+            updateVenue();
+            console.log(data);
+        }).catch(e => {
+            console.log(e);
+            setNotifications([...notifications, {
+                type: NotificationType.ERROR,
+                title: 'Error Updating Beer',
+                message: `There was an error updating ${updated.name}. Please try again later.`,
+                timeout: 5000
+            }]);
+        }).finally(() => {
+            setEditBeer(null);
+        });
+    };
 
     if (venue) {
         return (
             <div className={'current-venue-content'}>
-                <TimeChooseModal onClose={() => setShowHHReporter(false)} show={showHHReporter} venue={venue}/>
+                <TimeChooseModal onSubmitSuccess={updateVenue} onClose={() => setShowHHReporter(false)} show={showHHReporter} venue={venue}/>
                 <Container fluid={true} className={'venue-controls'}>
                     <Row className={'align-items-center top-row'}>
                         <Col xs={6} sm={'4'}>
-                            <h5>{venue.name} <Badge color={'primary'}>{venue.venueTypes.join("/")}</Badge></h5>
+                            <h5>{venue.name} {venue.venueTypes && <Badge color={'primary'}>{venue.venueTypes.join("/")}</Badge>}</h5>
                         </Col>
                         {
-                            !venue.venueTypes.includes("STORE") && <Col xs={6} sm={{offset: 4, size: 4}}>
+                            venue.venueTypes && !venue.venueTypes.includes("STORE") && <Col xs={6} sm={{offset: 4, size: 4}}>
                                 {getHappyHourTime()}
                             </Col>
                         }
@@ -201,7 +260,7 @@ export default function CurrentVenue(props: Props) {
                     </div>
                     <Row className={'beers-list'}>
                         {
-                            isLoading && <LoadingSpinner message={`Loading beers for ${venue.name}`}/>
+                            isLoading && <div style={{margin: '0 auto'}}><LoadingSpinner style={{maxHeight: '500px'}} message={`Loading beers for ${venue.name}`}/></div>
                         }
                         {
                             sortedBeers.length > 0 && !isLoading ? sortedBeers.map((beer, i) => <VenueBeerBrick
@@ -211,9 +270,10 @@ export default function CurrentVenue(props: Props) {
                                 downVoted={downVotedBeers.some(voted => voted.id === beer.id)}
                                 userAdded={userAddedBeers.some(added => added.id === beer.id)}
                                 place={i + 1}
-                            />).filter(item => item.props.beer.name.includes(searchTerm)) : (
+                                onEditClick={handleBeerEdit}
+                            />).filter(item => item.props.beer.name.includes(searchTerm)) : !isLoading ? (
                                 <p>Looks like you're the first user here! Add beer to start comparing for this venue.</p>
-                            )
+                            ) : null
                         }
                     </Row>
                 </Container>
@@ -223,7 +283,8 @@ export default function CurrentVenue(props: Props) {
                         show={showAddModal}
                         onConfirm={onBeerAdded}
                         onClose={() => setShowAddModal(false)}
-                        showCount={venue.venueTypes.includes("STORE")}
+                        showCount={venue.venueTypes.includes("STORE") || venue.venueTypes.includes("BREWERY")}
+                        showHappyHour={venue.venueTypes.includes("BREWERY") || venue.venueTypes.includes("RESTAURANT") || venue.venueTypes.includes("BAR")}
                     />
                 }
                 {showRegisterModal && <RegistrationModal
@@ -231,6 +292,16 @@ export default function CurrentVenue(props: Props) {
                     'against other\'s that are there. Adding a beer to a venue helps other users find the best deals near them!'}
                     show={showRegisterModal}
                     onClose={() => setShowRegisterModal(false)}
+                />}
+                {isHappyHour && <div data-testid={'confetti'}><ReactConfetti style={{zIndex: 9999}} recycle={false}/></div>}
+                {editBeer && <BeerAddModal
+                    modalType={ModalType.EDIT}
+                    show={editBeer !== null}
+                    onConfirm={onBeerEditConfirm}
+                    initialBeer={editBeer}
+                    onClose={() => setEditBeer(null)}
+                    showCount={venue.venueTypes.includes("STORE") || venue.venueTypes.includes("BREWERY")}
+                    showHappyHour={venue.venueTypes.includes("BREWERY") || venue.venueTypes.includes("RESTAURANT") || venue.venueTypes.includes("BAR")}
                 />}
             </div>
         )

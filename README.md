@@ -1,4 +1,4 @@
-[![buddy pipeline](https://app.buddy.works/pinsondg/beer4yourbuck/pipelines/pipeline/242463/badge.svg?token=60d9630ee09b5cdea47c804fcf5dd270ac5970faec633c2c7a5f410f75c7790c "buddy pipeline")](https://app.buddy.works/pinsondg/beer4yourbuck/pipelines/pipeline/242463)
+![Build and Upload to S3](https://github.com/pinsondg/beer4yourbuck/workflows/Build%20and%20Upload%20to%20S3/badge.svg?branch=master)
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

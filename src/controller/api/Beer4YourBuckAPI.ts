@@ -195,4 +195,20 @@ export default class Beer4YourBuckAPI {
             }
         });
     }
+
+    async updateBeer(beer: Beer) {
+        return axios.put(`${this.url}beer`, JSON.stringify(beer), {
+            headers: {
+                'Content-Type' : 'application/json'
+            }
+        });
+    }
+
+    async getVenueById(id: string) {
+        return axios.get(`${this.url}venue/${id}`, {
+            headers: {
+                'Accept' : 'application/json'
+            }
+        });
+    }
 }

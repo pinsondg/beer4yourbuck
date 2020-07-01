@@ -38,7 +38,7 @@ export function BeerNearYouBrick(props: Props) {
                     </Col>
                     <Col sm={8} style={{margin: '5px'}}>
                         <div>
-                            <h4>{`${props.beer.name} ${props.beer.count && props.beer.count > 1 ? `(${props.beer.count})` : ''}`}</h4>
+                            <h4>{`${props.beer.name} ${props.beer.count && props.beer.count > 1 ? `(x${props.beer.count})` : ''}`}</h4>
                         </div>
                         <div>
                             <p>{props.beer.abv} %ABV - {props.beer.volume} fl. oz.</p>

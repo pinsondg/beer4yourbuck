@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import BeerSearcher from "../../input/beer-searcher/BeerSearcher";
-import {Button, Form, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
+import {Button, Col, Form, InputGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
 import ABVInput from "../../input/apv-input/ABVInput";
 import {Beer} from "../../../model/Beer";
 import CostInput from "../../input/cost-input/CostInput";
@@ -9,6 +9,7 @@ import {OttawayCalculator} from "../../../controller/OttawayCalculator";
 import PoweredByUntapped from "../../misc/untapped/PoweredByUntapped";
 import './beer-add-modal.css'
 import {CountInput} from "../../input/count-input/CountInput";
+import CustomCheckbox from "../../misc/checkbox/CustomCheckbox";
 
 interface BeerAddModalProps {
     initialBeer?: Beer
@@ -20,6 +21,7 @@ interface BeerAddModalProps {
     show?: boolean;
     onClose?: () => void;
     showCount?: boolean;
+    showHappyHour?: boolean;
 }
 
 export enum ModalType {
@@ -54,6 +56,7 @@ export default function BeerAddModal(props: BeerAddModalProps) {
     const {onScoreCalculated} = props;
     const [isOpen, setIsOpen] = useState<boolean>(true);
     const [beerName, setBeerName] = useState<string>('');
+    const [isHappyHourDeal, setIsHappyHourDeal] = useState(false);
 
     useEffect(() => {
         let ottawayScore = -1;
@@ -123,6 +126,7 @@ export default function BeerAddModal(props: BeerAddModalProps) {
                 selectedBeer.price = cost;
                 selectedBeer.volume = volume;
                 selectedBeer.count = count;
+                selectedBeer.isHappyHourDeal = isHappyHourDeal;
                 props.onConfirm(selectedBeer);
             } else {
                 const beer: Beer = new Beer.Builder()
@@ -131,6 +135,7 @@ export default function BeerAddModal(props: BeerAddModalProps) {
                     .withPrice(cost)
                     .withVolume(volume)
                     .withCount(count)
+                    .withIsHappyHour(isHappyHourDeal)
                     .build();
                 props.onConfirm(beer);
             }
@@ -169,6 +174,14 @@ export default function BeerAddModal(props: BeerAddModalProps) {
                         text={volume ? volume.toString() : ''}
                         error={inputErrors.volumeError}
                     />
+                    {
+                        props.showHappyHour && <InputGroup style={{marginBottom: '10px'}} className={'align-items-center'} row>
+                            <Label style={{marginBottom: 0}}>Happy Hour Deal</Label>
+                            <Col>
+                                <CustomCheckbox size={30} selected={isHappyHourDeal} onChange={(val) => setIsHappyHourDeal(val)}/>
+                            </Col>
+                        </InputGroup>
+                    }
                     {props.showCount && <CountInput
                         onValueChange={(val) => setCount(+val)}
                     />}

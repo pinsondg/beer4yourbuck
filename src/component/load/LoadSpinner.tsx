@@ -1,7 +1,7 @@
 import React, {CSSProperties} from "react";
-import {AiOutlineLoading3Quarters} from "react-icons/ai";
 import './load-spinner.css'
 import classNames from "classnames";
+import BeerGlassLoader from "./beer-glass-loader/BeerGlassLoader";
 
 interface Props {
     message?: string;
@@ -17,7 +17,7 @@ export function LoadingSpinner(props: Props) {
     return (
         <div style={props.style} className={classes}>
             <p>{props.message ? props.message : "Loading..."}</p>
-            <AiOutlineLoading3Quarters size={props.spinnerSize ? props.spinnerSize : 42} className={'loading-icon'}/>
+            <BeerGlassLoader style={{maxWidth: '100%', maxHeight: '500px', width: '100%', margin: '0 auto'}}/>
         </div>
     )
 }

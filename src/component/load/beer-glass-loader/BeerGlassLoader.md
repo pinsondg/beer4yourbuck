@@ -1,0 +1,5 @@
+BeerGlassLoader example:
+
+```js
+<BeerGlassLoader/>
+```
