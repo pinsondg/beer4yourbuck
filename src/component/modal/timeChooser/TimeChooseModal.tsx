@@ -15,6 +15,7 @@ interface Props {
     onClose: () => void;
     show: boolean;
     venue?: BeerVenue;
+    onSubmitSuccess?: () => void;
 }
 
 const api = Beer4YourBuckAPI.getInstance();
@@ -41,7 +42,7 @@ function getUTCTime(val: string): string {
     console.log("Hour: " + val.substring(0, val.indexOf(':')));
     console.log("Min: " + val.substring(val.indexOf(':') + 1));
     let dateTime = DateTime.fromObject({hour: +val.substring(0, val.indexOf(':')), minute: +val.substring(val.indexOf(':') + 1)});
-    return dateTime.toUTC().toISOTime().toString();
+    return dateTime.toISOTime().toString();
 }
 
 function reducer(state: FormData, action: Action): FormData {
@@ -72,7 +73,7 @@ function reducer(state: FormData, action: Action): FormData {
             newState = {endTime: '', daysOfWeek: [], startTime: ''};
             break;
     }
-    console.log(JSON.stringify(newState));
+    console.log("State: " + JSON.stringify(newState));
     return newState;
 }
 
@@ -108,6 +109,9 @@ export default function TimeChooseModal(props: Props) {
                 }]);
                 setInputValidations({startTimeInvalid: false, endTimeInvalid: false, daysOfWeekInvalid: false});
                 dispatch({type: 'reset'});
+                if (props.onSubmitSuccess) {
+                    props.onSubmitSuccess();
+                }
             }).catch((err) => {
                 if (err.response) {
                     setNotifications([...notifications, {
