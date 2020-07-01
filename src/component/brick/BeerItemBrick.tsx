@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {Beer} from "../../model/Beer";
 import {Col, Jumbotron, Row} from "reactstrap";
 import classNames from "classnames";
@@ -27,8 +27,6 @@ export enum Place {
 
 export function BeerItemBrick(props: Props) {
     const [isHovering, setIsHovering] = useState<boolean>(false);
-    const [published, setPublished] = useState<boolean>(false);
-    const [isPublishing, setIsPublishing] = useState<boolean>(false);
 
     const classes = classNames('brick', {
         'first': props.place === Place.FIRST,
@@ -65,17 +63,6 @@ export function BeerItemBrick(props: Props) {
         return retString;
     };
 
-    useEffect(() => {
-        setPublished(props.beer.isPublished ? props.beer.isPublished : false);
-        setIsPublishing(false);
-    }, [props]);
-
-    const onPublishClick = () => {
-        if (props.onPublish) {
-            setIsPublishing(true);
-            props.onPublish(props.id);
-        }
-    };
 
     return (
         <Jumbotron className={classes} onMouseEnter={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)}>

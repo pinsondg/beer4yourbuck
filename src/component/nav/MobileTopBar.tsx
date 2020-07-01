@@ -33,7 +33,7 @@ export default function MobileTopBar() {
     return (
         <div style={{width: '100%'}}>
             <div style={{flex: '1 1 auto', color: '#f6c101', backgroundColor: '#343a40', padding: '10px', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
-                <img style={{height: '30px', marginRight: '5px', borderRadius: '.25rem'}} src={Beer4YourBuckLogo}/>
+                <img alt={'Logo'} style={{height: '30px', marginRight: '5px', borderRadius: '.25rem'}} src={Beer4YourBuckLogo}/>
                 <h4>{determinePage()}</h4>
                 <FaUser size={25} onClick={() => setProfileMenuOpen(!profileMenuOpen)}/>
             </div>

@@ -34,7 +34,6 @@ function App() {
     const [venue, setVenue] = useState<BeerVenue | null>();
     const [compareBeers, setCompareBeers] = useState<Beer[]>([]);
     const [notifications, setNotifications] = useState<Notification[]>([]);
-    const [uploadNotificationShown, setUploadNotificationShown] = useState<boolean>(false);
     const [user, setUser] = useState<User | null>(null);
     const userContext: UserContext = {user, setUser};
     const nearYouVenuesContext: NearYouVenuesContextData = {nearYouVenues, setNearYouVenues};
