@@ -109,10 +109,6 @@ describe('Current Venue happy hour set and no user', () => {
         const expectedHappyHourTime = `Happy Hour: ${DateTime.local().minus({hours: 1}).toLocaleString(DateTime.TIME_SIMPLE)}-${DateTime.local().plus({hours: 1}).toLocaleString(DateTime.TIME_SIMPLE)} SUN-SAT`
         helpers.getByText(expectedHappyHourTime);
     });
-
-    it('should show confetti', function () {
-        helpers.getByTestId('confetti');
-    });
 });
 
 describe('Current Venue happy hour not set and user', () => {
