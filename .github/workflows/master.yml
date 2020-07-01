@@ -34,14 +34,14 @@ jobs:
           # A file, directory or wildcard pattern that describes what to upload
           path: build
       - name: S3 Sync
-          uses: jakejarvis/s3-sync-action@master
-          with:
-            args: --acl public-read --follow-symlinks --delete
-          env:
-            AWS_S3_BUCKET: ${{ secrets.AWS_BUCKET_PROD }}
-            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            SOURCE_DIR: build
+        uses: jakejarvis/s3-sync-action@master
+        with:
+          args: --acl public-read --follow-symlinks --delete
+        env:
+          AWS_S3_BUCKET: ${{ secrets.AWS_BUCKET_PROD }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          SOURCE_DIR: build
       # Invalidate Cloudfront
       - name: Invalidate Cloudfront
         uses: chetan/invalidate-cloudfront-action@master
