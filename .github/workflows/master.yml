@@ -17,21 +17,22 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    - name: Setup Node.js environment
-      uses: actions/setup-node@v2.1.0
-    - name: Install Dependencies
-      run: npm install
-    - name: Test Project
-      run: npm run test-ci
-    - name: Build Prod Release
-      run: npm run build
-    - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v2
-      with:
-        # Artifact name
-        name: package
-        # A file, directory or wildcard pattern that describes what to upload
-        path: build
+      - uses: actions/checkout@v2
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.0
+      - name: Install Dependencies
+        run: npm install
+      - name: Test Project
+        run: npm run test-ci
+      - name: Build Prod Release
+        run: npm run build
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          # Artifact name
+          name: package
+          # A file, directory or wildcard pattern that describes what to upload
+          path: build
       
   upload:
     runs-on: ubuntu-latest
