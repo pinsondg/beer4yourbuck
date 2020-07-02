@@ -13,7 +13,7 @@ import {
 } from "reactstrap";
 import {BeerVenue, GooglePlace} from "../../model/BeerVenue";
 import Beer4YourBuckAPI from "../../controller/api/Beer4YourBuckAPI";
-import {getLocation} from "../../controller/LocationController";
+import {useCurrentGPSLocation} from "../../controller/LocationController";
 import {NotificationContext, NotificationType} from "../../context/NotificationContext";
 
 const breweryApi = Beer4YourBuckAPI.getInstance();
@@ -23,6 +23,7 @@ interface Props {
 }
 
 export function VenueLocationSelectorModal(props: Props) {
+    const currentGPSLocation = useCurrentGPSLocation();
     const [venueLocations, setVenueLocations] = useState<GooglePlace[] | null>(null);
     const [selectedVenue, setSelectedVenue] = useState<GooglePlace | null>(null);
     const [appearAutomatically, setAppearAutomatically] = useState<boolean>(true);
@@ -62,8 +63,8 @@ export function VenueLocationSelectorModal(props: Props) {
 
     useEffect(() => {
         if (appearAutomatically && !venue) {
-            getLocation((position => {
-                breweryApi.searchPossibleVenueNearYou(position.coords.latitude, position.coords.longitude, 50)
+            if (currentGPSLocation.currentPosition !== null && !currentGPSLocation.hasError && !venueLocations) {
+                breweryApi.searchPossibleVenueNearYou(currentGPSLocation.currentPosition.latitude, currentGPSLocation.currentPosition.longitude, 50)
                     .then(response => {
                         const locations: GooglePlace[] = response.data;
                         setVenueLocations(locations);
@@ -76,9 +77,18 @@ export function VenueLocationSelectorModal(props: Props) {
                             props.onNoVenuesFound();
                         }
                     });
-            }));
+            } else if (currentGPSLocation.hasError){
+                setNotifications([...notifications, {
+                    title: 'Error Getting Your Location',
+                    message: 'There was an error getting your current location. Please make sure you have given ' +
+                        'your browser and this website permission to access your location.',
+                    timeout: 6000,
+                    type: NotificationType.ERROR
+                }]);
+            }
         }
-    }, [props, appearAutomatically, venue]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props, appearAutomatically, venue, currentGPSLocation, notifications, setNotifications]);
 
     if (venueLocations && venueLocations.length > 0) {
         return (
