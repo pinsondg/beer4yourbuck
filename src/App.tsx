@@ -24,19 +24,19 @@ import MobileTopBar from "./component/nav/MobileTopBar";
 // @ts-ignore
 import AddToHomescreen from 'react-add-to-homescreen';
 import {filterReducer, initialFilters, NearYouFilterContext} from "./context/NearYouFilterContext";
-import {NearYouVenuesContext, NearYouVenuesContextData} from "./context/NearYouVenuesContext";
+import {NearYouVenuesContext, NearYouVenuesContextAction, nearYouVenuesReducer} from "./context/NearYouVenuesContext";
+import {useAsyncReducer} from "./controller/hooks/AsyncReducerHook";
 
 const api = Beer4YourBuckAPI.getInstance();
 function App() {
     console.log("Running app in " + process.env.NODE_ENV + " environment.");
     const [filters, filterDispatch] = useReducer(filterReducer, initialFilters);
-    const [nearYouVenues, setNearYouVenues] = useState<BeerVenue[] | null>(null);
+    const [nearYouVenues, nearYouVenuesDispatch] = useAsyncReducer<BeerVenue[] | null, NearYouVenuesContextAction>(nearYouVenuesReducer, {state: null});
     const [venue, setVenue] = useState<BeerVenue | null>();
     const [compareBeers, setCompareBeers] = useState<Beer[]>([]);
     const [notifications, setNotifications] = useState<Notification[]>([]);
     const [user, setUser] = useState<User | null>(null);
     const userContext: UserContext = {user, setUser};
-    const nearYouVenuesContext: NearYouVenuesContextData = {nearYouVenues, setNearYouVenues};
     const venueContext: BeerVenueContextData = {venue, setVenue};
     const compareBeerContext: CompareBeerContextData = {compareBeers, setCompareBeers};
     const notificationContext: NotificationContext = {setNotifications, notifications};
@@ -90,7 +90,7 @@ function App() {
                                           <Route path={'/compare'}>
                                               <MultiCompareFlow/>
                                           </Route>
-                                          <NearYouVenuesContext.Provider value={nearYouVenuesContext}>
+                                          <NearYouVenuesContext.Provider value={{nearYouVenues: nearYouVenues, nearYouVenueDispatch: nearYouVenuesDispatch}}>
                                               <NearYouFilterContext.Provider value={{filters: filters, filterDispatch: filterDispatch}}>
                                               <Route path={'/near'}>
                                                   <NearYouPage/>

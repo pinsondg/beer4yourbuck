@@ -18,8 +18,7 @@ import {
 } from "reactstrap";
 import './near-you-page.scss'
 import {Beer} from "../../model/Beer";
-import Beer4YourBuckAPI from "../../controller/api/Beer4YourBuckAPI";
-import {getDistance, getLocation, metersToMiles, milesToMeters} from "../../controller/LocationController";
+import {getDistance, metersToMiles, milesToMeters, useCurrentGPSLocation} from "../../controller/LocationController";
 import {LoadingSpinner} from "../../component/load/LoadSpinner";
 import {BeerNearYouBrick} from "../../component/brick/BeerNearYouBrick";
 import {NotificationContext, NotificationType} from "../../context/NotificationContext";
@@ -46,14 +45,14 @@ export function NearYouPage() {
     const getFiltersOfType = (filterType: FilterType): Filter[] => {
         return filters.map(x => x.filter).filter(x => x.type === filterType);
     };
-    const {nearYouVenues, setNearYouVenues} = useContext(NearYouVenuesContext);
+    const {nearYouVenues, nearYouVenueDispatch} = useContext(NearYouVenuesContext);
+    const gpsLocation = useCurrentGPSLocation();
     const [mode, setMode] = useState<Mode>(Mode.BEER);
-    const [currPos, setCurrPos] = useState<Position>();
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const {notifications, setNotifications} = useContext(NotificationContext);
     const [sideBarOpen, setSidebarOpen] = useState<boolean>(false);
     const [search, setSearch] = useState<string>('');
-    const [range, setRange] = useState<number>(+getFiltersOfType(FilterType.DISTANCE)[0].value);
+    const [range, setRange] = useState<number>(getFiltersOfType(FilterType.DISTANCE)[0] ? +getFiltersOfType(FilterType.DISTANCE)[0].value : 5);
     const [results, setResults] = useState<ReactNode[] | null>(null);
     const prevRange = usePrevious<number>(range);
 
@@ -66,55 +65,59 @@ export function NearYouPage() {
 
     const getNearYouLocationBricks = () => {
         if (!nearYouVenues) return [];
-        const results =  [...nearYouVenues].sort((venue1, venue2)=> {
-            let distance1 = 0;
-            let distance2 = 0;
-            if (currPos) {
-                distance1 = metersToMiles(getDistance(venue1.lat, venue1.lon, currPos.coords.latitude, currPos.coords.longitude));
-                distance2 = metersToMiles(getDistance(venue2.lat, venue2.lon, currPos.coords.latitude, currPos.coords.longitude));
-            }
-            return distance1 - distance2;
-        })
-            .filter(venue => venue.name.toLowerCase().includes(search.toLowerCase()) || venue.beers.some(beer => beer.name && beer.name.toLowerCase().includes(search.toLowerCase())))
-            .filter(venue => venue.venueTypes.some(venueType => getFiltersOfType(FilterType.VENUE_TYPE).length === 0 || getFiltersOfType(FilterType.VENUE_TYPE).map(x => x.value).includes(venueType.toLowerCase())))
-            .filter(venue => venue.beers.some(beer => beer.beerType && (getFiltersOfType(FilterType.BEER_TYPE).length === 0 || getFiltersOfType(FilterType.BEER_TYPE).map(x => x.value.toString().toLowerCase()).includes(beer.beerType.toLowerCase()))))
-            .filter(venue => {
-                const priceFilter = getFiltersOfType(FilterType.MAX_PRICE)[0];
-                if (!priceFilter) {
-                    return true;
-                } else {
-                    return venue.beers.some(beer => beer.price && beer.price <= priceFilter.value)
+        if (nearYouVenues.state !== null) {
+            const results =  [...nearYouVenues.state].sort((venue1, venue2)=> {
+                let distance1 = 0;
+                let distance2 = 0;
+                if (gpsLocation.currentPosition && !gpsLocation.hasError) {
+                    distance1 = metersToMiles(getDistance(venue1.lat, venue1.lon, gpsLocation.currentPosition.latitude, gpsLocation.currentPosition.longitude));
+                    distance2 = metersToMiles(getDistance(venue2.lat, venue2.lon, gpsLocation.currentPosition.latitude, gpsLocation.currentPosition.longitude));
                 }
+                return distance1 - distance2;
             })
-            .filter(venue => venue.beers.length > 0)
-            .map(venue => {
-            let distance = 0;
-            if (currPos) {
-                distance = metersToMiles(getDistance(venue.lat, venue.lon, currPos.coords.latitude, currPos.coords.longitude));
-            }
-            return (
-                <LocationNearYouBrick key={key++} distance={distance} venue={venue}/>
-            )
-        });
-        setResults(results);
+                .filter(venue => venue.name.toLowerCase().includes(search.toLowerCase()) || venue.beers.some(beer => beer.name && beer.name.toLowerCase().includes(search.toLowerCase())))
+                .filter(venue => venue.venueTypes.some(venueType => getFiltersOfType(FilterType.VENUE_TYPE).length === 0 || getFiltersOfType(FilterType.VENUE_TYPE).map(x => x.value.toString().toLowerCase()).includes(venueType.toLowerCase())))
+                .filter(venue => venue.beers.some(beer => beer.beerType && (getFiltersOfType(FilterType.BEER_TYPE).length === 0 || getFiltersOfType(FilterType.BEER_TYPE).map(x => x.value.toString().toLowerCase()).includes(beer.beerType.toLowerCase()))))
+                .filter(venue => {
+                    const priceFilter = getFiltersOfType(FilterType.MAX_PRICE)[0];
+                    if (!priceFilter) {
+                        return true;
+                    } else {
+                        return venue.beers.some(beer => beer.price && beer.price <= priceFilter.value)
+                    }
+                })
+                .filter(venue => venue.beers.length > 0)
+                .map(venue => {
+                    let distance = 0;
+                    if (gpsLocation.currentPosition && !gpsLocation.hasError) {
+                        distance = metersToMiles(getDistance(venue.lat, venue.lon, gpsLocation.currentPosition.latitude, gpsLocation.currentPosition.longitude));
+                    }
+                    return (
+                        <LocationNearYouBrick key={key++} distance={distance} venue={venue}/>
+                    )
+                });
+            setResults(results);
+        }
     };
 
     const getNearYouBeerBricks = () => {
         let beers: {beer: Beer, venue: BeerVenue}[] = [];
         if (!nearYouVenues) return [];
-        nearYouVenues.forEach(venue => venue.beers.forEach(beer => beers.push({venue: venue, beer: beer})));
-        const results =  (
-            beers.filter(beer => (beer.beer.name && beer.beer.name.toLowerCase().includes(search.toLowerCase())) || beer.venue.name.toLowerCase().includes(search.toLowerCase()))
-                .filter(beer => beer.venue.venueTypes.some(venueType => getFiltersOfType(FilterType.VENUE_TYPE).length === 0 || getFiltersOfType(FilterType.VENUE_TYPE).map(x => x.value).includes(venueType.toLowerCase())))
-                .filter(beer => getFiltersOfType(FilterType.MAX_PRICE).length === 0 || getFiltersOfType(FilterType.MAX_PRICE).map(filter => +filter.value).some(price => beer.beer.price && beer.beer.price <= price))
-                .filter(beer => getFiltersOfType(FilterType.BEER_TYPE).length === 0 || getFiltersOfType(FilterType.BEER_TYPE).map(filter => filter.value).some(type => beer.beer.beerType && beer.beer.beerType === type))
-                .filter(beer => getFiltersOfType(FilterType.COUNT).length === 0 || getFiltersOfType(FilterType.COUNT).map(filter => filter.value).some(type => beer.beer.count && beer.beer.count === +type))
-                .sort((item1 , item2) => {
-                return new Beer.Builder().withBeer(item2.beer).build().getOttawayScore()
-                    - new Beer.Builder().withBeer(item1.beer).build().getOttawayScore()
-            }).map(item => <BeerNearYouBrick key={key++} beer={new Beer.Builder().withBeer(item.beer).build()} venue={item.venue}/>)
-        );
-        setResults(results);
+        if (nearYouVenues.state !== null) {
+            nearYouVenues.state.forEach(venue => venue.beers.forEach(beer => beers.push({venue: venue, beer: beer})));
+            const results =  (
+                beers.filter(beer => (beer.beer.name && beer.beer.name.toLowerCase().includes(search.toLowerCase())) || beer.venue.name.toLowerCase().includes(search.toLowerCase()))
+                    .filter(beer => beer.venue.venueTypes.some(venueType => getFiltersOfType(FilterType.VENUE_TYPE).length === 0 || getFiltersOfType(FilterType.VENUE_TYPE).map(x => x.value.toString().toLowerCase()).includes(venueType.toLowerCase())))
+                    .filter(beer => getFiltersOfType(FilterType.MAX_PRICE).length === 0 || getFiltersOfType(FilterType.MAX_PRICE).map(filter => +filter.value).some(price => beer.beer.price && beer.beer.price <= price))
+                    .filter(beer => getFiltersOfType(FilterType.BEER_TYPE).length === 0 || getFiltersOfType(FilterType.BEER_TYPE).map(filter => filter.value).some(type => beer.beer.beerType && beer.beer.beerType === type))
+                    .filter(beer => getFiltersOfType(FilterType.COUNT).length === 0 || getFiltersOfType(FilterType.COUNT).map(filter => filter.value).some(type => beer.beer.count && beer.beer.count === +type))
+                    .sort((item1 , item2) => {
+                        return new Beer.Builder().withBeer(item2.beer).build().getOttawayScore()
+                            - new Beer.Builder().withBeer(item1.beer).build().getOttawayScore()
+                    }).map(item => <BeerNearYouBrick key={key++} beer={new Beer.Builder().withBeer(item.beer).build()} venue={item.venue}/>)
+            );
+            setResults(results);
+        }
     };
 
     useEffect(() => {
@@ -126,55 +129,56 @@ export function NearYouPage() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mode, nearYouVenues, filters, search]);
 
+    /**
+     * Load venues
+     */
     useEffect(() => {
-        setIsLoading(true);
-        const api = Beer4YourBuckAPI.getInstance();
-        getLocation((position) => {
-            console.log("Accuracy: " + position.coords.accuracy.toFixed(2) + " m");
-            setCurrPos(position);
-            if ((!nearYouVenues && !prevRange) || (prevRange && prevRange !== range)) {
-                api.getVenuesNearYou(position.coords.latitude, position.coords.longitude, milesToMeters(range))
-                    .then(data => {
-                        setIsLoading(false);
-                        const newVenues: BeerVenue[] = data.data;
-                        if (JSON.stringify(nearYouVenues) !== JSON.stringify(newVenues)) {
-                            setNearYouVenues(newVenues);
-                        } else if (newVenues.filter((venue) => venue.beers.length > 0).length === 0) {
-                            setNotifications([...notifications, {
-                                title: "No Venues Near You",
-                                message: "Looks like there's no venues near you that we know about." +
-                                    " Try expanding the search range or moving to another location." +
-                                    " Also, you can add a venue we don't know about by visiting the location" +
-                                    " and telling us what's there!",
-                                timeout: 11000,
-                                type: NotificationType.WARNING,
-                            }])
-                        }
-                        setIsLoading(false);
-                    }).catch(err => {
-                    setIsLoading(false);
-                    setNotifications([...notifications, {
-                        title: "Error Getting Locations Near You",
-                        message: "There was an error getting locations near you. Please try again later.",
-                        timeout: 5000,
-                        type: NotificationType.ERROR
-                    }]);
-                });
-            } else {
-                setIsLoading(false);
-            }
-        }, () => {
+        console.log(nearYouVenues.state);
+        if (nearYouVenues.state === null && gpsLocation.currentPosition !== null && !gpsLocation.hasError && !nearYouVenues.error) {
+            setIsLoading(true);
+            nearYouVenueDispatch({type: 'refresh', coords: gpsLocation.currentPosition, radius: milesToMeters(range)});
+        } else if (isLoading && (nearYouVenues.state !== null || gpsLocation.hasError || nearYouVenues.error)) {
             setIsLoading(false);
-            setNotifications([...notifications, {
-                title: 'Error Getting Your Location',
-                message: 'There was an error getting your current location. Please make sure you have given ' +
-                    'your browser and this website permission to access your location.',
-                timeout: 6000,
-                type: NotificationType.ERROR
-            }])
-        });
+            if (gpsLocation.hasError) {
+                setNotifications([...notifications, {
+                    title: 'Error Getting Your Location',
+                    message: 'There was an error getting your current location. Please make sure you have given ' +
+                        'your browser and this website permission to access your location.',
+                    timeout: 6000,
+                    type: NotificationType.ERROR
+                }]);
+            } else if (nearYouVenues.error) {
+                setNotifications([...notifications, {
+                    title: "Error Getting Locations Near You",
+                    message: "There was an error getting locations near you. Please try again later.",
+                    timeout: 5000,
+                    type: NotificationType.ERROR
+                }]);
+            } else if (nearYouVenues.state && nearYouVenues.state.length === 0) {
+                setNotifications([...notifications, {
+                    title: "No Venues Near You",
+                    message: "Looks like there's no venues near you that we know about." +
+                        " Try expanding the search range or moving to another location." +
+                        " Also, you can add a venue we don't know about by visiting the location" +
+                        " and telling us what's there!",
+                    timeout: 11000,
+                    type: NotificationType.WARNING,
+                }]);
+            }
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [setNotifications, range, nearYouVenues, setNearYouVenues]);
+    }, [nearYouVenues.state, nearYouVenues.error, gpsLocation.currentPosition, gpsLocation.hasError, nearYouVenueDispatch, range]);
+
+    /*
+     * Clear errors when we leave the page.
+     */
+    // useEffect( () => () => nearYouVenueDispatch({type: "clearError"}), [] );
+
+    useEffect(() => {
+        if (prevRange && range && range !== prevRange) {
+            nearYouVenueDispatch({type: 'clear'});
+        }
+    });
 
     const removeFilter = (id: number): void => {
         filterDispatch({type: "remove", filterId: id});
@@ -185,7 +189,7 @@ export function NearYouPage() {
             <NearYouSearchFilter
                 isOpen={sideBarOpen}
                 setIsOpen={setSidebarOpen}
-                venues={nearYouVenues ? nearYouVenues : []}
+                venues={nearYouVenues.state ? nearYouVenues.state : []}
             />
             <Container fluid>
                 <Row>
@@ -236,7 +240,7 @@ export function NearYouPage() {
                         {
                             isLoading ? (
                                 <LoadingSpinner className={'spinner'} message={"Finding places near you."}/>
-                            ) : !nearYouVenues || nearYouVenues.filter(venue => venue.beers.length > 0).length === 0 ? (
+                            ) : !nearYouVenues.state || nearYouVenues.state.filter(venue => venue.beers.length > 0).length === 0 ? (
                                 <div style={{margin: 'auto'}}>We couldn't find any venues near you! Try expanding the search range.</div>
                             ) : (
                                 <div className={'items-holder'}>

@@ -1,8 +1,40 @@
+import {useEffect, useState} from "react";
 
-export function getLocation(successCallback: PositionCallback, errorCallBack?: PositionErrorCallback) {
-    if (navigator && navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(successCallback, errorCallBack);
-    }
+export interface CurrentGPSPosition {
+    currentPosition: Coordinates | null;
+    hasError: boolean;
+}
+
+/**
+ * Hook for getting the current GPS coordinates and updating on evey re-render;
+ */
+export function useCurrentGPSLocation(): CurrentGPSPosition {
+    const [currentPosition, setCurrentPosition] = useState<Coordinates | null>(null);
+    const [error, setError] = useState<boolean>(false);
+
+    const onChange = (position: Position) => {
+        setCurrentPosition(position.coords);
+    };
+
+    const onError = () => {
+        setCurrentPosition(null);
+        setError(true);
+    };
+
+    useEffect(() => {
+        if (navigator && navigator.geolocation) {
+            const geo = navigator.geolocation;
+            const watcher = geo.watchPosition(onChange, onError);
+
+            return () => geo.clearWatch(watcher);
+        } else {
+            setError(true);
+            setCurrentPosition(null);
+        }
+    }, []);
+
+    // console.log(`Current position is ${currentPosition ? `${currentPosition.latitude},${currentPosition.longitude}`: null}`);
+    return {currentPosition, hasError: error};
 }
 
 

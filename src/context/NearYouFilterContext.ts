@@ -3,11 +3,6 @@ import {Filter, FilterType} from "../model/Filter";
 
 let filterIdCount = 0;
 
-export const NearYouFilterContext = createContext<NearYouFilterContextData>({
-    filters: [],
-    filterDispatch: () => {}
-});
-
 export interface NearYouFilterContextData {
     filters: ActiveFilter[];
     filterDispatch: Dispatch<FilterChangeAction>;
@@ -40,3 +35,8 @@ export interface ActiveFilter {
     filterId: number;
     filter: Filter
 }
+
+export const NearYouFilterContext = createContext<NearYouFilterContextData>({
+    filters: [],
+    filterDispatch: () => {}
+});
