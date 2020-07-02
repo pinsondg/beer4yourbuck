@@ -15,7 +15,7 @@ describe('Near You Page Filters Test', () => {
             <NotificationContext.Provider value={jest.fn()}>
                 <UserContext.Provider value={{user: null, setUser: jest.fn()}}>
                     <NearYouFilterContext.Provider value={mockFilterContext}>
-                        <NearYouVenuesContext.Provider value={{nearYouVenues: venues, setNearYouVenues: jest.fn()}}>
+                        <NearYouVenuesContext.Provider value={{nearYouVenues: {state: venues}, nearYouVenueDispatch: jest.fn()}}>
                             <NearYouPage/>
                         </NearYouVenuesContext.Provider>
                     </NearYouFilterContext.Provider>
@@ -40,7 +40,7 @@ describe('Near You Page Filters Test', () => {
         expect(helpers.getByText(/result/i)).toHaveTextContent('3 results');
     });
 
-    it('should only show store venues when store filter is active', async () => {
-
-    });
+    // it('should only show store venues when store filter is active', async () => {
+    //
+    // });
 });

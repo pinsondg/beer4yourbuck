@@ -87,6 +87,7 @@ export function VenueLocationSelectorModal(props: Props) {
                 }]);
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props, appearAutomatically, venue, currentGPSLocation, notifications, setNotifications]);
 
     if (venueLocations && venueLocations.length > 0) {
