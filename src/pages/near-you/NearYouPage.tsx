@@ -32,6 +32,7 @@ import {NearYouFilterContext} from "../../context/NearYouFilterContext";
 import {NearYouVenuesContext} from "../../context/NearYouVenuesContext";
 import {usePrevious} from "../../CustomHooks";
 import {capitalizeFirstLetter} from "../../controller/Utils";
+import {useHistory} from "react-router"
 
 
 enum Mode {
@@ -45,6 +46,7 @@ export function NearYouPage() {
     const getFiltersOfType = (filterType: FilterType): Filter[] => {
         return filters.map(x => x.filter).filter(x => x.type === filterType);
     };
+    const history = useHistory();
     const {nearYouVenues, nearYouVenueDispatch} = useContext(NearYouVenuesContext);
     const gpsLocation = useCurrentGPSLocation();
     const [mode, setMode] = useState<Mode>(Mode.BEER);
@@ -169,10 +171,9 @@ export function NearYouPage() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [nearYouVenues.state, nearYouVenues.error, gpsLocation.currentPosition, gpsLocation.hasError, nearYouVenueDispatch, range]);
 
-    /*
-     * Clear errors when we leave the page.
-     */
-    // useEffect( () => () => nearYouVenueDispatch({type: "clearError"}), [] );
+    history.listen((path) => {
+        nearYouVenueDispatch({type: "clearError"});
+    });
 
     useEffect(() => {
         if (prevRange && range && range !== prevRange) {
