@@ -7,20 +7,30 @@ import {NearYouPage} from "./NearYouPage";
 import {NearYouVenuesContext} from "../../context/NearYouVenuesContext";
 import {FilterType} from "../../model/Filter";
 import {MockVenue_goodData__Tugwells, MockVenue_goodData_StickyRice} from "../../mocks/MockBeerVenues";
+import {Route, Router, Switch} from "react-router-dom";
+import {createMemoryHistory} from "history";
 
 describe('Near You Page Filters Test', () => {
 
     const getTreeWithAttributes = (mockFilterContext, venues) => {
+        const history = createMemoryHistory('/near-you');
         return render(
-            <NotificationContext.Provider value={jest.fn()}>
-                <UserContext.Provider value={{user: null, setUser: jest.fn()}}>
-                    <NearYouFilterContext.Provider value={mockFilterContext}>
-                        <NearYouVenuesContext.Provider value={{nearYouVenues: {state: venues}, nearYouVenueDispatch: jest.fn()}}>
-                            <NearYouPage/>
-                        </NearYouVenuesContext.Provider>
-                    </NearYouFilterContext.Provider>
-                </UserContext.Provider>
-            </NotificationContext.Provider>
+            <Router history={history}>
+                <Switch>
+                    <Route>
+                        <NotificationContext.Provider value={jest.fn()}>
+                            <UserContext.Provider value={{user: null, setUser: jest.fn()}}>
+                                <NearYouFilterContext.Provider value={mockFilterContext}>
+                                    <NearYouVenuesContext.Provider value={{nearYouVenues: {state: venues}, nearYouVenueDispatch: jest.fn()}}>
+                                        <NearYouPage/>
+                                    </NearYouVenuesContext.Provider>
+                                </NearYouFilterContext.Provider>
+                            </UserContext.Provider>
+                        </NotificationContext.Provider>
+                    </Route>
+                </Switch>
+            </Router>
+
         )
     };
 
