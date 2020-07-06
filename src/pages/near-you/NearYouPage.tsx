@@ -32,7 +32,7 @@ import {NearYouFilterContext} from "../../context/NearYouFilterContext";
 import {NearYouVenuesContext} from "../../context/NearYouVenuesContext";
 import {usePrevious} from "../../CustomHooks";
 import {capitalizeFirstLetter} from "../../controller/Utils";
-import {useHistory} from "react-router"
+import {useHistory} from "react-router-dom"
 
 
 enum Mode {
