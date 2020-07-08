@@ -20,3 +20,35 @@ export function capitalizeFirstLetter(text: string): string {
     const firstLetter = text.substring(0 , 1);
     return `${firstLetter.toUpperCase()}${text.substring(1).toLowerCase()}`;
 }
+
+export interface GenericMap<E> {
+    [key: string] : E;
+}
+
+export class GenericMapWrapper<E> {
+    map: GenericMap<E>;
+
+    constructor() {
+        this.map = {};
+    }
+
+    forEach(callback: (key: string, value: E) => void) {
+        Object.keys(this.map).forEach(x => {
+            callback(x, this.map[x]);
+        })
+    }
+
+    contains(key: string) {
+        return this.map[key] !== undefined;
+    }
+
+    put(key: string, value: E): void {
+        if (key) {
+            this.map[key] = value;
+        }
+    }
+
+    get(key: string): E {
+        return this.map[key];
+    }
+}

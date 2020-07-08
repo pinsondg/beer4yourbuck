@@ -24,15 +24,15 @@ import {BeerNearYouBrick} from "../../component/brick/BeerNearYouBrick";
 import {NotificationContext, NotificationType} from "../../context/NotificationContext";
 import 'rc-slider/assets/index.css';
 import PopoverMenu, {PopoverDirection} from "../../component/menu/popover-menu/PopoverMenu";
-import DropdownSection from "../../component/misc/dropdown-section/DropdownSection";
-import CustomCheckbox from "../../component/misc/checkbox/CustomCheckbox";
+import DropdownSection from "../../component/dropdown/dropdown-section/DropdownSection";
 import {Filter, FilterType} from "../../model/Filter";
 import ActiveFilterBadge from "../../component/badge/active-filter-badge/ActiveFilterBadge";
 import {NearYouFilterContext} from "../../context/NearYouFilterContext";
 import {NearYouVenuesContext} from "../../context/NearYouVenuesContext";
 import {usePrevious} from "../../CustomHooks";
-import {capitalizeFirstLetter} from "../../controller/Utils";
+import {capitalizeFirstLetter, GenericMapWrapper} from "../../controller/Utils";
 import {useHistory} from "react-router-dom"
+import ChecklistRow from "../../component/input/checklist-row/ChecklistRow";
 
 
 enum Mode {
@@ -327,6 +327,52 @@ function NearYouSearchFilter(props: NearYouSearchFilterProps) {
             .some(filter => filter.filter.value === val)
     };
 
+    const createBeerSubsections = (nodes: React.ReactNode[], vals: Set<string>) => {
+        const map: GenericMapWrapper<Set<string>> = new GenericMapWrapper<Set<string>>();
+        vals.forEach(x => {
+            const split = x.split(' - ');
+            const type = split[0];
+            const subType = split[1];
+            if (split.length > 1) {
+                let subTypes = map.get(type);
+                if (!subTypes) {
+                    subTypes = new Set<string>();
+                    map.put(type, subTypes);
+                }
+                subTypes.add(subType);
+            } else {
+                map.put(type, new Set<string>());
+            }
+        });
+        map.forEach((key, val) => {
+            if (val.size === 0) {
+                nodes.push (
+                    <ChecklistRow
+                        title={key}
+                        selected={isFilterActive(key, FilterType.BEER_TYPE)}
+                        onChange={(checked) => onFilterCheckboxClick(key, checked, FilterType.BEER_TYPE)}
+                    />
+                )
+            } else {
+                const subNodes: ReactNode[] = [];
+                val.forEach(value => {
+                    const filterValue = `${key} - ${value}`;
+                    subNodes.push(
+                        <ChecklistRow
+                            title={value}
+                            selected={isFilterActive(filterValue, FilterType.BEER_TYPE)}
+                            onChange={(checked) => onFilterCheckboxClick(filterValue, checked, FilterType.BEER_TYPE)}
+                        />
+                )});
+                nodes.push(<DropdownSection title={key}>
+                    {
+                        subNodes
+                    }
+                </DropdownSection>)
+            }
+        });
+    };
+
     const getCheckboxNodesForFilter = (filter: FilterType): ReactNode => {
         const vals: Set<string> = new Set<string>();
         props.venues.forEach(venue => venue.beers.forEach(beer => {
@@ -343,16 +389,19 @@ function NearYouSearchFilter(props: NearYouSearchFilterProps) {
             }
         }));
         const nodes: ReactNode[] = [];
-        vals.forEach(val => {
-            nodes.push(<div className={'checklist-row'}>
-                <div className={'title-holder'}>
-                    <h5>{val}</h5>
-                </div>
-                <div className={'checkbox-holder'}>
-                    <CustomCheckbox selected={isFilterActive(val, filter)} onChange={(checked) => onFilterCheckboxClick(val, checked, filter)} size={30}/>
-                </div>
-            </div>)
-        });
+        if (filter === FilterType.BEER_TYPE) {
+            createBeerSubsections(nodes, vals);
+        } else {
+            vals.forEach(val => {
+                nodes.push(
+                    <ChecklistRow
+                        title={val}
+                        selected={isFilterActive(val, filter)}
+                        onChange={(checked) => onFilterCheckboxClick(val, checked, filter)}
+                    />
+                )
+            });
+        }
         return nodes;
     };
 
@@ -402,19 +451,13 @@ function NearYouSearchFilter(props: NearYouSearchFilterProps) {
                     </div>
                 </DropdownSection>
                 <DropdownSection title={'Venue Type'}>
-                    <div style={{display: "flex", flexDirection: "column"}}>
-                        {getCheckboxNodesForFilter(FilterType.VENUE_TYPE)}
-                    </div>
+                    {getCheckboxNodesForFilter(FilterType.VENUE_TYPE)}
                 </DropdownSection>
                 <DropdownSection title={'Beer Type'}>
-                    <div style={{display: 'flex', flexDirection: "column"}}>
-                        {getCheckboxNodesForFilter(FilterType.BEER_TYPE)}
-                    </div>
+                    {getCheckboxNodesForFilter(FilterType.BEER_TYPE)}
                 </DropdownSection>
                 <DropdownSection title={'Count'}>
-                    <div style={{display: 'flex', flexDirection: 'column'}}>
-                        {getCheckboxNodesForFilter(FilterType.COUNT)}
-                    </div>
+                    {getCheckboxNodesForFilter(FilterType.COUNT)}
                 </DropdownSection>
             </div>
         </PopoverMenu>
