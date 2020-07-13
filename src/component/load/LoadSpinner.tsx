@@ -17,7 +17,7 @@ export function LoadingSpinner(props: Props) {
     return (
         <div style={props.style} className={classes}>
             <p>{props.message ? props.message : "Loading..."}</p>
-            <BeerGlassLoader style={{maxWidth: '100%', maxHeight: '500px', width: '100%', margin: '0 auto'}}/>
+            <BeerGlassLoader style={{maxWidth: '540px', width: '100%', margin: '0 auto'}}/>
         </div>
     )
 }

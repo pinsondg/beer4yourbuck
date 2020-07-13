@@ -77,18 +77,12 @@ export function VenueLocationSelectorModal(props: Props) {
                             props.onNoVenuesFound();
                         }
                     });
-            } else if (currentGPSLocation.hasError){
-                setNotifications([...notifications, {
-                    title: 'Error Getting Your Location',
-                    message: 'There was an error getting your current location. Please make sure you have given ' +
-                        'your browser and this website permission to access your location.',
-                    timeout: 6000,
-                    type: NotificationType.ERROR
-                }]);
+            } else if (props.onNoVenuesFound && currentGPSLocation.hasError) {
+                props.onNoVenuesFound();
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props, appearAutomatically, venue, currentGPSLocation, notifications, setNotifications]);
+    }, [props, appearAutomatically, venue]);
 
     if (venueLocations && venueLocations.length > 0) {
         return (
