@@ -17,7 +17,7 @@ export const mockBudLight_untappedData: Beer = new Beer.Builder().withBeer({
 export const mockBudLight_12Pack_untappedData: Beer = new Beer.Builder().withBeer({
     id: "1238",
     name: "Bud Light",
-    breweryName: "Victory Brewing Company",
+    breweryName: "Anheuser-Busch",
     abv: "4.2",
     volume: 12,
     price: 18.99,

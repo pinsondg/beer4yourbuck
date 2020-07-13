@@ -33,6 +33,7 @@ import {usePrevious} from "../../CustomHooks";
 import {capitalizeFirstLetter, GenericMapWrapper} from "../../controller/Utils";
 import {useHistory} from "react-router-dom"
 import ChecklistRow from "../../component/input/checklist-row/ChecklistRow";
+import SelectDropdownSection, {SelectionItem} from "../../component/dropdown/select-dropdown-section/SelectDropdownSection";
 
 
 enum Mode {
@@ -135,7 +136,6 @@ export function NearYouPage() {
      * Load venues
      */
     useEffect(() => {
-        console.log(nearYouVenues.state);
         if (nearYouVenues.state === null && gpsLocation.currentPosition !== null && !gpsLocation.hasError && !nearYouVenues.error) {
             setIsLoading(true);
             nearYouVenueDispatch({type: 'refresh', coords: gpsLocation.currentPosition, radius: milesToMeters(range)});
@@ -327,6 +327,13 @@ function NearYouSearchFilter(props: NearYouSearchFilterProps) {
             .some(filter => filter.filter.value === val)
     };
 
+    const handleAllSelected = (key: string, vals: SelectionItem[], selected: boolean, filterType: FilterType) => {
+        console.log(`All selected: ${selected}`);
+        vals.forEach(val => {
+            onFilterCheckboxClick(`${key} - ${val.value}`, selected, filterType);
+        });
+    };
+
     const createBeerSubsections = (nodes: React.ReactNode[], vals: Set<string>) => {
         const map: GenericMapWrapper<Set<string>> = new GenericMapWrapper<Set<string>>();
         vals.forEach(x => {
@@ -346,7 +353,7 @@ function NearYouSearchFilter(props: NearYouSearchFilterProps) {
         });
         map.forEach((key, val) => {
             if (val.size === 0) {
-                nodes.push (
+                nodes.push(
                     <ChecklistRow
                         title={key}
                         selected={isFilterActive(key, FilterType.BEER_TYPE)}
@@ -354,21 +361,24 @@ function NearYouSearchFilter(props: NearYouSearchFilterProps) {
                     />
                 )
             } else {
-                const subNodes: ReactNode[] = [];
-                val.forEach(value => {
-                    const filterValue = `${key} - ${value}`;
-                    subNodes.push(
-                        <ChecklistRow
-                            title={value}
-                            selected={isFilterActive(filterValue, FilterType.BEER_TYPE)}
-                            onChange={(checked) => onFilterCheckboxClick(filterValue, checked, FilterType.BEER_TYPE)}
-                        />
-                )});
-                nodes.push(<DropdownSection title={key}>
-                    {
-                        subNodes
-                    }
-                </DropdownSection>)
+                let items: SelectionItem[] = [];
+                val.forEach(x => {
+                    console.log(`Value is: ${x}`);
+                    console.log(`Key is: ${key}`);
+                    const selectionItem: SelectionItem = {
+                        value: x,
+                        selected: isFilterActive(`${key} - ${x}`, FilterType.BEER_TYPE)
+                    };
+                    items.push(selectionItem);
+                });
+                nodes.push(
+                    <SelectDropdownSection
+                        title={key}
+                        items={items}
+                        onAllSelected={(selected) => handleAllSelected(key, items, selected, FilterType.BEER_TYPE)}
+                        onOneSelected={(val, checked) => onFilterCheckboxClick(val, checked, FilterType.BEER_TYPE)}
+                    />
+                )
             }
         });
     };

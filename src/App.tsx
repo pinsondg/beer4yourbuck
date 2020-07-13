@@ -29,7 +29,6 @@ import {useAsyncReducer} from "./controller/hooks/AsyncReducerHook";
 
 const api = Beer4YourBuckAPI.getInstance();
 function App() {
-    console.log("Running app in " + process.env.NODE_ENV + " environment.");
     const [filters, filterDispatch] = useReducer(filterReducer, initialFilters);
     const [nearYouVenues, nearYouVenuesDispatch] = useAsyncReducer<BeerVenue[] | null, NearYouVenuesContextAction>(nearYouVenuesReducer, {state: null});
     const [venue, setVenue] = useState<BeerVenue | null>();
