@@ -87,22 +87,3 @@
     margin: 15px;
     max-width: 50%;
 }
-
-.checklist-row {
-    padding: 5px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    overflow: hidden;
-    width: 100%;
-}
-
-.checkbox-holder {
-    flex: 0 0 auto;
-}
-
-.title-holder {
-    flex: 1 1 auto;
-    text-align: left;
-}

@@ -10,19 +10,21 @@ export const mockBudLight_untappedData: Beer = new Beer.Builder().withBeer({
     count: 1,
     isHappyHourDeal: false,
     untappedId: 3784,
-    label: 'https://untappd.akamaized.net/site/beer_logos/beer-3784_0e2c3_sm.jpeg'
+    label: 'https://untappd.akamaized.net/site/beer_logos/beer-3784_0e2c3_sm.jpeg',
+    beerType: 'Lager - American Light'
 }).build();
 
 export const mockBudLight_12Pack_untappedData: Beer = new Beer.Builder().withBeer({
     id: "1238",
     name: "Bud Light",
-    breweryName: "Victory Brewing Company",
+    breweryName: "Anheuser-Busch",
     abv: "4.2",
     volume: 12,
     price: 18.99,
     count: 12,
     untappedId: 3784,
-    label: 'https://untappd.akamaized.net/site/beer_logos/beer-3784_0e2c3_sm.jpeg'
+    label: 'https://untappd.akamaized.net/site/beer_logos/beer-3784_0e2c3_sm.jpeg',
+    beerType: 'Lager - American Light'
 }).build();
 
 export const mockBudweiser_untappedData: Beer = new Beer.Builder().withBeer({
@@ -35,7 +37,8 @@ export const mockBudweiser_untappedData: Beer = new Beer.Builder().withBeer({
     count: 1,
     isHappyHourDeal: false,
     untappedId: 3783,
-    label: 'https://untappd.akamaized.net/site/beer_logos/beer-3783_b208c_sm.jpeg'
+    label: 'https://untappd.akamaized.net/site/beer_logos/beer-3783_b208c_sm.jpeg',
+    beerType: 'Lager - American'
 }).build();
 
 export const mockBudLightLime_untappedData_isHappyHour: Beer = new Beer.Builder().withBeer({
@@ -48,7 +51,8 @@ export const mockBudLightLime_untappedData_isHappyHour: Beer = new Beer.Builder(
     count: 1,
     isHappyHourDeal: true,
     untappedId: 6341,
-    label: 'https://untappd.akamaized.net/site/beer_logos/beer-3783_b208c_sm.jpeg'
+    label: 'https://untappd.akamaized.net/site/beer_logos/beer-3783_b208c_sm.jpeg',
+    beerType: 'Lager - American Light'
 }).build();
 
 export const goldenMonkey_untappedData_isHappyHour: Beer = new Beer.Builder().withBeer({
@@ -61,7 +65,8 @@ export const goldenMonkey_untappedData_isHappyHour: Beer = new Beer.Builder().wi
     count: 1,
     isHappyHourDeal: true,
     untappedId: 3787,
-    label: 'https://untappd.akamaized.net/site/beer_logos/beer-3787_20fc3_sm.jpeg'
+    label: 'https://untappd.akamaized.net/site/beer_logos/beer-3787_20fc3_sm.jpeg',
+    beerType: 'Pilsner'
 }).build();
 
 export const mockBudweiser_noUntappedData: Beer = new Beer.Builder().withBeer({

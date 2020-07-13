@@ -9,7 +9,6 @@ export type AsyncReducer<T, V> = (state: AsyncState<T>, action: V) => Promise<As
 
 export function useAsyncReducer<T, V>(asyncReducer: AsyncReducer<T, any>, initialState: AsyncState<T>): [AsyncState<T>, Dispatch<V>] {
     const [state, setState] = useState(initialState);
-    console.log("Use async reducer current state: " + JSON.stringify(state));
 
     const dispatch: Dispatch<V> = async (action: V) => {
         const result = asyncReducer(state, action);

@@ -2,6 +2,11 @@
 
 $animation-time: 2s;
 
+.beer-glass-loader-holder {
+  overflow: hidden;
+  max-height: 100%;
+}
+
 #glass-border, #glass-clip {
   animation-name: rotate;
   animation-iteration-count: infinite;

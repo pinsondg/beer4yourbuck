@@ -15,7 +15,11 @@ export type FilterChangeAction =
 export function filterReducer(state: ActiveFilter[], action: FilterChangeAction) {
     switch (action.type) {
         case "add":
-            return [...state, {filterId: filterIdCount++, filter: action.filter}];
+            if (!state.some(filter => filter.filter.value === action.filter.value)) {
+                return [...state, {filterId: filterIdCount++, filter: action.filter}];
+            } else {
+                return state;
+            }
         case "remove":
             return state.filter(x => x.filterId !== action.filterId);
     }

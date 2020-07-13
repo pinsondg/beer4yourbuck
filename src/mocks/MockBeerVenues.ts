@@ -1,5 +1,6 @@
 import {BeerVenue} from "../model/BeerVenue";
 import {
+    goldenMonkey_untappedData_isHappyHour,
     mockBudLight_12Pack_untappedData,
     mockBudLight_untappedData,
     mockBudLightLime_untappedData_isHappyHour,
@@ -24,7 +25,7 @@ export const MockVenue_goodData_StickyRice: BeerVenue = {
     lat: 37.550546,
     lon: -77.469425,
     address: '2232 W Main St, Richmond, VA 23220',
-    beers: [mockBudLightLime_untappedData_isHappyHour, mockBudweiser_untappedData]
+    beers: [mockBudLightLime_untappedData_isHappyHour, mockBudweiser_untappedData, goldenMonkey_untappedData_isHappyHour]
 };
 
 export const MockVenue_goodData__Tugwells: BeerVenue = {

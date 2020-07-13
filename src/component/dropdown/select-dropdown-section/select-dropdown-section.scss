@@ -1,0 +1,21 @@
+.select-dropdown-section-holder {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  overflow: hidden;
+  width: 100%;
+}
+
+.select-dropdown-section-dropdown {
+  flex: 1 1 100%;
+  border-bottom: 0;
+  padding: 5px;
+}
+
+.select-dropdown-section-checkbox {
+  flex: 0 0 auto;
+  position: relative;
+  height: 100%;
+  padding: 5px;
+}
