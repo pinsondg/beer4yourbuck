@@ -1,4 +1,4 @@
-import React, {ReactNode, useContext, useEffect, useState} from "react";
+import React, {ReactNode, ReactText, useContext, useEffect, useState} from "react";
 import {LocationNearYouBrick} from "../../component/brick/LocationNearYouBrick";
 import {BeerVenue} from "../../model/BeerVenue";
 import {
@@ -308,7 +308,7 @@ function NearYouSearchFilter(props: NearYouSearchFilterProps) {
         }
     }, [filters]);
 
-    const onFilterCheckboxClick = (value: string, checked: boolean, filterType: FilterType) => {
+    const onFilterCheckboxClick = (value: ReactText, checked: boolean, filterType: FilterType) => {
         const beerTypeFilters = filters.filter(x => x.filter.type === filterType);
         if (!checked) {
             const filterId = beerTypeFilters.filter(x => x.filter.value === value)[0].filterId;
@@ -322,7 +322,7 @@ function NearYouSearchFilter(props: NearYouSearchFilterProps) {
         }
     };
 
-    const isFilterActive = (val: string, filterType: FilterType): boolean => {
+    const isFilterActive = (val: ReactText, filterType: FilterType): boolean => {
         return filters.filter(filter => filter.filter.type === filterType)
             .some(filter => filter.filter.value === val)
     };
@@ -334,21 +334,23 @@ function NearYouSearchFilter(props: NearYouSearchFilterProps) {
         });
     };
 
-    const createBeerSubsections = (nodes: React.ReactNode[], vals: Set<string>) => {
+    const createBeerSubsections = (nodes: React.ReactNode[], vals: Set<string | number>) => {
         const map: GenericMapWrapper<Set<string>> = new GenericMapWrapper<Set<string>>();
         vals.forEach(x => {
-            const split = x.split(' - ');
-            const type = split[0];
-            const subType = split[1];
-            if (split.length > 1) {
-                let subTypes = map.get(type);
-                if (!subTypes) {
-                    subTypes = new Set<string>();
-                    map.put(type, subTypes);
+            if (typeof x === 'string') {
+                const split = x.split(' - ');
+                const type = split[0];
+                const subType = split[1];
+                if (split.length > 1) {
+                    let subTypes = map.get(type);
+                    if (!subTypes) {
+                        subTypes = new Set<string>();
+                        map.put(type, subTypes);
+                    }
+                    subTypes.add(subType);
+                } else {
+                    map.put(type, new Set<string>());
                 }
-                subTypes.add(subType);
-            } else {
-                map.put(type, new Set<string>());
             }
         });
         map.forEach((key, val) => {
@@ -384,14 +386,14 @@ function NearYouSearchFilter(props: NearYouSearchFilterProps) {
     };
 
     const getCheckboxNodesForFilter = (filter: FilterType): ReactNode => {
-        const vals: Set<string> = new Set<string>();
+        const vals: Set<string | number> = new Set<string | number>();
         props.venues.forEach(venue => venue.beers.forEach(beer => {
             switch (filter) {
                 case FilterType.BEER_TYPE:
                     if (beer.beerType) vals.add(beer.beerType);
                     break;
                 case FilterType.COUNT:
-                    if (beer.count) vals.add(beer.count.toFixed(0));
+                    if (beer.count) vals.add(beer.count);
                     break;
                 case FilterType.VENUE_TYPE:
                     venue.venueTypes.forEach(type => vals.add(capitalizeFirstLetter(type)));
@@ -402,7 +404,14 @@ function NearYouSearchFilter(props: NearYouSearchFilterProps) {
         if (filter === FilterType.BEER_TYPE) {
             createBeerSubsections(nodes, vals);
         } else {
-            vals.forEach(val => {
+            Array.from(vals).sort((x1, x2) => {
+                if (typeof x1 === 'number' && typeof x2 === 'number') {
+                    return +x1 - +x2;
+                } else {
+                    return 0;
+                }
+            }).forEach(val => {
+                console.log(val);
                 nodes.push(
                     <ChecklistRow
                         title={val}
