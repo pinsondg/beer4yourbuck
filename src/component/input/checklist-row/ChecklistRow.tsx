@@ -1,10 +1,10 @@
-import React, {CSSProperties, useEffect, useState} from "react";
+import React, {CSSProperties, ReactText, useEffect, useState} from "react";
 import CustomCheckbox from "../../misc/checkbox/CustomCheckbox";
 import './checklist-row.scss';
 import classNames from "classnames";
 
 interface Props {
-    title: string;
+    title: ReactText;
     selected: boolean;
     checkboxSize?: number
     onChange: (selected: boolean) => void
