@@ -214,9 +214,7 @@ export default function CurrentVenue(props: Props) {
                 timeout: 4000
             }]);
             updateVenue();
-            console.log(data);
         }).catch(e => {
-            console.log(e);
             setNotifications([...notifications, {
                 type: NotificationType.ERROR,
                 title: 'Error Updating Beer',

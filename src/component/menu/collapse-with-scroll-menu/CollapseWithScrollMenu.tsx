@@ -21,7 +21,6 @@ export default function CollapseWithScrollMenu(props: Props) {
             if (currScroll > scrollY && wrapperRef && wrapperRef.current) {
                 wrapperRef.current.style.top = `${top - 1}px`;
                 setTop(top - 1);
-                console.log("DOWN");
             } else if (currScroll < scrollY && wrapperRef && wrapperRef.current) {
                 console.log("UP");
             }

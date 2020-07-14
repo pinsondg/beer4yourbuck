@@ -68,7 +68,6 @@ export function MenuUpload(props: Props) {
                 api.checkJobStatus(jobId)
                     .then(data => {
                         const status: string = data.data.status;
-                        console.log(data);
                         if (status === 'COMPLETE') {
                             const beers: Beer[] = data.data.beers.map((x: BeerInterface) => new Beer.Builder().withBeer(x).build());
                             setCompareBeers(beers);

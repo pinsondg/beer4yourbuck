@@ -47,7 +47,6 @@ export default function Login(props: Props) {
                         history.goBack();
                     });
                 }).catch(err => {
-                    console.log(err);
                     if (err.response.data && err.response.data.exception === 'User is disabled') {
                         setNotifications([...notifications, {
                             title: 'Your Account is Disabled!',

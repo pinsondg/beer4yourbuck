@@ -287,7 +287,6 @@ function NearYouSearchFilter(props: NearYouSearchFilterProps) {
     };
 
     const handlePriceChange = (val: string | null) => {
-        console.log(val);
         const convertedVal: number = val !== null && val.includes('$') ? +val.substring(val.indexOf('$') + 1).trim() : -1;
         const currPriceFilter = filters.filter(x => x.filter.type === FilterType.MAX_PRICE)[0];
         if (currPriceFilter) {
@@ -301,7 +300,6 @@ function NearYouSearchFilter(props: NearYouSearchFilterProps) {
     useEffect(() => {
         const priceFilter = filters.filter(filter => filter.filter.type === FilterType.MAX_PRICE).map(x => x.filter)[0];
         if (priceFilter && typeof priceFilter.value === 'number') {
-            console.log(`Set price filter to: $${priceFilter.value.toFixed(2)}`);
             setPriceFilter(`$${priceFilter.value.toFixed(2)}`);
         } else {
             setPriceFilter('None');
@@ -328,7 +326,6 @@ function NearYouSearchFilter(props: NearYouSearchFilterProps) {
     };
 
     const handleAllSelected = (key: string, vals: SelectionItem[], selected: boolean, filterType: FilterType) => {
-        console.log(`All selected: ${selected}`);
         vals.forEach(val => {
             onFilterCheckboxClick(`${key} - ${val.value}`, selected, filterType);
         });
@@ -365,8 +362,6 @@ function NearYouSearchFilter(props: NearYouSearchFilterProps) {
             } else {
                 let items: SelectionItem[] = [];
                 val.forEach(x => {
-                    console.log(`Value is: ${x}`);
-                    console.log(`Key is: ${key}`);
                     const selectionItem: SelectionItem = {
                         value: x,
                         selected: isFilterActive(`${key} - ${x}`, FilterType.BEER_TYPE)

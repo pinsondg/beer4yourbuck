@@ -39,8 +39,6 @@ interface InputValidations {
 }
 
 function getUTCTime(val: string): string {
-    console.log("Hour: " + val.substring(0, val.indexOf(':')));
-    console.log("Min: " + val.substring(val.indexOf(':') + 1));
     let dateTime = DateTime.fromObject({hour: +val.substring(0, val.indexOf(':')), minute: +val.substring(val.indexOf(':') + 1)});
     return dateTime.toISOTime().toString();
 }
@@ -73,7 +71,6 @@ function reducer(state: FormData, action: Action): FormData {
             newState = {endTime: '', daysOfWeek: [], startTime: ''};
             break;
     }
-    console.log("State: " + JSON.stringify(newState));
     return newState;
 }
 
@@ -97,7 +94,6 @@ export default function TimeChooseModal(props: Props) {
     };
 
     const onSubmit = () => {
-        console.log(formData.daysOfWeek.length);
         if (props.venue && formData.startTime !== '' && formData.endTime !== '' && formData.daysOfWeek.length > 0) {
             setSubmitting(true);
             api.updateHappyHour(+props.venue.id, formData.daysOfWeek, formData.startTime, formData.endTime).then((data) => {
@@ -137,7 +133,6 @@ export default function TimeChooseModal(props: Props) {
             let endTimeInvalid = formData.endTime === '';
             let daysOfWeekInvalid = formData.daysOfWeek.length === 0;
             setInputValidations({startTimeInvalid: startTimeInvalid, endTimeInvalid: endTimeInvalid, daysOfWeekInvalid: daysOfWeekInvalid});
-            console.log('new state: ' + JSON.stringify({startTimeInvalid: startTimeInvalid, endTimeInvalid: endTimeInvalid, daysOfWeekInvalid: daysOfWeekInvalid}))
         }
     };
 

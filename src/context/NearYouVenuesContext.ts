@@ -33,7 +33,6 @@ export async function nearYouVenuesReducer(state: AsyncState<BeerVenue[] | null>
         case "remove":
             return {state: state.state ? state.state.filter(x => x.id !== action.venueId) : null};
         default:
-            console.log(`Setting state to: ${JSON.stringify(state)}`);
             return state;
     }
 }

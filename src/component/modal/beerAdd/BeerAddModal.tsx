@@ -63,7 +63,6 @@ export default function BeerAddModal(props: BeerAddModalProps) {
         if (apvInput && cost && volume) {
             ottawayScore = OttawayCalculator.calculate(apvInput, cost, volume, count);
         }
-        console.log("Ottaway Score is: " + ottawayScore);
         if (ottawayScore > -1 && onScoreCalculated && ottawayScore !== score) {
             onScoreCalculated(ottawayScore);
         }
@@ -140,7 +139,6 @@ export default function BeerAddModal(props: BeerAddModalProps) {
                 props.onConfirm(beer);
             }
         } else {
-            console.log('ERROR not all fields filled out.')
             //TODO: Display errors
         }
     };

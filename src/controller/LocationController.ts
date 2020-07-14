@@ -32,8 +32,6 @@ export function useCurrentGPSLocation(): CurrentGPSPosition {
             setCurrentPosition(null);
         }
     }, []);
-
-    // console.log(`Current position is ${currentPosition ? `${currentPosition.latitude},${currentPosition.longitude}`: null}`);
     return {currentPosition, hasError: error};
 }
 
