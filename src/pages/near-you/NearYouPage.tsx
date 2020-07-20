@@ -31,7 +31,6 @@ import {NearYouFilterContext} from "../../context/NearYouFilterContext";
 import {NearYouVenuesContext} from "../../context/NearYouVenuesContext";
 import {usePrevious} from "../../CustomHooks";
 import {capitalizeFirstLetter, GenericMapWrapper} from "../../controller/Utils";
-import {useHistory} from "react-router-dom"
 import ChecklistRow from "../../component/input/checklist-row/ChecklistRow";
 import SelectDropdownSection, {SelectionItem} from "../../component/dropdown/select-dropdown-section/SelectDropdownSection";
 
@@ -47,7 +46,6 @@ export function NearYouPage() {
     const getFiltersOfType = (filterType: FilterType): Filter[] => {
         return filters.map(x => x.filter).filter(x => x.type === filterType);
     };
-    const history = useHistory();
     const {nearYouVenues, nearYouVenueDispatch} = useContext(NearYouVenuesContext);
     const gpsLocation = useCurrentGPSLocation();
     const [mode, setMode] = useState<Mode>(Mode.BEER);
@@ -137,6 +135,7 @@ export function NearYouPage() {
      */
     useEffect(() => {
         if (nearYouVenues.state === null && gpsLocation.currentPosition !== null && !gpsLocation.hasError && !nearYouVenues.error) {
+            console.log("Updating near you venues...");
             setIsLoading(true);
             nearYouVenueDispatch({type: 'refresh', coords: gpsLocation.currentPosition, radius: milesToMeters(range)});
         } else if (isLoading && (nearYouVenues.state !== null || gpsLocation.hasError || nearYouVenues.error)) {
@@ -169,11 +168,13 @@ export function NearYouPage() {
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [nearYouVenues.state, nearYouVenues.error, gpsLocation.currentPosition, gpsLocation.hasError, nearYouVenueDispatch, range]);
+    }, [nearYouVenues, gpsLocation.currentPosition, gpsLocation.hasError, nearYouVenueDispatch, range]);
 
-    history.listen((path) => {
-        nearYouVenueDispatch({type: "clearError"});
-    });
+    /*
+     * Clear errors when we leave the page.
+     */
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect( () => () => nearYouVenueDispatch({type: "clearError"}), [] );
 
     useEffect(() => {
         if (prevRange && range && range !== prevRange) {
@@ -198,7 +199,7 @@ export function NearYouPage() {
                         <div style={{overflowX: "scroll", display: "flex", flexDirection: "row", alignItems: 'center', padding: '5px'}}>
                             {
                                 filters.map(x =>
-                                    <div style={{marginLeft: '2px', marginRight: '2px'}}>
+                                    <div key={x.filterId} style={{marginLeft: '2px', marginRight: '2px'}}>
                                         <ActiveFilterBadge
                                             filterId={x.filterId}
                                             filter={x.filter}
@@ -260,14 +261,6 @@ interface NearYouSearchFilterProps {
     isOpen: boolean;
     setIsOpen: (state: boolean) => void;
     venues: BeerVenue[];
-}
-
-interface ActiveVenueTypes {
-    bar: boolean,
-    restaurant: boolean,
-    brewery: boolean,
-    store: boolean,
-    other: boolean
 }
 
 function NearYouSearchFilter(props: NearYouSearchFilterProps) {
@@ -354,6 +347,7 @@ function NearYouSearchFilter(props: NearYouSearchFilterProps) {
             if (val.size === 0) {
                 nodes.push(
                     <ChecklistRow
+                        key={key}
                         title={key}
                         selected={isFilterActive(key, FilterType.BEER_TYPE)}
                         onChange={(checked) => onFilterCheckboxClick(key, checked, FilterType.BEER_TYPE)}
@@ -370,6 +364,7 @@ function NearYouSearchFilter(props: NearYouSearchFilterProps) {
                 });
                 nodes.push(
                     <SelectDropdownSection
+                        key={key}
                         title={key}
                         items={items}
                         onAllSelected={(selected) => handleAllSelected(key, items, selected, FilterType.BEER_TYPE)}
@@ -406,9 +401,9 @@ function NearYouSearchFilter(props: NearYouSearchFilterProps) {
                     return 0;
                 }
             }).forEach(val => {
-                console.log(val);
                 nodes.push(
                     <ChecklistRow
+                        key={val}
                         title={val}
                         selected={isFilterActive(val, filter)}
                         onChange={(checked) => onFilterCheckboxClick(val, checked, filter)}
@@ -431,9 +426,10 @@ function NearYouSearchFilter(props: NearYouSearchFilterProps) {
             }
         }));
         const nodes: ReactNode[] = [];
-        nodes.push(<option>None</option>);
+        let key = 0;
+        nodes.push(<option key={key++}>None</option>);
         for (let i = Math.floor(min); i <= max; i = i + 0.5) {
-            nodes.push(<option>{`$${i.toFixed(2)}`}</option>)
+            nodes.push(<option key={key++}>{`$${i.toFixed(2)}`}</option>)
         }
         return nodes;
     };
