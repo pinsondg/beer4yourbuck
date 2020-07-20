@@ -262,14 +262,6 @@ interface NearYouSearchFilterProps {
     venues: BeerVenue[];
 }
 
-interface ActiveVenueTypes {
-    bar: boolean,
-    restaurant: boolean,
-    brewery: boolean,
-    store: boolean,
-    other: boolean
-}
-
 function NearYouSearchFilter(props: NearYouSearchFilterProps) {
     const [priceFilter, setPriceFilter] = useState<string>('');
     const {filters, filterDispatch} = useContext(NearYouFilterContext);
@@ -406,7 +398,6 @@ function NearYouSearchFilter(props: NearYouSearchFilterProps) {
                     return 0;
                 }
             }).forEach(val => {
-                console.log(val);
                 nodes.push(
                     <ChecklistRow
                         title={val}
