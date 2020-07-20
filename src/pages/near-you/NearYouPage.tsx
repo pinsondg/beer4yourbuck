@@ -137,6 +137,7 @@ export function NearYouPage() {
      */
     useEffect(() => {
         if (nearYouVenues.state === null && gpsLocation.currentPosition !== null && !gpsLocation.hasError && !nearYouVenues.error) {
+            console.log("Updating near you venues...");
             setIsLoading(true);
             nearYouVenueDispatch({type: 'refresh', coords: gpsLocation.currentPosition, radius: milesToMeters(range)});
         } else if (isLoading && (nearYouVenues.state !== null || gpsLocation.hasError || nearYouVenues.error)) {
@@ -169,11 +170,12 @@ export function NearYouPage() {
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [nearYouVenues.state, nearYouVenues.error, gpsLocation.currentPosition, gpsLocation.hasError, nearYouVenueDispatch, range]);
+    }, [nearYouVenues, gpsLocation.currentPosition, gpsLocation.hasError, nearYouVenueDispatch, range]);
 
-    history.listen((path) => {
-        nearYouVenueDispatch({type: "clearError"});
-    });
+    /*
+     * Clear errors when we leave the page.
+     */
+    useEffect( () => () => nearYouVenueDispatch({type: "clearError"}), [] );
 
     useEffect(() => {
         if (prevRange && range && range !== prevRange) {
@@ -362,6 +364,7 @@ function NearYouSearchFilter(props: NearYouSearchFilterProps) {
                 });
                 nodes.push(
                     <SelectDropdownSection
+                        key={key}
                         title={key}
                         items={items}
                         onAllSelected={(selected) => handleAllSelected(key, items, selected, FilterType.BEER_TYPE)}

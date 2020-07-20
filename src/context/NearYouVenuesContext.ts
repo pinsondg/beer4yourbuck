@@ -32,6 +32,8 @@ export async function nearYouVenuesReducer(state: AsyncState<BeerVenue[] | null>
             return action.venues;
         case "remove":
             return {state: state.state ? state.state.filter(x => x.id !== action.venueId) : null};
+        case "clearError":
+            return {state: state.state, error: undefined};
         default:
             return state;
     }

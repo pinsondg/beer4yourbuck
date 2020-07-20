@@ -34,6 +34,7 @@ export default function SelectDropdownSection(props: Props) {
                     title={item.value}
                     selected={item.selected}
                     onChange={(selected) => props.onOneSelected(`${props.title} - ${item.value}`, selected)}
+                    key={item.value}
                 />
             )
         })
