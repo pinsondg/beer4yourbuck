@@ -200,7 +200,7 @@ export function NearYouPage() {
                         <div style={{overflowX: "scroll", display: "flex", flexDirection: "row", alignItems: 'center', padding: '5px'}}>
                             {
                                 filters.map(x =>
-                                    <div style={{marginLeft: '2px', marginRight: '2px'}}>
+                                    <div key={x.filterId} style={{marginLeft: '2px', marginRight: '2px'}}>
                                         <ActiveFilterBadge
                                             filterId={x.filterId}
                                             filter={x.filter}
@@ -348,6 +348,7 @@ function NearYouSearchFilter(props: NearYouSearchFilterProps) {
             if (val.size === 0) {
                 nodes.push(
                     <ChecklistRow
+                        key={key}
                         title={key}
                         selected={isFilterActive(key, FilterType.BEER_TYPE)}
                         onChange={(checked) => onFilterCheckboxClick(key, checked, FilterType.BEER_TYPE)}
@@ -403,6 +404,7 @@ function NearYouSearchFilter(props: NearYouSearchFilterProps) {
             }).forEach(val => {
                 nodes.push(
                     <ChecklistRow
+                        key={val}
                         title={val}
                         selected={isFilterActive(val, filter)}
                         onChange={(checked) => onFilterCheckboxClick(val, checked, filter)}
@@ -425,9 +427,10 @@ function NearYouSearchFilter(props: NearYouSearchFilterProps) {
             }
         }));
         const nodes: ReactNode[] = [];
-        nodes.push(<option>None</option>);
+        let key = 0;
+        nodes.push(<option key={key++}>None</option>);
         for (let i = Math.floor(min); i <= max; i = i + 0.5) {
-            nodes.push(<option>{`$${i.toFixed(2)}`}</option>)
+            nodes.push(<option key={key++}>{`$${i.toFixed(2)}`}</option>)
         }
         return nodes;
     };

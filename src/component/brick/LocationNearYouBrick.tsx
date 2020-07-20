@@ -50,7 +50,7 @@ export function LocationNearYouBrick(props: Props) {
                             <Col sm={'auto'} style={{width: '100%', margin: "auto", display: "flex", flexDirection: "column", overflow: "hidden"}}>
                             {
                                 props.venue.beers.map(beer => new Beer.Builder().withBeer(beer).build()).sort(beerSort).slice(0, 3).map(beer =>
-                                    <Row className={'justify-content-center align-items-center'} style={{marginTop: '10px'}}>
+                                    <Row key={beer.id} className={'justify-content-center align-items-center'} style={{marginTop: '10px'}}>
                                         <Col md={4} lg={4} xl={4} style={{display: 'flex', justifyContent: 'center'}}>
                                             <div className={'logo-holder location'}>
                                                 <CircularBeerLogo

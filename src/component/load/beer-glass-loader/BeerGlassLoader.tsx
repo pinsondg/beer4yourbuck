@@ -20,7 +20,7 @@ export default function BeerGlassLoader(props: Props) {
         const bubbles: ReactNode[] = [];
         const numberBubbles = getRndInteger(10, 15);
         for (let i = 0; i < numberBubbles; i++) {
-            bubbles.push(<g className={'bubble'}>
+            bubbles.push(<g className={'bubble'} key={i}>
                 <circle cx={getRndInteger(200, 400)} cy={getRndInteger(600, 1000)} r={getRndInteger(2, 5)}/>
             </g>)
         }
