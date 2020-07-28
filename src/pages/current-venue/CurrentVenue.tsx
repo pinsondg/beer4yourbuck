@@ -305,10 +305,10 @@ export default function CurrentVenue(props: Props) {
         )
     } else {
         return (
-            <div>
+            <div className={noVenuesFound ? 'no-venue' : ''}>
                 <VenueLocationSelectorModal onNoVenuesFound={() => setNoVenuesFound(true)}/>
                 {noVenuesFound === undefined && <LoadingSpinner message={'Searching for possible venues near you...'}/>}
-                {noVenuesFound && <h4>Could not find any venues near you.</h4>}
+                {noVenuesFound && <p>Looks like you're not near any venues we know about. Please go to a venue that serves beer and try again!</p>}
             </div>
         )
     }

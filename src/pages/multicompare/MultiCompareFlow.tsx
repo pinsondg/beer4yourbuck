@@ -8,15 +8,11 @@ import {MdAdd} from "react-icons/md";
 import {Flipped, Flipper} from "react-flip-toolkit";
 import {CompareBeerContext} from "../../context/CompareBeerContext";
 import {ConformationModal} from "../../component/modal/ConformationModal";
-import {NotificationContext, NotificationType} from "../../context/NotificationContext";
-import {BeerVenueContext} from "../../context/BeerVenueContext";
-import Beer4YourBuckAPI from "../../controller/api/Beer4YourBuckAPI";
 import {Beer4YourBuckBtn, BtnType} from "../../component/button/custom-btns/ThemedButtons";
+import classNames from "classnames";
 
 interface Props {
 }
-
-const api = Beer4YourBuckAPI.getInstance();
 
 function sortList(list: BeerItem[]): BeerItem[] {
     const newList = [...list];
@@ -53,35 +49,11 @@ interface EditBeer {
 
 export function MultiCompareFlow(props: Props) {
     const {setCompareBeers, compareBeers} = useContext(CompareBeerContext);
-    const {notifications, setNotifications} = useContext(NotificationContext);
-    const {venue} = useContext(BeerVenueContext);
     const [showVolumeModal, setShowVolumeModal] = useState<boolean>(false);
     const [beerBricks, setBeerBricks] = useState<BeerItem[]>([]);
     const [showAddModal, setShowAddModal] = useState<boolean>(false);
     const [showClearConfirm, setShowClearConfirm] = useState<boolean>(false);
     const [edit, setEdit] = useState<EditBeer | null>(null);
-
-    const updateBeerInBackend = (beer: Beer) => {
-        if (venue) {
-            api.addBeersToVenue(venue, beerBricks.map(beerBrick => beerBrick.beer)).then(() => {
-                setNotifications([...notifications, {
-                    title: "Beer Published!",
-                    message: `${beer.name} has been successfully published to ${venue.name}`,
-                    type: NotificationType.SUCCESS,
-                    timeout: 3000
-                }]);
-                beer.isPublished = true;
-                setBeerBricks([...beerBricks]);
-            }).catch(() => {
-                setNotifications([...notifications, {
-                    title: "Beer Not Published!",
-                    message: beerBricks[beerBricks.length - 1].beer.name + " was not added to " + venue.name + ".",
-                    type: NotificationType.ERROR,
-                    timeout: 5000
-                }]);
-            });
-        }
-    };
 
     const onBeerAdded = (beer: Beer) => {
         const newList = [...beerBricks, {beer: beer, isEditable: true, onEditSelect: () => {}, id: beerId.toString(), place: Place.NONE, onDeleteSelect: onDeleteSelect}];
@@ -154,18 +126,18 @@ export function MultiCompareFlow(props: Props) {
         }
     };
 
-    const onPublish = (id: string) => {
-        const found = beerBricks.filter(x => x.id === id)[0].beer;
-        updateBeerInBackend(found);
-    };
+    const listClasses = classNames('list-holder', {
+        'empty': beerBricks.length === 0
+    });
+
 
     return (
         <div style={{width: '100%', position: 'relative', flex: '1 1 auto', maxHeight: '100%', overflow: 'hidden'}}>
             <Beer4YourBuckBtn className={'add-button'} customStyle={BtnType.PRIMARY} onClick={() => setShowAddModal(true)}><MdAdd size={25}/></Beer4YourBuckBtn>
-            <div className={'list-holder'}>
+            <div className={listClasses}>
                 <Flipper flipKey={JSON.stringify(beerBricks.map(x => x.id))}>
                     {
-                        beerBricks.length === 0 && <p>List is empty. Add beer to compare and publish.</p>
+                        beerBricks.length === 0 && <p>List is empty. Add beer to compare.</p>
                     }
                     {
                         beerBricks.map(beerBrick =>
@@ -180,7 +152,6 @@ export function MultiCompareFlow(props: Props) {
                                         place={beerBrick.place}
                                         onDeleteSelect={onDeleteSelect}
                                         isDeletable={true}
-                                        onPublish={venue ? onPublish : undefined}
                                     />
                                 </div>
                             </Flipped>
@@ -192,7 +163,7 @@ export function MultiCompareFlow(props: Props) {
                 }
             </div>
             {
-                showAddModal && <BeerAddModal modalType={ModalType.ADD} show={showAddModal} onConfirm={onBeerAdded} onClose={() => setShowAddModal(false)}/>
+                showAddModal && <BeerAddModal modalType={ModalType.ADD} show={showAddModal} onConfirm={onBeerAdded} onClose={() => setShowAddModal(false)} showCount/>
             }
             {
                 showClearConfirm && <ConformationModal show={showClearConfirm} onYes={clear} onNo={() => setShowClearConfirm(false)} onClose={() => setShowClearConfirm(false)} text={"Are you sure you want to clear all beers?"}/>

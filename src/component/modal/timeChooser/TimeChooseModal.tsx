@@ -40,7 +40,12 @@ interface InputValidations {
 
 function getUTCTime(val: string): string {
     let dateTime = DateTime.fromObject({hour: +val.substring(0, val.indexOf(':')), minute: +val.substring(val.indexOf(':') + 1)});
-    return dateTime.toISOTime().toString();
+    const isoTime = dateTime.toISOTime();
+    if (isoTime !== null) {
+        return isoTime.toString();
+    } else {
+        return val;
+    }
 }
 
 function reducer(state: FormData, action: Action): FormData {
