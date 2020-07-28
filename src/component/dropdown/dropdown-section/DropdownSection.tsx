@@ -1,4 +1,4 @@
-import React, {CSSProperties, ReactNode, useState} from "react";
+import React, {CSSProperties, ReactNode, useEffect, useState} from "react";
 import {Collapse} from "reactstrap";
 import {IoIosArrowDown} from "react-icons/io";
 import './dropdown-section.css'
@@ -9,18 +9,30 @@ interface Props {
     title: string;
     className?: string;
     style?: CSSProperties;
+    isOpen?: boolean;
+    onChange?: (isOpen: boolean) => void
 }
 
 export default function DropdownSection(props: Props) {
-    const [isOpen, setIsOpen]  =  useState<boolean>(false);
+    const {onChange, title, isOpen}  = props;
+    const [isOpenLocal, setIsOpenLocal]  =  useState<boolean>(false);
+
+    useEffect(() => {
+        if (isOpen !== undefined) {
+            setIsOpenLocal(isOpen);
+        }
+    }, [isOpen]);
 
     const arrowClass = classNames('dropdown-toggle-1', {
-        'down': !isOpen,
-        'up': isOpen
+        'down': !isOpenLocal,
+        'up': isOpenLocal
     });
 
     const toggle = () => {
-        setIsOpen(!isOpen);
+        setIsOpenLocal(!isOpenLocal);
+        if (onChange) {
+            onChange(!isOpenLocal);
+        }
     };
 
     const baseClassNames = classNames('dropdown-container', props.className);
@@ -28,12 +40,12 @@ export default function DropdownSection(props: Props) {
     return (
         <div style={props.style} className={baseClassNames}>
             <div className={'title-header'} onClick={toggle}>
-                <h5>{props.title}</h5>
+                <h5>{title}</h5>
                 <div className={arrowClass}>
                     <IoIosArrowDown size={20}/>
                 </div>
             </div>
-            <Collapse isOpen={isOpen}>
+            <Collapse isOpen={isOpenLocal}>
                 <div className={'dropdown-content-container'}>
                     {props.children}
                 </div>

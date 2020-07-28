@@ -267,9 +267,11 @@ interface NearYouSearchFilterProps {
     venues: BeerVenue[];
 }
 
+
 function NearYouSearchFilter(props: NearYouSearchFilterProps) {
     const [priceFilter, setPriceFilter] = useState<string>('');
     const {filters, filterDispatch} = useContext(NearYouFilterContext);
+    const [currentOpen, setCurrentOpen]  = useState<string | null>(null);
 
     const getRangeValue = () => {
         return filters.filter(x => x.filter.type === FilterType.DISTANCE)[0].filter.value;
@@ -438,10 +440,20 @@ function NearYouSearchFilter(props: NearYouSearchFilterProps) {
         return nodes;
     };
 
+    const handleOtherOpen = (isOpen: boolean, title: string) => {
+        if (isOpen) {
+            setCurrentOpen(title);
+        }
+    };
+
+    const isDropdownOpen = (title: string): boolean => {
+        return currentOpen === title;
+    };
+
     return (
         <PopoverMenu isOpen={props.isOpen} popoverDirection={PopoverDirection.LEFT} titleText={'Search Settings'} onClose={() => props.setIsOpen(false)}>
             <div className={'filter-settings'}>
-                <DropdownSection title={'Distance'}>
+                <DropdownSection isOpen={isDropdownOpen('Distance')} onChange={isOpen => handleOtherOpen(isOpen, 'Distance')} title={'Distance'}>
                     <div className={'setting range-holder'}>
                         <Form>
                             <FormGroup className={'align-items-center'} row>
@@ -453,7 +465,7 @@ function NearYouSearchFilter(props: NearYouSearchFilterProps) {
                         </Form>
                     </div>
                 </DropdownSection>
-                <DropdownSection title={'Max Price'}>
+                <DropdownSection isOpen={isDropdownOpen('Max Price')} onChange={isOpen => handleOtherOpen(isOpen, 'Max Price')} title={'Max Price'}>
                     <div>
                         <Form>
                             <FormGroup>
@@ -464,16 +476,17 @@ function NearYouSearchFilter(props: NearYouSearchFilterProps) {
                         </Form>
                     </div>
                 </DropdownSection>
-                <DropdownSection title={'Venue Type'}>
+                <DropdownSection isOpen={isDropdownOpen('Venue Type')} onChange={isOpen => handleOtherOpen(isOpen, 'Venue Type')} title={'Venue Type'}>
                     {getCheckboxNodesForFilter(FilterType.VENUE_TYPE)}
                 </DropdownSection>
-                <DropdownSection title={'Beer Type'}>
+                <DropdownSection isOpen={isDropdownOpen('Beer Type')} onChange={isOpen => handleOtherOpen(isOpen, 'Beer Type')} title={'Beer Type'}>
                     {getCheckboxNodesForFilter(FilterType.BEER_TYPE)}
                 </DropdownSection>
-                <DropdownSection title={'Count'}>
+                <DropdownSection isOpen={isDropdownOpen('Count')} onChange={isOpen => handleOtherOpen(isOpen, 'Count')} title={'Count'}>
                     {getCheckboxNodesForFilter(FilterType.COUNT)}
                 </DropdownSection>
             </div>
+            <Button onClick={() => filterDispatch({type: 'clear'})}>Clear All Filters</Button>
         </PopoverMenu>
     )
 }
