@@ -44,7 +44,7 @@ describe('Near You Page Filters Test', () => {
             filterReducer: filterReducer
         }, [MockVenue_goodData_StickyRice, MockVenue_goodData__Tugwells]);
         expect(helpers.getByTestId("popover-menu")).toHaveClass('closed');
-        const filterButton = helpers.getByText(/filters/i);
+        const filterButton = helpers.getAllByText(/filters/i)[1];
         expect(filterButton).toHaveTextContent("Filters (1)");
         fireEvent.click(filterButton);
         expect(helpers.getByTestId("popover-menu")).not.toHaveClass('closed');
@@ -89,7 +89,7 @@ describe('Near You Page Filters Test', () => {
             filters: [...initialFilters, ...filters],
             filterReducer: filterReducer
         }, [MockVenue_goodData_StickyRice, MockVenue_goodData__Tugwells]);
-        const filterButton = helpers.getByText(/filters/i);
+        const filterButton = helpers.getAllByText(/filters/i)[1];
         expect(filterButton).toHaveTextContent("Filters (2)");
         expect(helpers.getByText(/result/i)).toHaveTextContent('3 results');
     });
@@ -107,7 +107,7 @@ describe('Near You Page Filters Test', () => {
             filters: [...initialFilters, ...filters],
             filterReducer: filterReducer
         }, [MockVenue_goodData_StickyRice, MockVenue_goodData__Tugwells]);
-        const filterButton = helpers.getByText(/filters/i);
+        const filterButton = helpers.getAllByText(/filters/i)[1];
         expect(filterButton).toHaveTextContent("Filters (2)");
         expect(helpers.getByText(/result/i)).toHaveTextContent('1 result');
     });
@@ -125,7 +125,7 @@ describe('Near You Page Filters Test', () => {
             filters: [...initialFilters, ...filters],
             filterReducer: filterReducer
         }, [MockVenue_goodData__Tugwells]);
-        const filterButton = helpers.getByText(/filters/i);
+        const filterButton = helpers.getAllByText(/filters/i)[1];
         expect(filterButton).toHaveTextContent("Filters (2)");
         expect(helpers.getByText(/result/i)).toHaveTextContent('2 results');
     });
@@ -143,7 +143,7 @@ describe('Near You Page Filters Test', () => {
             filters: [...initialFilters, ...filters],
             filterReducer: filterReducer
         }, [MockVenue_goodData_StickyRice]);
-        const filterButton = helpers.getByText(/filters/i);
+        const filterButton = helpers.getAllByText(/filters/i)[1];
         expect(filterButton).toHaveTextContent("Filters (2)");
         expect(helpers.getByText(/result/i)).toHaveTextContent('1 result');
     });

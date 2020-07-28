@@ -10,7 +10,8 @@ export interface NearYouFilterContextData {
 
 export type FilterChangeAction =
     | {type: 'add', filter: Filter}
-    | {type: 'remove', filterId: number};
+    | {type: 'remove', filterId: number}
+    | {type: 'clear'};
 
 export function filterReducer(state: ActiveFilter[], action: FilterChangeAction) {
     switch (action.type) {
@@ -22,6 +23,8 @@ export function filterReducer(state: ActiveFilter[], action: FilterChangeAction)
             }
         case "remove":
             return state.filter(x => x.filterId !== action.filterId);
+        case "clear":
+            return state.filter(x => x.filter.type === FilterType.DISTANCE);
     }
 }
 
