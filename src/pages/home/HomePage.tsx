@@ -3,7 +3,7 @@ import './home-page.css'
 import Background from '../../image/domain/stock/selective-focus-photography-of-people-having-a-toast-1269043.jpg'
 import {GiGears} from "react-icons/gi";
 import {IoIosArrowDown} from 'react-icons/io'
-import {MdCompareArrows, MdMyLocation} from 'react-icons/md'
+import {MdCompareArrows, MdMyLocation, MdNearMe} from 'react-icons/md'
 import Beer4YourBuckAPI from "../../controller/api/Beer4YourBuckAPI";
 import {UserContext} from "../../context/UserContext";
 import {useHistory} from "react-router-dom";
@@ -49,7 +49,7 @@ export function HomePage() {
             <div style={{width: '100%', height: '100%', color: "white", backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${Background})`, backgroundPosition: 'center', backgroundSize: 'cover', backgroundRepeat: 'no-repeat'}}>
                 <div className={'intro-text'}>
                     <h1>The Go-To Place To Find Cheap Beer</h1>
-                    <h5 style={{margin: '0 auto', maxWidth: '32.4102564rem'}}>We compare beers across multiple different restaurants, bars, breweries and stores to help you find the best deals near you!</h5>
+                    <h5 style={{margin: '0 auto', maxWidth: '32.4102564rem', padding: '5px'}}>We compare beers across multiple different restaurants, bars, breweries and stores to help you find the best deals near you!</h5>
                     {reportedBeers !== null && reportedVenues !== null && <h5 style={{margin: '0 auto', marginTop: '50px', maxWidth: '32.4102564rem'}}>{`${reportedBeers.toString()} beers and ${reportedVenues.toString()} venues added by our users!`}</h5>}
                     <div style={{position: 'absolute', bottom: 0, display: "flex", flexDirection: 'column', justifyContent: 'center', alignItems: "center"}}>
                         Find Out More
@@ -69,21 +69,31 @@ export function HomePage() {
             </div>
             <hr/>
             <div className={'home-info-item'}>
-                <h4>Find Cheap Beers Closest To You</h4>
-                <MdMyLocation size={40}/>
+                <h4>Find Reported Beers Near You</h4>
+                <MdNearMe size={40}/>
                 <p>
-                    Enable your location services to find beers and venues closest to you!
+                    Find beers at restaurants, grocery stores, breweries and any other place that has beer near you. Use
+                    the helpful filters to narrow the search results to what you are looking for. And remember, the Beer4YourBuck
+                    will always be on top!
                 </p>
             </div>
-            <hr/>
             <div className={'home-info-item'}>
                 <h4>Compare Beers Where You Are</h4>
-                <MdCompareArrows size={40}/>
+                <MdMyLocation size={40}/>
                 <p>
                     Let us know where you are and compare beers other users have reported or create an account and add beers
                     that interest you! Every beer added to a venue will be available for other users to see and compare.
                     You can also confirm a beer has been accurately reported with an upvote or downvote any beer with inaccuracies.
                     This helps keep our data accurate and up to date for a better user experience for everyone!
+                </p>
+            </div>
+            <hr/>
+            <div className={'home-info-item'}>
+                <h4>Quick Compare</h4>
+                <MdCompareArrows size={40}/>
+                <p>
+                    Quickly compare beers without the need to be at a venue. Beers compared here will not be reported to
+                    other users.
                 </p>
             </div>
         </div>

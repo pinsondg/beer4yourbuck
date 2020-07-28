@@ -146,9 +146,10 @@ export function MenuUpload(props: Props) {
 
     return (
         <div className={'page'}>
-            <div className={'page-header'}>
-                <h1>Menu Upload (BETA)</h1>
-            </div>
+            <p>
+                Upload a beer menu and our machine learning algorithm will do it's best to read it and give you the best
+                Beer4YourBuck! <b>Still in early development. Results may very</b>
+            </p>
             <div {...getRootProps()} className={uploadAreaClasses}>
                 <input {...getInputProps()} type={'file'} accept="image/*;capture=camera"/>
                 {

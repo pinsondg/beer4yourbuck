@@ -22,7 +22,7 @@ export default function MobileTopBar() {
             case '/compare':
                 return 'Quick Compare';
             case '/upload':
-                return 'Menu Upload (Beta)';
+                return 'Menu Upload (ALPHA)';
             case '/current-venue':
                 return 'Current Venue';
             case '/':

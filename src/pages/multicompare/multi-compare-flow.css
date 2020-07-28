@@ -20,6 +20,12 @@
     background-attachment: local, local, scroll, scroll;
 }
 
+.list-holder.empty {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
 .add-button {
     height: 50px;
     width: 50px;
