@@ -1,4 +1,4 @@
-import React, {ReactNode, ReactText, useContext, useEffect, useState} from "react";
+import React, {ReactNode, ReactText, useContext, useEffect, useRef, useState} from "react";
 import {LocationNearYouBrick} from "../../component/brick/LocationNearYouBrick";
 import {BeerVenue} from "../../model/BeerVenue";
 import {
@@ -33,6 +33,7 @@ import {usePrevious} from "../../CustomHooks";
 import {capitalizeFirstLetter, GenericMapWrapper} from "../../controller/Utils";
 import ChecklistRow from "../../component/input/checklist-row/ChecklistRow";
 import SelectDropdownSection, {SelectionItem} from "../../component/dropdown/select-dropdown-section/SelectDropdownSection";
+import ScrollToTopButton from "../../component/button/scroll-to-top-button/ScrollToTopButton";
 
 
 enum Mode {
@@ -42,6 +43,7 @@ enum Mode {
 let key = 0;
 
 export function NearYouPage() {
+    const content = useRef<HTMLDivElement>(null);
     const {filterDispatch, filters} = useContext(NearYouFilterContext);
     const getFiltersOfType = (filterType: FilterType): Filter[] => {
         return filters.map(x => x.filter).filter(x => x.type === filterType);
@@ -187,7 +189,8 @@ export function NearYouPage() {
     };
 
     return (
-        <div className={'near-you-page-content'}>
+        <div ref={content} className={'near-you-page-content'}>
+            <ScrollToTopButton style={{zIndex: 999, position: 'absolute', right: 0, bottom: 0, padding: '20px'}} scrollRef={content}>Scroll To Top</ScrollToTopButton>
             <NearYouSearchFilter
                 isOpen={sideBarOpen}
                 setIsOpen={setSidebarOpen}
