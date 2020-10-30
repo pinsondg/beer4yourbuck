@@ -1,4 +1,4 @@
-import React, {useEffect, useReducer, useState} from 'react';
+import React, {RefObject, useEffect, useReducer, useState} from 'react';
 import './App.css';
 import {BeerVenue} from "./model/BeerVenue";
 import {BeerVenueContext, BeerVenueContextData} from "./context/BeerVenueContext";
@@ -26,6 +26,7 @@ import AddToHomescreen from 'react-add-to-homescreen';
 import {filterReducer, initialFilters, NearYouFilterContext} from "./context/NearYouFilterContext";
 import {NearYouVenuesContext, NearYouVenuesContextAction, nearYouVenuesReducer} from "./context/NearYouVenuesContext";
 import {useAsyncReducer} from "./controller/hooks/AsyncReducerHook";
+import {ContentRef, CurrentContentRef} from './context/CurrentContentRef';
 
 const api = Beer4YourBuckAPI.getInstance();
 function App() {
@@ -35,6 +36,8 @@ function App() {
     const [compareBeers, setCompareBeers] = useState<Beer[]>([]);
     const [notifications, setNotifications] = useState<Notification[]>([]);
     const [user, setUser] = useState<User | null>(null);
+    const [contentRef, setContentRef] = useState<RefObject<HTMLDivElement>>();
+    const contentRefContext: ContentRef = {contentRef, setContentRef};
     const userContext: UserContext = {user, setUser};
     const venueContext: BeerVenueContextData = {venue, setVenue};
     const compareBeerContext: CompareBeerContextData = {compareBeers, setCompareBeers};
@@ -69,10 +72,11 @@ function App() {
     };
 
   return (
-      <BeerVenueContext.Provider value={venueContext}>
-          <UserContext.Provider value={userContext}>
-              <Router>
-                  <div className="App">
+      <CurrentContentRef.Provider value={contentRefContext}>
+          <BeerVenueContext.Provider value={venueContext}>
+              <UserContext.Provider value={userContext}>
+                  <Router>
+                      <div className="App">
                           <NotificationContext.Provider value={notificationContext}>
                               {!isMobileWidth && <TopNavBar/>}
                               {isMobileWidth && <MobileTopBar/>}
@@ -80,7 +84,7 @@ function App() {
                                   <NotificationCenter/>
                                   <Switch>
                                       <Route exact path={'/'}>
-                                        <HomePage/>
+                                          <HomePage/>
                                       </Route>
                                       <CompareBeerContext.Provider value={compareBeerContext}>
                                           <Route path={'/upload'}>
@@ -91,9 +95,9 @@ function App() {
                                           </Route>
                                           <NearYouVenuesContext.Provider value={{nearYouVenues: nearYouVenues, nearYouVenueDispatch: nearYouVenuesDispatch}}>
                                               <NearYouFilterContext.Provider value={{filters: filters, filterDispatch: filterDispatch}}>
-                                              <Route path={'/near'}>
-                                                  <NearYouPage/>
-                                              </Route>
+                                                  <Route path={'/near'}>
+                                                      <NearYouPage/>
+                                                  </Route>
                                               </NearYouFilterContext.Provider>
                                           </NearYouVenuesContext.Provider>
                                           <Route path={'/current-venue'}>
@@ -116,10 +120,11 @@ function App() {
                               </div>
                               {isMobileWidth && <MobileNavBar/>}
                           </NotificationContext.Provider>
-                  </div>
-              </Router>
-          </UserContext.Provider>
-      </BeerVenueContext.Provider>
+                      </div>
+                  </Router>
+              </UserContext.Provider>
+          </BeerVenueContext.Provider>
+      </CurrentContentRef.Provider>
   );
 }
 

@@ -1,12 +1,14 @@
-import React, {ReactNode, useEffect, useState} from "react";
+import React, {ReactNode, useContext, useEffect, useState} from "react";
 import {Col, Container, Row} from "reactstrap";
 import {MdCameraAlt, MdCompareArrows, MdMyLocation, MdNearMe} from "react-icons/md";
 import './mobile-navbar.css'
 import {useHistory, useLocation} from "react-router-dom";
 import {CircleClick} from "../misc/circle-click/CircleClick";
 import Color from 'color'
+import {CurrentContentRef} from "../../context/CurrentContentRef";
 
 export default function MobileNavBar() {
+    const {contentRef} = useContext(CurrentContentRef);
     const [active, setActive] = useState<string | null>(null);
     const history = useHistory();
     const location = useLocation();
@@ -24,7 +26,7 @@ export default function MobileNavBar() {
                 setActive('upload');
                 break;
             case '/current-venue':
-                setActive('venue');
+                setActive('current-venue');
                 break;
             default:
                 setActive(null);
@@ -32,27 +34,43 @@ export default function MobileNavBar() {
         }
     }, [location.pathname]);
 
+    const onCLick = (page: string) => {
+        // console.log(JSON.stringify(contentRef));
+        if (isCurrent(page) && contentRef && contentRef.current) {
+            contentRef.current.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        } else {
+            history.push('/' + page);
+        }
+    };
+
+    const isCurrent = (page: string): boolean => {
+        return !!active && active === page;
+    };
+
     return (
         <div className={'mobile-nav-bar'}>
             <Container style={{margin: '0 auto', padding: '10px'}}>
                 <Row className={'justify-content-center align-items-center'}>
                     <Col>
-                        <MenuCircleClick onClick={() => history.push('/near')} isCurrent={!!active && active === 'near'}>
+                        <MenuCircleClick onClick={() => onCLick('near')} isCurrent={isCurrent('near')}>
                             <MdNearMe size={27}/>
                         </MenuCircleClick>
                     </Col>
                     <Col>
-                        <MenuCircleClick onClick={() => history.push('/compare')}  isCurrent={!!active && active === 'compare'}>
+                        <MenuCircleClick onClick={() => onCLick('compare')}  isCurrent={isCurrent('compare')}>
                             <MdCompareArrows size={27}/>
                         </MenuCircleClick>
                     </Col>
                     <Col>
-                        <MenuCircleClick onClick={() => history.push('/upload')} isCurrent={!!active && active === 'upload'}>
+                        <MenuCircleClick onClick={() => onCLick('upload')} isCurrent={isCurrent('upload')}>
                             <MdCameraAlt size={27}/>
                         </MenuCircleClick>
                     </Col>
                     <Col>
-                        <MenuCircleClick onClick={() => history.push('/current-venue')} isCurrent={!!active && active === 'venue'}>
+                        <MenuCircleClick onClick={() => onCLick('current-venue')} isCurrent={isCurrent('current-venue')}>
                             <MdMyLocation size={27}/>
                         </MenuCircleClick>
                     </Col>

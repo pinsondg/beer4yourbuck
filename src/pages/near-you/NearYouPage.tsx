@@ -1,4 +1,4 @@
-import React, {ReactNode, ReactText, useContext, useEffect, useState} from "react";
+import React, {ReactNode, ReactText, useContext, useEffect, useRef, useState} from "react";
 import {LocationNearYouBrick} from "../../component/brick/localtion-near-you-brick/LocationNearYouBrick";
 import {BeerVenue} from "../../model/BeerVenue";
 import {
@@ -33,6 +33,7 @@ import {usePrevious} from "../../CustomHooks";
 import {capitalizeFirstLetter, GenericMapWrapper} from "../../controller/Utils";
 import ChecklistRow from "../../component/input/checklist-row/ChecklistRow";
 import SelectDropdownSection, {SelectionItem} from "../../component/dropdown/select-dropdown-section/SelectDropdownSection";
+import {CurrentContentRef} from "../../context/CurrentContentRef";
 
 
 enum Mode {
@@ -42,6 +43,8 @@ enum Mode {
 let key = 0;
 
 export function NearYouPage() {
+    const {contentRef, setContentRef} = useContext(CurrentContentRef);
+    const  nearYouContentRef = useRef(null);
     const {filterDispatch, filters} = useContext(NearYouFilterContext);
     const getFiltersOfType = (filterType: FilterType): Filter[] => {
         return filters.map(x => x.filter).filter(x => x.type === filterType);
@@ -130,6 +133,10 @@ export function NearYouPage() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mode, nearYouVenues, filters, search]);
 
+    useEffect(() => {
+        setContentRef(nearYouContentRef);
+    });
+
     /**
      * Load venues
      */
@@ -187,7 +194,7 @@ export function NearYouPage() {
     };
 
     return (
-        <div className={'near-you-page-content'}>
+        <div ref={contentRef} className={'near-you-page-content'}>
             <NearYouSearchFilter
                 isOpen={sideBarOpen}
                 setIsOpen={setSidebarOpen}
