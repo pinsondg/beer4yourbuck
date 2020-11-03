@@ -8,7 +8,7 @@ import BeerAddModal, {ModalType} from "../../component/modal/beerAdd/BeerAddModa
 import {Beer} from "../../model/Beer";
 import Beer4YourBuckAPI from "../../controller/api/Beer4YourBuckAPI";
 import {NotificationContext, NotificationType} from "../../context/NotificationContext";
-import VenueBeerBrick from "../../component/brick/VenueBeerBrick";
+import VenueBeerBrick from "../../component/brick/venue-beer-brick/VenueBeerBrick";
 import {UserContext} from "../../context/UserContext";
 import RegistrationModal from "../../component/modal/RegistrationModal";
 import {LoadingSpinner} from "../../component/load/LoadSpinner";

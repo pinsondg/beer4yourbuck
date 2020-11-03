@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from "react";
-import BeerItem, {BeerItemBrick, Place} from "../../component/brick/BeerItemBrick";
+import BeerItem, {BeerItemBrick, Place} from "../../component/brick/beer-item-brick/BeerItemBrick";
 import {Button} from "reactstrap";
 import BeerAddModal, {ModalType} from "../../component/modal/beerAdd/BeerAddModal";
 import {Beer} from "../../model/Beer";

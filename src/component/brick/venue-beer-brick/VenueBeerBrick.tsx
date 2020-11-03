@@ -1,15 +1,15 @@
 import React, {useContext, useEffect, useState} from "react";
-import {Beer} from "../../model/Beer";
+import {Beer} from "../../../model/Beer";
 import {Badge, Button, Col, Container, Jumbotron, Row, UncontrolledTooltip} from "reactstrap";
-import CircularBeerLogo from "../image/CircularBeerLogo";
-import Beer4YourBuckAPI from "../../controller/api/Beer4YourBuckAPI";
-import {UserContext} from "../../context/UserContext";
-import RegistrationModal from "../modal/RegistrationModal";
+import CircularBeerLogo from "../../image/CircularBeerLogo";
+import Beer4YourBuckAPI from "../../../controller/api/Beer4YourBuckAPI";
+import {UserContext} from "../../../context/UserContext";
+import RegistrationModal from "../../modal/RegistrationModal";
 import {FaArrowAltCircleDown, FaArrowAltCircleUp} from "react-icons/fa";
 import './venue-beer-brick.css'
-import './brick.css'
+import '../brick.css'
 import classNames from "classnames";
-import Beer4YourBuckLogo from '../../image/domain/logos/LogoMakr_3Klh9R.png';
+import Beer4YourBuckLogo from '../../../image/domain/logos/LogoMakr_3Klh9R.png';
 
 const api = Beer4YourBuckAPI.getInstance();
 
