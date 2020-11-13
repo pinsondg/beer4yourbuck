@@ -38,7 +38,7 @@ export function BeerNearYouBrick(props: Props) {
                         <p>{props.beer.abv}% ABV - {props.beer.volume}oz - ${props.beer.price ? props.beer.price.toFixed(2) : 'N/A'}</p>
                     </div>
                     <div className={'location-container'}>
-                        <FaMapMarkerAlt style={{marginRight: '5px', color: '#f6c101'}} size={15}/><p>{props.venue.name} (<a href={"https://www.google.com/maps?q=" + props.venue.address} target={'_blank'}>Map</a>)</p>
+                        <FaMapMarkerAlt style={{marginRight: '5px', color: '#f6c101'}} size={15}/><p>{props.venue.name} (<a rel='noopener noreferrer' href={"https://www.google.com/maps?q=" + props.venue.address} target='_blank'>Map</a>)</p>
                     </div>
                 </div>
             </div>
