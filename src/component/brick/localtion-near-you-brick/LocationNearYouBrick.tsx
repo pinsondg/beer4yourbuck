@@ -1,15 +1,15 @@
 import React from "react";
 import {Badge, Col, Container, Jumbotron, Row} from "reactstrap";
-import {Beer} from "../../model/Beer";
-import {BeerVenue} from "../../model/BeerVenue";
-import './brick.css'
+import {Beer} from "../../../model/Beer";
+import {BeerVenue} from "../../../model/BeerVenue";
+import '../brick.css'
 import './location-near-you-brick.css'
-import './beer-item-brick.css'
-import CircularBeerLogo from "../image/CircularBeerLogo";
-import {UnverifiedBadge, VerifiedBadge} from "../badge/VerificationBadges";
-import ShowInMapsButton from "../button/show-map-button/ShowInMapsButton";
-import {isMobile} from "../../controller/Utils";
+import '../beer-item-brick/beer-item-brick.css'
 import classNames from "classnames";
+import ShowInMapsButton from "../../button/show-map-button/ShowInMapsButton";
+import {isMobile} from "../../../controller/Utils";
+import {UnverifiedBadge, VerifiedBadge} from "../../badge/VerificationBadges";
+import CircularBeerLogo from "../../image/CircularBeerLogo";
 
 export default interface Props {
     venue: BeerVenue;

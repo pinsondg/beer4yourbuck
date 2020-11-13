@@ -1,5 +1,5 @@
 import React, {ReactNode, ReactText, useContext, useEffect, useState} from "react";
-import {LocationNearYouBrick} from "../../component/brick/LocationNearYouBrick";
+import {LocationNearYouBrick} from "../../component/brick/localtion-near-you-brick/LocationNearYouBrick";
 import {BeerVenue} from "../../model/BeerVenue";
 import {
     Button,
@@ -20,7 +20,7 @@ import './near-you-page.scss'
 import {Beer} from "../../model/Beer";
 import {getDistance, metersToMiles, milesToMeters, useCurrentGPSLocation} from "../../controller/LocationController";
 import {LoadingSpinner} from "../../component/load/LoadSpinner";
-import {BeerNearYouBrick} from "../../component/brick/BeerNearYouBrick";
+import {BeerNearYouBrick} from "../../component/brick/beer-near-you-brick/BeerNearYouBrick";
 import {NotificationContext, NotificationType} from "../../context/NotificationContext";
 import 'rc-slider/assets/index.css';
 import PopoverMenu, {PopoverDirection} from "../../component/menu/popover-menu/PopoverMenu";

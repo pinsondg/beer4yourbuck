@@ -1,0 +1,66 @@
+
+.left-content {
+  width: 25%;
+  flex: 0 0 25%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 5px;
+  justify-content: flex-start;
+
+  .logo-holder {
+    width: 85%;
+    max-width: 90px;
+    max-height: 90px;
+    img {
+      width: inherit;
+      height: inherit;
+    }
+  }
+}
+
+.main-content {
+  flex: 1 1 100%;
+  text-align: left;
+  .beer-name-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+  }
+}
+
+.location-container {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: flex-start;
+}
+
+.value-score-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.badge-holder {
+    margin-top: 2px;
+    margin-bottom: 2px;
+    display: inline-block;
+    max-width: 100%;
+
+    .badge {
+        max-width: 100%;
+    }
+}
+
+.brick-text {
+    text-align: left;
+    margin-bottom: 1px;
+}
+
+.near-you-brick-content {
+  display: flex;
+  flex-direction: row;
+}

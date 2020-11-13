@@ -1,13 +1,13 @@
 import React, {useState} from "react";
-import {Beer} from "../../model/Beer";
+import {Beer} from "../../../model/Beer";
 import {Col, Jumbotron, Row} from "reactstrap";
 import classNames from "classnames";
 import './beer-item-brick.css'
-import {BeerVenue} from "../../model/BeerVenue";
-import {isMobile} from "../../controller/Utils";
-import './brick.css'
-import CircularBeerLogo from "../image/CircularBeerLogo";
-import Beer4YourBuckLogo from "../../image/domain/logos/LogoMakr_3Klh9R.png";
+import '../brick.css'
+import Beer4YourBuckLogo from "../../../image/domain/logos/LogoMakr_3Klh9R.png";
+import {BeerVenue} from "../../../model/BeerVenue";
+import CircularBeerLogo from "../../image/CircularBeerLogo";
+import {isMobile} from "../../../controller/Utils";
 
 export default interface Props {
     beer: Beer;
