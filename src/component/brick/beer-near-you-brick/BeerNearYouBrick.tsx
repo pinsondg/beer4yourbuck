@@ -8,6 +8,8 @@ import CircularBeerLogo from "../../image/CircularBeerLogo";
 import {VerifiedBadge} from "../../badge/VerificationBadges";
 import {FaMapMarkerAlt} from "react-icons/fa";
 import ValueScoreBadge from "../../badge/value-score-badge/ValueScoreBadge";
+import Beer4YourBuckLogo from "../../image/domain/logos/LogoMakr_3Klh9R.png";
+
 
 interface Props {
     beer: Beer;
@@ -21,7 +23,7 @@ export function BeerNearYouBrick(props: Props) {
             <div className={'near-you-brick-content'}>
                 <div className={'left-content'}>
                     <div className={'logo-holder'}>
-                        <CircularBeerLogo src={props.beer.label}/>
+                        <CircularBeerLogo src={props.beer.label ? props.beer.label : Beer4YourBuckLogo}/>
                     </div>
                     <div className={'value-score-container'}>
                         <ValueScoreBadge className={'score-badge'} score={props.beer.getOttawayScore()}/>
