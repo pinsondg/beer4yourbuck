@@ -8,7 +8,7 @@ import CircularBeerLogo from "../../image/CircularBeerLogo";
 import {VerifiedBadge} from "../../badge/VerificationBadges";
 import {FaMapMarkerAlt} from "react-icons/fa";
 import ValueScoreBadge from "../../badge/value-score-badge/ValueScoreBadge";
-import Beer4YourBuckLogo from "../../image/domain/logos/LogoMakr_3Klh9R.png";
+import Beer4YourBuckLogo from "../../../image/domain/logos/LogoMakr_3Klh9R.png";
 
 
 interface Props {
