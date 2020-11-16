@@ -1,4 +1,4 @@
-import React, {ReactNode, useContext, useEffect, useState} from "react";
+import React, {ReactNode, useContext, useEffect, useRef, useState} from "react";
 import {BeerVenueContext} from "../../context/BeerVenueContext";
 import {Badge, Button, Col, Container, Input, Row} from "reactstrap";
 import './current-venue.css'
@@ -17,6 +17,7 @@ import {Beer4YourBuckBtn, BtnType} from "../../component/button/custom-btns/Them
 import {DateTime} from "luxon";
 import TimeChooseModal from "../../component/modal/timeChooser/TimeChooseModal";
 import ReactConfetti from "react-confetti";
+import {CurrentContentRef} from "../../context/CurrentContentRef";
 
 const api = Beer4YourBuckAPI.getInstance();
 
@@ -78,6 +79,8 @@ export function formatDaysOfWeek(days: string[]): string {
 }
 
 export default function CurrentVenue(props: Props) {
+    const {contentRef, setContentRef} = useContext(CurrentContentRef);
+    const  currentVenueContentRef = useRef(null);
     const {venue, setVenue} = useContext(BeerVenueContext);
     const [sortedBeers, setSortedBeers] = useState<Beer[]>([]);
     const {notifications, setNotifications} = useContext(NotificationContext);
@@ -201,6 +204,10 @@ export default function CurrentVenue(props: Props) {
         }
     };
 
+    useEffect(() => {
+        setContentRef(currentVenueContentRef);
+    });
+
     const handleBeerEdit = (beer: Beer) => {
         setEditBeer(beer);
     };
@@ -228,7 +235,7 @@ export default function CurrentVenue(props: Props) {
 
     if (venue) {
         return (
-            <div className={'current-venue-content'}>
+            <div className={'current-venue-content'} ref={contentRef}>
                 <TimeChooseModal onSubmitSuccess={updateVenue} onClose={() => setShowHHReporter(false)} show={showHHReporter} venue={venue}/>
                 <Container fluid={true} className={'venue-controls'}>
                     <Row className={'align-items-center top-row'}>
