@@ -37,6 +37,11 @@ export function BeerNearYouBrick(props: Props) {
                         }
                     </div>
                     <div className={'beer-properties-container'}>
+                        {
+                            props.beer.breweryName ? <h6>{props.beer.breweryName}</h6> : null
+                        }
+                    </div>
+                    <div className={'beer-properties-container'}>
                         <p>{props.beer.abv}% ABV - {props.beer.volume}oz - ${props.beer.price ? props.beer.price.toFixed(2) : 'N/A'}</p>
                     </div>
                     <div className={'location-container'}>

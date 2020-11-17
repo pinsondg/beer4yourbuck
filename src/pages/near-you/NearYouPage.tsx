@@ -5,7 +5,6 @@ import {
     Button,
     Col,
     Container,
-    CustomInput,
     DropdownItem,
     DropdownMenu,
     DropdownToggle,
@@ -138,44 +137,34 @@ export function NearYouPage() {
     });
 
     /**
-     * Load venues
+     * Reload the venues.
      */
     useEffect(() => {
-        if (nearYouVenues.state === null && gpsLocation.currentPosition !== null && !gpsLocation.hasError && !nearYouVenues.error) {
-            console.log("Updating near you venues...");
-            setIsLoading(true);
-            nearYouVenueDispatch({type: 'refresh', coords: gpsLocation.currentPosition, radius: milesToMeters(range)});
-        } else if (isLoading && (nearYouVenues.state !== null || gpsLocation.hasError || nearYouVenues.error)) {
+        console.log(`Is loading: ${isLoading}; GPS has error: ${gpsLocation.hasError}; GPS coordinates: ${gpsLocation.currentPosition ? gpsLocation.currentPosition.longitude.toFixed(4) : 'N/A'}, ${gpsLocation.currentPosition ? gpsLocation.currentPosition.latitude.toFixed(4) : 'N/A'}; Has near you venues: ${!!nearYouVenues.state}`);
+        if (isLoading && (gpsLocation.hasError)) {
             setIsLoading(false);
-            if (gpsLocation.hasError) {
-                setNotifications([...notifications, {
-                    title: 'Error Getting Your Location',
-                    message: 'There was an error getting your current location. Please make sure you have given ' +
-                        'your browser and this website permission to access your location.',
-                    timeout: 6000,
-                    type: NotificationType.ERROR
-                }]);
-            } else if (nearYouVenues.error) {
-                setNotifications([...notifications, {
-                    title: "Error Getting Locations Near You",
-                    message: "There was an error getting locations near you. Please try again later.",
-                    timeout: 5000,
-                    type: NotificationType.ERROR
-                }]);
-            } else if (nearYouVenues.state && nearYouVenues.state.length === 0) {
-                setNotifications([...notifications, {
-                    title: "No Venues Near You",
-                    message: "Looks like there's no venues near you that we know about." +
-                        " Try expanding the search range or moving to another location." +
-                        " Also, you can add a venue we don't know about by visiting the location" +
-                        " and telling us what's there!",
-                    timeout: 11000,
-                    type: NotificationType.WARNING,
-                }]);
-            }
+            setNotifications([...notifications, {
+                title: 'Error Getting Your Location',
+                message: 'There was an error getting your current location. Please make sure you have given ' +
+                    'your browser and this website permission to access your location.',
+                timeout: 6000,
+                type: NotificationType.ERROR
+            }]);
+        } else if (isLoading && !nearYouVenues.state && !nearYouVenues.error && gpsLocation.currentPosition) {
+            console.log("Refreshing beers...");
+            nearYouVenueDispatch({type: "refresh", coords: gpsLocation.currentPosition, radius: milesToMeters(range)});
+        } else if (isLoading && nearYouVenues.error) {
+            setIsLoading(false);
+            setNotifications([...notifications, {
+                title: "Error Getting Locations Near You",
+                message: "There was an error getting locations near you. Please try again later.",
+                timeout: 5000,
+                type: NotificationType.ERROR
+            }]);
+        } else if (isLoading && nearYouVenues.state) {
+            setIsLoading(false);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [nearYouVenues, gpsLocation.currentPosition, gpsLocation.hasError, nearYouVenueDispatch, range]);
+    }, [isLoading, gpsLocation.hasError, gpsLocation.currentPosition, nearYouVenues.state, nearYouVenues.error, setNotifications, notifications, nearYouVenueDispatch, range]);
 
     /*
      * Clear errors when we leave the page.
@@ -183,11 +172,19 @@ export function NearYouPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect( () => () => nearYouVenueDispatch({type: "clearError"}), [] );
 
+    //clear venues every range change
     useEffect(() => {
         if (prevRange && range && range !== prevRange) {
             nearYouVenueDispatch({type: 'clear'});
         }
-    });
+    }, [prevRange, range, nearYouVenueDispatch]);
+
+    // set loading to true every time the venues get cleared without an error
+    useEffect(() => {
+        if (!nearYouVenues.state && !nearYouVenues.error) {
+            setIsLoading(true);
+        }
+    }, [setIsLoading, nearYouVenues.state, nearYouVenues.error]);
 
     const removeFilter = (id: number): void => {
         filterDispatch({type: "remove", filterId: id});
@@ -457,6 +454,14 @@ function NearYouSearchFilter(props: NearYouSearchFilterProps) {
         return currentOpen === title;
     };
 
+    const getRangeOptions = (): ReactNode[] => {
+        const retList: ReactNode[] = [];
+        for (let i = 0.5; i <= 10; i += 0.5) {
+            retList.push(<option key={i}>{i}</option>);
+        }
+        return retList;
+    };
+
     return (
         <PopoverMenu isOpen={props.isOpen} popoverDirection={PopoverDirection.LEFT} titleText={'Search Settings'} onClose={() => props.setIsOpen(false)}>
             <div className={'filter-settings'}>
@@ -464,9 +469,11 @@ function NearYouSearchFilter(props: NearYouSearchFilterProps) {
                     <div className={'setting range-holder'}>
                         <Form>
                             <FormGroup className={'align-items-center'} row>
-                                <Label xs={2}>{getRangeValue()}<br/>miles</Label>
-                                <Col xs={10}>
-                                    <CustomInput id={'distance-input'} min={0.5} max={10} step={0.5} type={'range'} onChange={(e) => handleRangeChange(+e.target.value)} value={getRangeValue()}/>
+                                <Label xs={4}>Distance (miles)</Label>
+                                <Col xs={8}>
+                                    <Input value={getRangeValue()} type={'select'} onChange={(e) => handleRangeChange(+e.target.value)}>
+                                        {getRangeOptions()}
+                                    </Input>
                                 </Col>
                             </FormGroup>
                         </Form>

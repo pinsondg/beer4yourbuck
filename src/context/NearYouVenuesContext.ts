@@ -13,7 +13,7 @@ export type NearYouVenuesContextAction =
     | {type: 'remove', venueId: string}
     | {type: 'clearError'};
 
-export async function nearYouVenuesReducer(state: AsyncState<BeerVenue[] | null>, action: NearYouVenuesContextAction): Promise<AsyncState<BeerVenue[] | null>> {
+export async function nearYouVenuesReducer(state: AsyncState<BeerVenue[] | null>, action: NearYouVenuesContextAction, callback?: () => void): Promise<AsyncState<BeerVenue[] | null>> {
     switch (action.type) {
         case "add":
             return {
@@ -24,6 +24,9 @@ export async function nearYouVenuesReducer(state: AsyncState<BeerVenue[] | null>
         case "refresh":
             const newVenues = api.getVenuesNearYou(action.coords.latitude, action.coords.longitude, action.radius);
             const data = await newVenues;
+            if (callback) {
+                callback();
+            }
             return {
                 state: data.data,
                 error: undefined
