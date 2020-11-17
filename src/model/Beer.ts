@@ -18,6 +18,16 @@ export interface BeerInterface {
     beerType?: string;
     isPublished?: boolean;
     isHappyHourDeal?: boolean;
+    votes?: BeerVote[];
+}
+
+export interface BeerVote {
+    voteId: number
+    voteType: Vote
+}
+
+export enum Vote {
+    UPVOTE = 'UPVOTE', DOWNVOTE = 'DOWNVOTE'
 }
 
 export class Beer implements BeerInterface {
@@ -36,12 +46,28 @@ export class Beer implements BeerInterface {
     beerType?: string;
     isPublished?: boolean;
     isHappyHourDeal?: boolean;
+    votes?: BeerVote[];
 
     getOttawayScore(): number {
         if (this.volume && this.abv && this.price && this.count) {
             return OttawayCalculator.calculate(+this.abv, this.price, this.volume, this.count);
         }
         return -1;
+    }
+
+    getTotalVoteCount(): number | null{
+        if (this.votes) {
+            let count = 0;
+            this.votes.forEach(vote => {
+                if (vote.voteType === Vote.UPVOTE) {
+                    count += 1;
+                } else if (vote.voteType === Vote.DOWNVOTE) {
+                    count -=1;
+                }
+            });
+            return count;
+        }
+        return null;
     }
 
     static Builder =  class Builder {
@@ -59,6 +85,7 @@ export class Beer implements BeerInterface {
         private count?: number;
         private beerType?: string;
         private isHappyHourDeal?: boolean;
+        private votes?: BeerVote[];
 
         withName(name: string): Builder {
             this.name = name;
@@ -130,6 +157,11 @@ export class Beer implements BeerInterface {
             return this;
         }
 
+        withVotes(votes: BeerVote[]): Builder {
+            this.votes = votes;
+            return this
+        }
+
         withBeer(beer: BeerInterface): Builder {
             this.volume = beer.volume;
             this.untappedId = beer.untappedId;
@@ -145,6 +177,7 @@ export class Beer implements BeerInterface {
             this.count = beer.count;
             this.beerType = beer.beerType;
             this.isHappyHourDeal = beer.isHappyHourDeal;
+            this.votes = beer.votes;
             return this;
         }
 
@@ -165,6 +198,7 @@ export class Beer implements BeerInterface {
             beer.count = this.count;
             beer.beerType = this.beerType;
             beer.isHappyHourDeal = this.isHappyHourDeal;
+            beer.votes = this.votes;
             return beer;
         }
     }

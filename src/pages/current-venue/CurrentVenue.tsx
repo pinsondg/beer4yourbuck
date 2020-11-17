@@ -158,23 +158,25 @@ export default function CurrentVenue(props: Props) {
     }, [venue]);
 
     useEffect(() => {
-        api.getUserBeerActivityInfo().then(data => {
-            const upvoted: Beer[] = data.data.upvoted;
-            const downvote: Beer[] = data.data.downvoted;
-            const added: Beer[] = data.data.added;
-            if (JSON.stringify(upvoted) !== JSON.stringify(upVotedBeers)) {
-                setUpVotedBeers(upvoted)
-            }
-            if (JSON.stringify(downvote) !== JSON.stringify(downVotedBeers)) {
-                setDownVotedBeers(downvote)
-            }
-            if (JSON.stringify(userAddedBeers) !== JSON.stringify(added)) {
-                setUserAddedBeers(added);
-            }
-            setIsLoading(false);
-        }).catch(err => {
-            setIsLoading(false);
-        });
+        if (userAddedBeers.length === 0) {
+            api.getUserBeerActivityInfo().then(data => {
+                const upvoted: Beer[] = data.data.upvoted;
+                const downvote: Beer[] = data.data.downvoted;
+                const added: Beer[] = data.data.added;
+                if (JSON.stringify(upvoted) !== JSON.stringify(upVotedBeers)) {
+                    setUpVotedBeers(upvoted)
+                }
+                if (JSON.stringify(downvote) !== JSON.stringify(downVotedBeers)) {
+                    setDownVotedBeers(downvote)
+                }
+                if (JSON.stringify(userAddedBeers) !== JSON.stringify(added)) {
+                    setUserAddedBeers(added);
+                }
+                setIsLoading(false);
+            }).catch(err => {
+                setIsLoading(false);
+            });
+        }
     }, [upVotedBeers, downVotedBeers, userAddedBeers, venue]);
 
     const onAddBeerClicked = () => {
