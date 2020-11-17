@@ -69,14 +69,8 @@ export default function VenueBeerBrick(props: Props) {
     }, [props]);
 
     useEffect(() => {
-        api.getBeerVotedScore(props.beer).then(data => {
-            if (voteCount !== data.data) {
-                setVoteCount(data.data);
-            }
-        }).catch(err => {
-            setVoteCount(null);
-        });
-    });
+        setVoteCount(props.beer.getTotalVoteCount());
+    }, [props.beer]);
 
     const upvoteClasses = classNames('vote-button', {
         'upvoted': upVoted
