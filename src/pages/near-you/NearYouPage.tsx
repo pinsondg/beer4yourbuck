@@ -52,6 +52,7 @@ export function NearYouPage() {
     const gpsLocation = useCurrentGPSLocation();
     const [mode, setMode] = useState<Mode>(Mode.BEER);
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [isFetchingBeers, setIsFetchingBeers] = useState<boolean>(false);
     const {notifications, setNotifications} = useContext(NotificationContext);
     const [sideBarOpen, setSidebarOpen] = useState<boolean>(false);
     const [search, setSearch] = useState<string>('');
@@ -150,11 +151,13 @@ export function NearYouPage() {
                 timeout: 6000,
                 type: NotificationType.ERROR
             }]);
-        } else if (isLoading && !nearYouVenues.state && !nearYouVenues.error && gpsLocation.currentPosition) {
+        } else if (isLoading && !isFetchingBeers && !nearYouVenues.state && !nearYouVenues.error && gpsLocation.currentPosition) {
             console.log("Refreshing beers...");
             nearYouVenueDispatch({type: "refresh", coords: gpsLocation.currentPosition, radius: milesToMeters(range)});
+            setIsFetchingBeers(true);
         } else if (isLoading && nearYouVenues.error) {
             setIsLoading(false);
+            setIsFetchingBeers(false);
             setNotifications([...notifications, {
                 title: "Error Getting Locations Near You",
                 message: "There was an error getting locations near you. Please try again later.",
@@ -163,8 +166,20 @@ export function NearYouPage() {
             }]);
         } else if (isLoading && nearYouVenues.state) {
             setIsLoading(false);
+            setIsFetchingBeers(false);
         }
-    }, [isLoading, gpsLocation.hasError, gpsLocation.currentPosition, nearYouVenues.state, nearYouVenues.error, setNotifications, notifications, nearYouVenueDispatch, range]);
+    }, [
+        isLoading,
+        gpsLocation.hasError,
+        gpsLocation.currentPosition,
+        nearYouVenues.state,
+        nearYouVenues.error,
+        setNotifications,
+        notifications,
+        nearYouVenueDispatch,
+        range,
+        isFetchingBeers
+    ]);
 
     /*
      * Clear errors when we leave the page.
