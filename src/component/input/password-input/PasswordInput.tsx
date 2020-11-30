@@ -1,5 +1,6 @@
 import React from "react";
-import {Button, Col, FormGroup, Input, Label, Row, UncontrolledCollapse} from "reactstrap";
+import {Button, Col, FormGroup, Label, Row, UncontrolledCollapse} from "reactstrap";
+import PasswordShowHide from "../PasswordShowHide/PasswordShowHide";
 
 interface Props {
     onPasswordChange: (val: string) => void;
@@ -15,8 +16,8 @@ export default function PasswordInput(props: Props) {
                     Password
                 </Label>
                 <Col xs={8} sm={10}>
-                    <Input type={'password'} name={'password'} id={'password'} placeholder={'Password'}
-                           onChange={(e) => props.onPasswordChange(e.target.value)}/>
+                    <PasswordShowHide name={'password'} id={'password'} placeholder={'Password'}
+                                      onChange={(e) => props.onPasswordChange(e)}/>
                 </Col>
             </FormGroup>
             <FormGroup row className={'justify-content-center align-items-center'}>
@@ -24,8 +25,8 @@ export default function PasswordInput(props: Props) {
                     Confirm Password
                 </Label>
                 <Col xs={8} sm={10}>
-                    <Input type={'password'} name={'confirm-password'} id={'confirm-password'}
-                           placeholder={'Confirm Password'} onChange={(e) => props.onConfirmPasswordChange(e.target.value)}/>
+                    <PasswordShowHide name={'confirm-password'} id={'confirm-password'}
+                                      placeholder={'Confirm Password'} onChange={(e) => props.onConfirmPasswordChange(e)}/>
                 </Col>
             </FormGroup>
             <Row>
