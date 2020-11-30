@@ -2,7 +2,7 @@ LocationNearYouBrick example:
 
 ```js
 import 'bootstrap/dist/css/bootstrap.css';
-import {Beer} from './Beer';
+import {Beer} from '../../../model/Beer'
 
 const beer1 = new Beer.Builder().withBeer({
     name: 'Bud Light',
