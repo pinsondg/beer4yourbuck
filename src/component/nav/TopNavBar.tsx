@@ -3,7 +3,7 @@ import {Collapse, Nav, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink} fro
 import {useHistory, useLocation} from "react-router-dom";
 import './top-nav-bar.css'
 import {isMobile} from "../../controller/Utils";
-import {UserContext} from "../../context/UserContext";
+import {LoginStatus, UserContext} from "../../context/UserContext";
 import Beer4YourBuckAPI from "../../controller/api/Beer4YourBuckAPI";
 import {NotificationContext, NotificationType} from "../../context/NotificationContext";
 import Beer4YourBuckLogo from '../../image/domain/logos/LogoMakr_3Klh9R.png'
@@ -18,7 +18,7 @@ export function TopNavBar(props: Props) {
     const location = useLocation();
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [selected, setSelected] = useState<string | null>(null);
-    const {user, setUser} = useContext(UserContext);
+    const {user, setUser, setLoginStatus} = useContext(UserContext);
     const {notifications, setNotifications} = useContext(NotificationContext);
     const history = useHistory();
 
@@ -46,6 +46,7 @@ export function TopNavBar(props: Props) {
 
     const logOutFrontend = () => {
         setUser(null);
+        setLoginStatus(LoginStatus.LOGGED_OUT);
         setNotifications([...notifications, {
             title: 'Logout Successful',
             message: 'You have logged out successfully.',

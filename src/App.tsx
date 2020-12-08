@@ -13,7 +13,7 @@ import {CompareBeerContext, CompareBeerContextData} from "./context/CompareBeerC
 import {Notification, NotificationContext} from "./context/NotificationContext";
 import NotificationCenter from "./component/notification/NotificationCenter";
 import CurrentVenue from "./pages/current-venue/CurrentVenue";
-import {UserContext} from "./context/UserContext";
+import {LoginStatus, UserContext} from "./context/UserContext";
 import User from "./model/User";
 import Login from "./pages/login-page/Login";
 import Beer4YourBuckAPI from "./controller/api/Beer4YourBuckAPI";
@@ -36,9 +36,10 @@ function App() {
     const [compareBeers, setCompareBeers] = useState<Beer[]>([]);
     const [notifications, setNotifications] = useState<Notification[]>([]);
     const [user, setUser] = useState<User | null>(null);
+    const [loginStatus, setLoginStatus] = useState<LoginStatus>(LoginStatus.LOGGED_OUT);
     const [contentRef, setContentRef] = useState<RefObject<HTMLDivElement>>();
     const contentRefContext: ContentRef = {contentRef, setContentRef};
-    const userContext: UserContext = {user, setUser};
+    const userContext: UserContext = {user, setUser, setLoginStatus, loginStatus};
     const venueContext: BeerVenueContextData = {venue, setVenue};
     const compareBeerContext: CompareBeerContextData = {compareBeers, setCompareBeers};
     const notificationContext: NotificationContext = {setNotifications, notifications};
@@ -51,16 +52,19 @@ function App() {
     });
 
     useEffect(() => {
-        if (!user) {
+        if (!user && loginStatus ===  LoginStatus.LOGGED_OUT) {
+            setLoginStatus(LoginStatus.LOGGING_IN);
             api.getUserDetails().then(data => {
                 if (JSON.stringify(user) !== data.data) {
                     setUser(data.data);
+                    setLoginStatus(LoginStatus.LOGGED_IN);
                 }
             }).catch(err => {
+                setLoginStatus(LoginStatus.LOGIN_FAILURE);
                 setUser(null);
-            })
+            });
         }
-    }, [user]);
+    }, [user, loginStatus]);
 
     const onAddToHomescreenClick = () => {
         alert(`

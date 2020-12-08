@@ -3,7 +3,7 @@ import {Button, Col, Collapse, Container, Form, FormGroup, Input, Label} from "r
 import Beer4YourBuckAPI from "../../controller/api/Beer4YourBuckAPI";
 import {useHistory} from "react-router-dom";
 import {NotificationContext, NotificationType} from "../../context/NotificationContext";
-import {UserContext} from "../../context/UserContext";
+import {LoginStatus, UserContext} from "../../context/UserContext";
 import './login.css'
 import {Beer4YourBuckBtn, BtnType} from "../../component/button/custom-btns/ThemedButtons";
 import {LoadingSpinner} from "../../component/load/LoadSpinner";
@@ -21,7 +21,7 @@ export default function Login(props: Props) {
     const [rememberMe, setRememberMe] = useState<boolean>(false);
     const history = useHistory();
     const {notifications, setNotifications} = useContext(NotificationContext);
-    const {setUser} = useContext(UserContext);
+    const {setUser, setLoginStatus} = useContext(UserContext);
     const [forgotPassword, setForgotPassword] = useState<boolean>(false);
     const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
 
@@ -44,6 +44,7 @@ export default function Login(props: Props) {
         } else {
             if (!forgotPassword && !isLoggingIn) {
                 setIsLoggingIn(true);
+                setLoginStatus(LoginStatus.LOGGING_IN);
                 api.login(name, password, rememberMe).then(data => {
                     api.getUserDetails().then(data => {
                         setIsLoggingIn(false);
@@ -54,10 +55,12 @@ export default function Login(props: Props) {
                             timeout: 5000
                         }]);
                         setUser(data.data);
+                        setLoginStatus(LoginStatus.LOGGED_IN);
                         history.push('/');
                     });
                 }).catch(err => {
                     setIsLoggingIn(false);
+                    setLoginStatus(LoginStatus.LOGIN_FAILURE);
                     if (err.response.data && err.response.data.exception === 'User is disabled') {
                         setNotifications([...notifications, {
                             title: 'Your Account is Disabled!',
