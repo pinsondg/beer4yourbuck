@@ -19,6 +19,11 @@
   }
 }
 
+.non-mobile  {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
 .main-content {
   flex: 1 1 100%;
   text-align: left;

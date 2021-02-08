@@ -45,6 +45,10 @@
 
 .items-holder {
     padding-top: 10px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
 }
 
 .spinner {

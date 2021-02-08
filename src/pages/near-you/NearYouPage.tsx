@@ -118,7 +118,7 @@ export function NearYouPage() {
                     .sort((item1 , item2) => {
                         return new Beer.Builder().withBeer(item2.beer).build().getOttawayScore()
                             - new Beer.Builder().withBeer(item1.beer).build().getOttawayScore()
-                    }).map(item => <BeerNearYouBrick key={key++} beer={new Beer.Builder().withBeer(item.beer).build()} venue={item.venue}/>)
+                    }).map((item, index) => <BeerNearYouBrick rank={index + 1} key={key++} beer={new Beer.Builder().withBeer(item.beer).build()} venue={item.venue}/>)
             );
             setResults(results);
         }
@@ -256,25 +256,21 @@ export function NearYouPage() {
                         </UncontrolledDropdown>
                     </Col>
                 </Row>
-                <Row>
-                    <Col style={{paddingLeft: '0', paddingRight: '0'}}>
-                        {
-                            isLoading ? (
-                                <LoadingSpinner className={'spinner'} message={`Finding ${String.fromCodePoint(0x1F37A)} near you...`}/>
-                            ) : !nearYouVenues.state || nearYouVenues.state.filter(venue => venue.beers.length > 0).length === 0 ? (
-                                <div style={{margin: 'auto', padding: '5px'}}>
-                                    We couldn't find any beers near you. This is due to no users in your area reporting beers they find.
-                                    Help improve the results in your area by visiting any location that serves beer, navigating to the <a href='/current-venue'>current
-                                    venue page</a>, and adding beers that you find!
-                                </div>
-                            ) : (
-                                <div className={'items-holder'}>
-                                    {results}
-                                </div>
-                            )
-                        }
-                    </Col>
-                </Row>
+                    {
+                        isLoading ? (
+                            <LoadingSpinner className={'spinner'} message={`Finding ${String.fromCodePoint(0x1F37A)} near you...`}/>
+                        ) : !nearYouVenues.state || nearYouVenues.state.filter(venue => venue.beers.length > 0).length === 0 ? (
+                            <div style={{margin: 'auto', padding: '5px'}}>
+                                We couldn't find any beers near you. This is due to no users in your area reporting beers they find.
+                                Help improve the results in your area by visiting any location that serves beer, navigating to the <a href='/current-venue'>current
+                                venue page</a>, and adding beers that you find!
+                            </div>
+                        ) : (
+                            <div className={'items-holder'}>
+                                {results}
+                            </div>
+                        )
+                    }
             </Container>
         </div>
     )

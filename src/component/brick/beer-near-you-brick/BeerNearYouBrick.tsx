@@ -9,18 +9,30 @@ import {VerifiedBadge} from "../../badge/VerificationBadges";
 import {FaMapMarkerAlt} from "react-icons/fa";
 import ValueScoreBadge from "../../badge/value-score-badge/ValueScoreBadge";
 import Beer4YourBuckLogo from "../../../image/domain/logos/LogoMakr_3Klh9R.png";
+import classNames from "classnames";
+import {isMobile} from "../../../controller/Utils";
 
 
 interface Props {
     beer: Beer;
     venue: BeerVenue;
+    rank?: number;
 }
 
 export function BeerNearYouBrick(props: Props) {
 
+    const brickClasses = classNames('brick', {
+        'non-mobile': !isMobile()
+    });
+
     return (
-        <Jumbotron className={'brick'}>
+        <Jumbotron className={brickClasses}>
             <div className={'near-you-brick-content'}>
+                {
+                    props.rank ? <div>
+                        <h3>{props.rank}</h3>
+                    </div> : null
+                }
                 <div className={'left-content'}>
                     <div className={'logo-holder'}>
                         <CircularBeerLogo src={props.beer.label ? props.beer.label : Beer4YourBuckLogo}/>
